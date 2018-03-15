@@ -1,0 +1,6 @@
+﻿  stdafx.cpp
+  NBChatPro.cpp
+  Unknown compiler version - please run the configure tests and report the results
+d:\cpluspluspro\nbchatpro\nbchatpro\nbchatpro.cpp(15): error C2371: “a”: 重定义；不同的基类型
+  d:\cpluspluspro\nbchatpro\nbchatpro\nbchatpro.cpp(13): note: 参见“a”的声明
+d:\cpluspluspro\nbchatpro\nbchatpro\nbchatpro.cpp(19): error C2088: “<<”: 对于 class 非法

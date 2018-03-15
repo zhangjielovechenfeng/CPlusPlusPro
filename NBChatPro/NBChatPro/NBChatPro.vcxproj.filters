@@ -21,12 +21,42 @@
     <ClInclude Include="targetver.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Chatter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ChatterManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Message.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ChatServer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerDataDefine.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="LogPrint.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="NBChatPro.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Chatter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ChatterManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Message.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ChatServer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
