@@ -61,14 +61,28 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
+    <ClCompile Include="ChatServer.cpp" />
+    <ClCompile Include="Chatter.cpp" />
+    <ClCompile Include="ChatterManager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Message.cpp" />
+    <ClCompile Include="NBChatPro.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="F:\mysql-5.7.21-win32\lib\libmysql.lib" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ChatServer.h" />
+    <ClInclude Include="Chatter.h" />
+    <ClInclude Include="ChatterManager.h" />
+    <ClInclude Include="LogPrint.h" />
+    <ClInclude Include="Message.h" />
+    <ClInclude Include="ServerDataDefine.h" />
+  </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <CppLanguageStandard>c++98</CppLanguageStandard>
+      <AdditionalIncludeDirectories>./include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

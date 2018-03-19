@@ -1,8 +1,10 @@
 #pragma once
 
-#include "Winsock2.h"
 #include "ServerDataDefine.h"
+#include <iostream>
+#include <sys/epoll.h>
 
+using namespace std;
 /*
 	ChatServer :  ÁÄÌì·şÎñÆ÷
 */
@@ -13,7 +15,7 @@ public:
 	~ChatServer();
 
 public:
-	SOCKET InitChatServer();
+	bool InitChatServer();
 
 
 };

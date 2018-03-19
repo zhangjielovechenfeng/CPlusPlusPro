@@ -3,7 +3,6 @@
 #include "Chatter.h"
 #include <string>
 #include <map>
-#include <Winsock2.h>
 
 using namespace std;
 
