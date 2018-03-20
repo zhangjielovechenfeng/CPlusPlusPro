@@ -1,7 +1,11 @@
 #include <cstdio>
+#include "ChatServer.h"
 
 int main()
 {
-    printf("hello from ChatProject!\n");
+	ChatServer chatServer;
+	chatServer.InitChatServer();
+	chatServer.Run();
+	chatServer.Stop();
     return 0;
 }

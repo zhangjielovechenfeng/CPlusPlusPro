@@ -1,13 +1,20 @@
 #pragma once
 
-#include "ServerDataDefine.h"
 #include <iostream>
-#include <sys/epoll.h>
+#include "MyEpoll.h"
+#include <netinet/in.h>
+
+#define SERVER_PORT 8888		// 服务器端口号
+#define LISTEN_LEN 1024			// 监听队列长度
 
 using namespace std;
 /*
 	ChatServer :  聊天服务器
 */
+
+typedef struct sockaddr_in SockAddr_In;
+typedef struct sockaddr SockAddr;
+
 class ChatServer
 {
 public:
@@ -15,8 +22,32 @@ public:
 	~ChatServer();
 
 public:
-	bool InitChatServer();
+	int InitChatServer();
 
+	//运行服务器
+	bool Run();
 
+	//断开服务器
+	void Stop();
+
+private:
+	//创建socket连接
+	bool _CreateScoketConnect();
+
+	//socket绑定
+	bool _SocketBind();
+
+	//socket监听
+	bool _SocketListen();
+
+	//等待client练剑请求
+	bool _SocketAccept();
+
+	// 设置非阻塞模式
+	bool _SetNonBlock();
+
+private:
+	MyEpoll*	m_epoll;
+	int			m_socketFd;
 };
 
