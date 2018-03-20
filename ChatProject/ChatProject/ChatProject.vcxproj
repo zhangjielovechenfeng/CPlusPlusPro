@@ -63,10 +63,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeone\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includetwo\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <IncludePath>E:\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeOne;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemGroup>
     <ClCompile Include="ChatServer.cpp" />
     <ClCompile Include="Chatter.cpp" />
     <ClCompile Include="ChatterManager.cpp" />
+    <ClCompile Include="Log.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="MyEpoll.cpp" />
@@ -79,6 +83,7 @@
     <ClInclude Include="Chatter.h" />
     <ClInclude Include="ChatterManager.h" />
     <ClInclude Include="ErrDefine.h" />
+    <ClInclude Include="Log.h" />
     <ClInclude Include="LogPrint.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="MyEpoll.h" />
@@ -87,6 +92,11 @@
     <ClCompile>
       <CppLanguageStandard>c++98</CppLanguageStandard>
       <AdditionalIncludeDirectories>C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeone\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>E:\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeOne;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

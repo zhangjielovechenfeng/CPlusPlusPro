@@ -1,7 +1,7 @@
 #include "MyEpoll.h"
 #include "LogPrint.h"
 #include <cstdio>
-#include <memory.h>
+#include <string.h>
 #include "ErrDefine.h"
 
 MyEpoll::MyEpoll()

@@ -17,6 +17,9 @@
     <ClCompile Include="MyEpoll.cpp">
       <Filter>ChatLogicServer</Filter>
     </ClCompile>
+    <ClCompile Include="Log.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="F:\mysql-5.7.21-win32\lib\libmysql.lib" />
@@ -52,6 +55,9 @@
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="ErrDefine.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Log.h">
       <Filter>Util</Filter>
     </ClInclude>
   </ItemGroup>
