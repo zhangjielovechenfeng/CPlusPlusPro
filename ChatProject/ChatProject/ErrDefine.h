@@ -11,4 +11,8 @@ enum ERROR_CODE
 	ERROR_CODE_SOCKET_BIND_FAILED				= -6,		// socket绑定失败
 	ERROR_CODE_SOCKET_LISTEN_FAILED				= -7,		// socket监听失败
 	ERROR_CODE_SOCKET_ACCEPT_FAILED				= -8,		// 等待client请求失败
+	ERROR_CODE_RECV_MSG_ERROR					= -9,		// 接受数据错误
+	ERROR_CODE_EPOLL_MOD_FAILED					= -10,		// epoll事件修改失败
+	ERROR_CODE_EPOLL_ADD_FAILED					= -11,		// epoll事件添加失败
+	ERROR_CODE_SEND_MSG_ERROR					= -12,		// 发送数据失败
 };

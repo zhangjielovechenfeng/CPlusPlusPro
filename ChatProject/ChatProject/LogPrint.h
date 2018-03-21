@@ -1,7 +1,10 @@
 #pragma once
 
-#define LOG_SIZE 1024
 #include "Log.h"
+#include <stdio.h>
+
+#define LOG_SIZE 1024
+
 #define LOG_ERR(_s_, ...) do{\
 	char _msg_[LOG_SIZE];\
 	char _log_[LOG_SIZE];\

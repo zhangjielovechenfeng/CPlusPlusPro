@@ -6,6 +6,7 @@
 
 #define SERVER_PORT 8888		// 服务器端口号
 #define LISTEN_LEN 1024			// 监听队列长度
+#define DATA_BUFF_SIZE 1024	    // 数据buff大小
 
 using namespace std;
 /*
@@ -25,7 +26,7 @@ public:
 	int InitChatServer();
 
 	//运行服务器
-	bool Run();
+	int Run();
 
 	//断开服务器
 	void Stop();
@@ -45,6 +46,10 @@ private:
 
 	// 设置非阻塞模式
 	bool _SetNonBlock();
+
+	bool _RecvMsg(int connFd);
+
+	bool _SendMsg(int connFd);
 
 private:
 	MyEpoll*	m_epoll;

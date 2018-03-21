@@ -17,7 +17,7 @@ public:
 	~MyEpoll();
 
 	int GetEpollFd();
-	EpollEvent& GetRecvEvents();
+	EpollEvent* GetRecvEvents();
 
 public:
 	bool EpollCreate();

@@ -1,6 +1,5 @@
 #include "MyEpoll.h"
 #include "LogPrint.h"
-#include <cstdio>
 #include <string.h>
 #include "ErrDefine.h"
 
@@ -21,9 +20,9 @@ int MyEpoll::GetEpollFd()
 	return m_epollFd;
 }
 
-EpollEvent & MyEpoll::GetRecvEvents()
+EpollEvent * MyEpoll::GetRecvEvents()
 {
-	return *m_recvEvent;
+	return m_recvEvent;
 }
 
 bool MyEpoll::EpollCreate()

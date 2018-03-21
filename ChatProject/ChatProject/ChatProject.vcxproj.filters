@@ -20,9 +20,21 @@
     <ClCompile Include="Log.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="F:\mysql-5.7.21-win32\lib\libmysql.lib" />
+    <ClCompile Include="Singleton.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="ThreadLock.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="RecvMsgBuff.cpp">
+      <Filter>ChatLogicServer</Filter>
+    </ClCompile>
+    <ClCompile Include="ChatClientManager.cpp">
+      <Filter>ChatLogicServer</Filter>
+    </ClCompile>
+    <ClCompile Include="ChatClient.cpp">
+      <Filter>ChatLogicServer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ChatLogicServer">
@@ -59,6 +71,24 @@
     </ClInclude>
     <ClInclude Include="Log.h">
       <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Singleton.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadLock.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="RecvMsgBuff.h">
+      <Filter>ChatLogicServer</Filter>
+    </ClInclude>
+    <ClInclude Include="ChatClientManager.h">
+      <Filter>ChatLogicServer</Filter>
+    </ClInclude>
+    <ClInclude Include="ChatClient.h">
+      <Filter>ChatLogicServer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
