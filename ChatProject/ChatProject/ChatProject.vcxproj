@@ -77,7 +77,6 @@
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="MyEpoll.cpp" />
     <ClCompile Include="RecvMsgBuff.cpp" />
-    <ClCompile Include="Singleton.cpp" />
     <ClCompile Include="ThreadLock.cpp" />
   </ItemGroup>
   <ItemGroup>

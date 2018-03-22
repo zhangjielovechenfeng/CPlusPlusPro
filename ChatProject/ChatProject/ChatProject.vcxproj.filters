@@ -20,9 +20,6 @@
     <ClCompile Include="Log.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="Singleton.cpp">
-      <Filter>Util</Filter>
-    </ClCompile>
     <ClCompile Include="ThreadLock.cpp">
       <Filter>Util</Filter>
     </ClCompile>

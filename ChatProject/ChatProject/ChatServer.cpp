@@ -17,6 +17,7 @@ ChatServer::ChatServer()
 
 ChatServer::~ChatServer()
 {
+	SAFE_DELETE(m_epoll);
 }
 
 int ChatServer::InitChatServer()
@@ -26,7 +27,7 @@ int ChatServer::InitChatServer()
 		return ERROR_CODE_CREATE_SOCKET_FAILED;
 	}
 
-	if (!_SetNonBlock())
+	if (!_SetNonBlock(m_socketFd))
 	{
 		return ERROR_CODE_SET_NONBLOCK_FAILED;
 	}
@@ -49,13 +50,20 @@ int ChatServer::InitChatServer()
 		return ERROR_CODE_SOCKET_LISTEN_FAILED;
 	}
 
-	cout << "等待client请求" << endl;
+	cout << "Chat Server Init OK!!!" << endl;
 
 	return ERROR_CODE_NONE;
 }
 
 int ChatServer::Run()
 {
+	m_epoll = new MyEpoll();
+
+	// 给socket描述符注册事件
+	if (!m_epoll->EpollAdd(m_socketFd))
+	{
+		return ERROR_CODE_EPOLL_ADD_FAILED;
+	}
 	while (1)
 	{
 		int readyFdNum = m_epoll->EpollWait();// 等待epoll事件发生
@@ -70,12 +78,12 @@ int ChatServer::Run()
 					return ERROR_CODE_SOCKET_ACCEPT_FAILED;
 				}
 
-				if (!_SetNonBlock())
+				if (!_SetNonBlock(connFd))
 				{
 					return ERROR_CODE_SET_NONBLOCK_FAILED;
 				}
 
-				if (!m_epoll->EpollAdd(m_socketFd))
+				if (!m_epoll->EpollAdd(connFd))
 				{
 					return ERROR_CODE_EPOLL_ADD_FAILED;
 				}
@@ -88,13 +96,18 @@ int ChatServer::Run()
 					continue;
 				}
 
-				if (!_RecvMsg(connFd))
+				int ret = _RecvMsg(connFd);
+				if (ret != ERROR_CODE_NONE)
 				{
-					LOG_ERR("Recv Message Error!!!");
-					return ERROR_CODE_RECV_MSG_ERROR;
+					if (ERROR_CODE_CLIENT_HAD_OFFLINE == ret)
+					{
+						close(connFd);
+						continue;
+					}
+					return ret;
 				}
 
-				if (!m_epoll->EpollMod(m_socketFd))
+				if (!m_epoll->EpollMod(connFd))
 				{
 					return ERROR_CODE_EPOLL_MOD_FAILED;
 				}
@@ -107,13 +120,16 @@ int ChatServer::Run()
 					continue;
 				}
 
+				//给发送消息加锁
+				ThreadLock lock();
+
 				if (!_SendMsg(connFd))
 				{
 					LOG_ERR("Send Message Error!!!");
 					return ERROR_CODE_SEND_MSG_ERROR;
 				}
 
-				if (!m_epoll->EpollMod(m_socketFd, EPOLLIN))
+				if (!m_epoll->EpollMod(connFd, EPOLLIN))
 				{
 					return ERROR_CODE_EPOLL_MOD_FAILED;
 				}
@@ -161,16 +177,22 @@ bool ChatServer::_SocketListen()
 	return true;
 }
 
-bool ChatServer::_SocketAccept()
+int ChatServer::_SocketAccept()
 {
 	SockAddr_In clientAddr;
 	socklen_t clientAddSize = sizeof(SockAddr_In);
-	if (accept(m_socketFd, (SockAddr*)&clientAddr, &clientAddSize) < 0)
+	int connFd = accept(m_socketFd, (SockAddr*)&clientAddr, &clientAddSize);
+	if (connFd < 0)
 	{
-		LOG_ERR("Socket Accept Client Failed!!!");
-		return false;
+		LOG_ERR("Socket Accept Client Failed!!!,error:[%s]", strerror(errno));
+		return ERROR_CODE_SOCKET_ACCEPT_FAILED;
 	}
-	return true;
+
+	if (!ChatClientManager::Instance().AddChatClient(connFd, clientAddr))
+	{
+		return ERROR_CODE_INSERT_ONLINE_FAILED;
+	}
+	return connFd;
 }
 
 void ChatServer::Stop()
@@ -178,7 +200,7 @@ void ChatServer::Stop()
 	close(m_socketFd);
 }
 
-bool ChatServer::_SetNonBlock()
+bool ChatServer::_SetNonBlock(int fd)
 {
 	int opt = fcntl(m_socketFd, F_GETFL);
 	if (opt < 0)
@@ -196,18 +218,41 @@ bool ChatServer::_SetNonBlock()
 	return true;
 }
 
-bool ChatServer::_RecvMsg(int connFd)
+int ChatServer::_RecvMsg(int connFd)
 {
+	ChatClient* chatClient = ChatClientManager::Instance().GetChatClient(connFd);
+	ASSERT_RETURN(chatClient != NULL, ERROR_CODE_CLIENT_NOT_EXIST);
+
 	char recvMsgBuff[DATA_BUFF_SIZE];
 	memset(recvMsgBuff, 0, DATA_BUFF_SIZE);
-	ssize_t  factReadSize = read(connFd, recvMsgBuff, DATA_BUFF_SIZE);
-	if (factReadSize < -1)
+	ssize_t  factRecvSize = recv(connFd, recvMsgBuff, DATA_BUFF_SIZE, 0);
+	if (0 == factRecvSize)
 	{
-		LOG_ERR("Read Data Error!!!error: %s", strerror(errno));
-		return false;
+		// Client 主动断开连接
+		LOG_RUN("Client Disconnect, IP: %s", chatClient->GetIP().c_str());
+		cout << "The Client[ip: " << chatClient->GetIP().c_str() << "] Disconnect!!!" << endl;
+
+		if (!ChatClientManager::Instance().DelChatClient(connFd))
+		{
+			return ERROR_CODE_CLIENT_OFFLINE_FAILED;
+		}
+		return ERROR_CODE_CLIENT_HAD_OFFLINE;
+	}
+	else if (factRecvSize < 0)
+	{
+		LOG_ERR("Recv Data Error!!!error: %s", strerror(errno));
+		return ERROR_CODE_RECV_MSG_ERROR;
 	}
 
-	ChatClient* chatClient = ChatClientManager::Instance().GetChatClient(connFd);
-	ASSERT_RETURN(chatClient != NULL, false)
+	if(!chatClient->RecvMsgData(recvMsgBuff, (UINT)factRecvSize))
+	{
+		LOG_ERR("Insert Msg Buff Failed!!!");
+		return ERROR_CODE_INSERT_MSG_TO_BUFF_FAILED;
+	}
+	return ERROR_CODE_NONE;
+}
+
+bool ChatServer::_SendMsg(int connFd)
+{
 	return true;
 }

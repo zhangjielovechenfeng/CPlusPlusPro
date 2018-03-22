@@ -2,6 +2,9 @@
 
 #include "Message.h"
 #include <string>
+#include "Util.h"
+#include "RecvMsgBuff.h"
+#include "ChatServer.h"
 
 using namespace std;
 
@@ -11,17 +14,20 @@ using namespace std;
 class ChatClient
 {
 public:
-	ChatClient();
+	ChatClient(int connFd);
 	~ChatClient();
+public:
+	string & GetIP();
 
 public:
-	bool InitChatClient();
+	bool InitChatClient(SockAddr_In clientAddr);
 
-	bool RecvMsgData();
+	bool RecvMsgData(char* data, UINT dataLen);
 private:
-	int			m_socketFd;
-	string		m_ip;
-	Message		m_msg;
-
+	int				m_connFd;
+	int				m_port;
+	string			m_ip;
+	Message			m_msg;
+	RecvMsgBuff		m_recvMsgData;
 };
 

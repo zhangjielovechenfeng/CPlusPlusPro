@@ -25,29 +25,30 @@ public:
 public:
 	int InitChatServer();
 
-	//运行服务器
+	// 运行服务器
 	int Run();
 
-	//断开服务器
+	// 断开服务器
 	void Stop();
 
 private:
-	//创建socket连接
+	// 创建socket连接
 	bool _CreateScoketConnect();
 
-	//socket绑定
+	// socket绑定
 	bool _SocketBind();
-
-	//socket监听
+	 
+	// socket监听
 	bool _SocketListen();
 
-	//等待client练剑请求
-	bool _SocketAccept();
+	// 等待client练剑请求
+	int _SocketAccept();
 
 	// 设置非阻塞模式
-	bool _SetNonBlock();
+	bool _SetNonBlock(int fd);
 
-	bool _RecvMsg(int connFd);
+	// 接收消息
+	int _RecvMsg(int connFd);
 
 	bool _SendMsg(int connFd);
 

@@ -8,6 +8,8 @@ MyEpoll::MyEpoll()
 	m_epollFd = 0;
 	memset(&m_listenEvent, 0, sizeof(m_listenEvent));
 	memset(m_recvEvent, 0, sizeof(*m_recvEvent));
+
+	EpollCreate();
 }
 
 
@@ -36,12 +38,12 @@ bool MyEpoll::EpollCreate()
 	return true;
 }
 
-bool MyEpoll::EpollAdd(int socketFd, uint32_t listenEvent)
+bool MyEpoll::EpollAdd(int connFd, uint32_t listenEvent)
 {
 	m_listenEvent.events = listenEvent;
-	m_listenEvent.data.fd = socketFd;
+	m_listenEvent.data.fd = connFd;
 
-	int result = epoll_ctl(m_epollFd, EPOLL_CTL_ADD, socketFd, &m_listenEvent);
+	int result = epoll_ctl(m_epollFd, EPOLL_CTL_ADD, connFd, &m_listenEvent);
 	if (result < 0)
 	{
 		LOG_ERR("Add Epoll Event Failed!!!");
@@ -50,12 +52,12 @@ bool MyEpoll::EpollAdd(int socketFd, uint32_t listenEvent)
 	return true;
 }
 
-bool MyEpoll::EpollMod(int socketFd, uint32_t listenEvent)
+bool MyEpoll::EpollMod(int connFd, uint32_t listenEvent)
 {
 	m_listenEvent.events = listenEvent;
-	m_listenEvent.data.fd = socketFd;
+	m_listenEvent.data.fd = connFd;
 
-	int result = epoll_ctl(m_epollFd, EPOLL_CTL_MOD, socketFd, &m_listenEvent);
+	int result = epoll_ctl(m_epollFd, EPOLL_CTL_MOD, connFd, &m_listenEvent);
 	if (result < 0)
 	{
 		LOG_ERR("Add Epoll Event Failed!!!");
@@ -64,12 +66,12 @@ bool MyEpoll::EpollMod(int socketFd, uint32_t listenEvent)
 	return true;
 }
 
-bool MyEpoll::EpollDel(int socketFd, uint32_t listenEvent)
+bool MyEpoll::EpollDel(int connFd, uint32_t listenEvent)
 {
 	m_listenEvent.events = listenEvent;
-	m_listenEvent.data.fd = socketFd;
+	m_listenEvent.data.fd = connFd;
 
-	int result = epoll_ctl(m_epollFd, EPOLL_CTL_DEL, socketFd, NULL);
+	int result = epoll_ctl(m_epollFd, EPOLL_CTL_DEL, connFd, NULL);
 	if (result < 0)
 	{
 		LOG_ERR("Add Epoll Event Failed!!!");
@@ -80,7 +82,7 @@ bool MyEpoll::EpollDel(int socketFd, uint32_t listenEvent)
 
 int MyEpoll::EpollWait()
 {
-	int eventNum = epoll_wait(m_epollFd, m_recvEvent, MAX_EVENTS, 0); // timeout : 0 立即返回，-1 不确定
+	int eventNum = epoll_wait(m_epollFd, m_recvEvent, MAX_EVENTS, 500); //这里是1000ms
 	if (eventNum <= 0)
 	{
 		LOG_ERR("Epoll Wait Had Timeout!!!");

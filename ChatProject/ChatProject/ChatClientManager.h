@@ -18,15 +18,15 @@ public:
 
 public:
 	// 添加聊天客户端（上线）
-	bool AddChatClient(int socketFd);
+	bool AddChatClient(int connFd, SockAddr_In clientAddr);
 
 	// 删除聊天客户端（下线）
-	bool DelChatClient(int socketFd);
+	bool DelChatClient(int connFd);
 
 	// 检查是否在线
-	bool CheckOnline(int socketFd);
+	bool CheckOnline(int connFd);
 
-	ChatClient* GetChatClient(int socketFd);
+	ChatClient* GetChatClient(int connFd);
 
 private:
 	ChatClientMap m_chatClientMap; //客户端map

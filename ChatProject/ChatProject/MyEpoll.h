@@ -21,9 +21,9 @@ public:
 
 public:
 	bool EpollCreate();
-	bool EpollAdd(int socketFd, uint32_t listenEvent = EPOLLIN);
-	bool EpollMod(int socketFd, uint32_t listenEvent = EPOLLOUT);
-	bool EpollDel(int socketFd, uint32_t listenEvent);
+	bool EpollAdd(int connFd, uint32_t listenEvent = EPOLLIN);
+	bool EpollMod(int connFd, uint32_t listenEvent = EPOLLOUT);
+	bool EpollDel(int connFd, uint32_t listenEvent);
 	int  EpollWait();
 	bool CanReadData(int eventIndex);
 	bool CanWriteData(int eventIndex);

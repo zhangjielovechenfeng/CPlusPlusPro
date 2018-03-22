@@ -1,6 +1,6 @@
 #include "RecvMsgBuff.h"
 #include <string.h>
-
+#include <cstdio>
 
 RecvMsgBuff::RecvMsgBuff()
 {
@@ -13,13 +13,21 @@ RecvMsgBuff::~RecvMsgBuff()
 {
 }
 
-void RecvMsgBuff::InsertDataToBuff(const char * data, UINT dataLen)
+bool RecvMsgBuff::InsertDataToBuff(char * data, UINT dataLen)
 {
 	if (dataLen > MAX_DATA_LEN || dataLen + m_currBuffLen > MAX_DATA_LEN)
 	{
-		return;
+		return false;
 	}
 	memcpy(m_recvBuff + m_currBuffLen, data, dataLen);
 	m_currBuffLen += dataLen;
 	m_recvBuff[m_currBuffLen] = 0;
+
+	printf("the data: %s\n", m_recvBuff);
+	return true;
+}
+
+bool RecvMsgBuff::HaveCompletePkgInData()
+{
+	return false;
 }

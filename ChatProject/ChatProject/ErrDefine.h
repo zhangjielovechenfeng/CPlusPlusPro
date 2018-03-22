@@ -15,4 +15,9 @@ enum ERROR_CODE
 	ERROR_CODE_EPOLL_MOD_FAILED					= -10,		// epoll事件修改失败
 	ERROR_CODE_EPOLL_ADD_FAILED					= -11,		// epoll事件添加失败
 	ERROR_CODE_SEND_MSG_ERROR					= -12,		// 发送数据失败
+	ERROR_CODE_CLIENT_NOT_EXIST					= -13,		// client不存在
+	ERROR_CODE_CLIENT_OFFLINE_FAILED			= -14,		// client离线失败
+	ERROR_CODE_INSERT_MSG_TO_BUFF_FAILED		= -15,		// 接受数据保存失败
+	ERROR_CODE_INSERT_ONLINE_FAILED				= -16,		// client上线失败
+	ERROR_CODE_CLIENT_HAD_OFFLINE				= -17,		// client已离线
 };
