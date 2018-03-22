@@ -94,6 +94,7 @@
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="ThreadLock.h" />
     <ClInclude Include="Util.h" />
+    <ClInclude Include="CSProto.proto" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

@@ -48,9 +48,9 @@ private:
 	bool _SetNonBlock(int fd);
 
 	// 接收消息
-	int _RecvMsg(int connFd);
+	int _RecvMsgData(int connFd);
 
-	bool _SendMsg(int connFd);
+	bool _SendMsgData(int connFd);
 
 private:
 	MyEpoll*	m_epoll;

@@ -43,6 +43,9 @@
     <Filter Include="Util">
       <UniqueIdentifier>{a586176f-090f-4513-a66a-53012111ef19}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ChatLogicServer\Protocol">
+      <UniqueIdentifier>{3c8d2c65-121d-4c3e-9e7a-be09590dd5a2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ChatServer.h">
@@ -86,6 +89,9 @@
     </ClInclude>
     <ClInclude Include="ChatClient.h">
       <Filter>ChatLogicServer</Filter>
+    </ClInclude>
+    <ClInclude Include="CSProto.proto">
+      <Filter>ChatLogicServer\Protocol</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

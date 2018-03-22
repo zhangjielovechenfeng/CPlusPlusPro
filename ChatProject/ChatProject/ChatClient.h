@@ -22,7 +22,7 @@ public:
 public:
 	bool InitChatClient(SockAddr_In clientAddr);
 
-	bool RecvMsgData(char* data, UINT dataLen);
+	bool SaveMsgData(char* data, UINT dataLen);
 private:
 	int				m_connFd;
 	int				m_port;

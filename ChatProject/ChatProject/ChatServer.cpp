@@ -96,7 +96,7 @@ int ChatServer::Run()
 					continue;
 				}
 
-				int ret = _RecvMsg(connFd);
+				int ret = _RecvMsgData(connFd);
 				if (ret != ERROR_CODE_NONE)
 				{
 					if (ERROR_CODE_CLIENT_HAD_OFFLINE == ret)
@@ -123,7 +123,7 @@ int ChatServer::Run()
 				//给发送消息加锁
 				ThreadLock lock();
 
-				if (!_SendMsg(connFd))
+				if (!_SendMsgData(connFd))
 				{
 					LOG_ERR("Send Message Error!!!");
 					return ERROR_CODE_SEND_MSG_ERROR;
@@ -218,7 +218,7 @@ bool ChatServer::_SetNonBlock(int fd)
 	return true;
 }
 
-int ChatServer::_RecvMsg(int connFd)
+int ChatServer::_RecvMsgData(int connFd)
 {
 	ChatClient* chatClient = ChatClientManager::Instance().GetChatClient(connFd);
 	ASSERT_RETURN(chatClient != NULL, ERROR_CODE_CLIENT_NOT_EXIST);
@@ -240,11 +240,17 @@ int ChatServer::_RecvMsg(int connFd)
 	}
 	else if (factRecvSize < 0)
 	{
+		// 此三种情况连接为正常
+		if (EINTR == errno || EWOULDBLOCK == errno || EAGAIN == errno)
+		{
+			return ERROR_CODE_NONE;
+		}
 		LOG_ERR("Recv Data Error!!!error: %s", strerror(errno));
 		return ERROR_CODE_RECV_MSG_ERROR;
 	}
 
-	if(!chatClient->RecvMsgData(recvMsgBuff, (UINT)factRecvSize))
+	// 存储接收的消息
+	if(!chatClient->SaveMsgData(recvMsgBuff, (UINT)factRecvSize))
 	{
 		LOG_ERR("Insert Msg Buff Failed!!!");
 		return ERROR_CODE_INSERT_MSG_TO_BUFF_FAILED;
@@ -252,7 +258,7 @@ int ChatServer::_RecvMsg(int connFd)
 	return ERROR_CODE_NONE;
 }
 
-bool ChatServer::_SendMsg(int connFd)
+bool ChatServer::_SendMsgData(int connFd)
 {
 	return true;
 }

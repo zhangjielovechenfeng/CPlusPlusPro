@@ -25,7 +25,7 @@ bool ChatClient::InitChatClient(SockAddr_In clientAddr)
 	return true;
 }
 
-bool ChatClient::RecvMsgData(char * data, UINT dataLen)
+bool ChatClient::SaveMsgData(char * data, UINT dataLen)
 {
 	return m_recvMsgData.InsertDataToBuff(data, dataLen);
 }
