@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="ChatServer.cpp">
+      <Filter>ChatLogicServer</Filter>
+    </ClCompile>
+    <ClCompile Include="Chatter.cpp">
+      <Filter>ChatLogicServer</Filter>
+    </ClCompile>
+    <ClCompile Include="ChatterManager.cpp">
+      <Filter>ChatLogicServer</Filter>
+    </ClCompile>
+    <ClCompile Include="Message.cpp">
+      <Filter>ChatLogicServer</Filter>
+    </ClCompile>
+    <ClCompile Include="MyEpoll.cpp">
+      <Filter>ChatLogicServer</Filter>
+    </ClCompile>
+    <ClCompile Include="Log.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="ThreadLock.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="RecvMsgBuff.cpp">
+      <Filter>ChatLogicServer</Filter>
+    </ClCompile>
+    <ClCompile Include="ChatClientManager.cpp">
+      <Filter>ChatLogicServer</Filter>
+    </ClCompile>
+    <ClCompile Include="ChatClient.cpp">
+      <Filter>ChatLogicServer</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="ChatLogicServer">
+      <UniqueIdentifier>{afb03707-0673-4da8-b31e-38c4ce46fa8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DBSaveServer">
+      <UniqueIdentifier>{8d020608-e101-4e38-9f2e-59d77d4ada94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{a586176f-090f-4513-a66a-53012111ef19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ChatLogicServer\Protocol">
+      <UniqueIdentifier>{3c8d2c65-121d-4c3e-9e7a-be09590dd5a2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ChatServer.h">
+      <Filter>ChatLogicServer</Filter>
+    </ClInclude>
+    <ClInclude Include="Chatter.h">
+      <Filter>ChatLogicServer</Filter>
+    </ClInclude>
+    <ClInclude Include="ChatterManager.h">
+      <Filter>ChatLogicServer</Filter>
+    </ClInclude>
+    <ClInclude Include="Message.h">
+      <Filter>ChatLogicServer</Filter>
+    </ClInclude>
+    <ClInclude Include="MyEpoll.h">
+      <Filter>ChatLogicServer</Filter>
+    </ClInclude>
+    <ClInclude Include="LogPrint.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="ErrDefine.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Log.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Singleton.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadLock.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="RecvMsgBuff.h">
+      <Filter>ChatLogicServer</Filter>
+    </ClInclude>
+    <ClInclude Include="ChatClientManager.h">
+      <Filter>ChatLogicServer</Filter>
+    </ClInclude>
+    <ClInclude Include="ChatClient.h">
+      <Filter>ChatLogicServer</Filter>
+    </ClInclude>
+    <ClInclude Include="CSProto.proto">
+      <Filter>ChatLogicServer\Protocol</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

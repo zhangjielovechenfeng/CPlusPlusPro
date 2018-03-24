@@ -1,0 +1,10 @@
+//**********CS 通信协议*********//
+
+sysntax = "proto3"
+
+package CSProtocol;
+
+message HeartBeatPkg
+{
+
+}

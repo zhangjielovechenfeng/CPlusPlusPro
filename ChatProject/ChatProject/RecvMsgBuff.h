@@ -1,7 +1,7 @@
 #pragma once
 
 #define MAX_DATA_LEN 64	// 接收数据最大长度
-#include "../Util/Util.h"
+#include "Util.h"
 
 class RecvMsgBuff
 {
