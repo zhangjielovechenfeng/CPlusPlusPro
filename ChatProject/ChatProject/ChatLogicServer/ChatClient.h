@@ -2,8 +2,8 @@
 
 #include "Message.h"
 #include <string>
-#include "Util.h"
-#include "RecvMsgBuff.h"
+#include "../Util/Util.h"
+#include "CSMsgBuff.h"
 #include "ChatServer.h"
 
 using namespace std;
@@ -28,6 +28,6 @@ private:
 	int				m_port;
 	string			m_ip;
 	Message			m_msg;
-	RecvMsgBuff		m_recvMsgData;
+	CSMsgBuff		m_recvMsgData;
 };
 

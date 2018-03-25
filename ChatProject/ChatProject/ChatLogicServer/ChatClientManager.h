@@ -2,7 +2,7 @@
 
 #include "ChatClient.h"
 #include <map>
-#include "Singleton.h"
+#include "../Util/Singleton.h"
 
 using namespace std;
 

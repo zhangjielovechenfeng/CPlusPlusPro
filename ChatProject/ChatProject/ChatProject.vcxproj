@@ -27,7 +27,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{549a4de1-57f0-48a8-babe-ae74db8ce560}</ProjectGuid>
+    <ProjectGuid>{6c35de41-fc64-4a12-bd42-91a24f6407a8}</ProjectGuid>
     <Keyword>Linux</Keyword>
     <RootNamespace>ChatProject</RootNamespace>
     <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
@@ -51,6 +51,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <UseDebugLibraries>true</UseDebugLibraries>
+    <RemoteRootDir>~/ChatProject</RemoteRootDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <UseDebugLibraries>false</UseDebugLibraries>
@@ -61,50 +62,53 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeone\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includetwo\include;$(IncludePath)</IncludePath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
-    <IncludePath>E:\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeOne;$(IncludePath)</IncludePath>
+    <IncludePath>E:\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeTwo\include;E:\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeOne;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemGroup>
-    <ClCompile Include="ChatClient.cpp" />
-    <ClCompile Include="ChatClientManager.cpp" />
-    <ClCompile Include="ChatServer.cpp" />
-    <ClCompile Include="Chatter.cpp" />
-    <ClCompile Include="ChatterManager.cpp" />
-    <ClCompile Include="Log.cpp" />
+    <ClCompile Include="ChatLogicServer\ChatClient.cpp" />
+    <ClCompile Include="ChatLogicServer\ChatClientManager.cpp" />
+    <ClCompile Include="ChatLogicServer\ChatServer.cpp" />
+    <ClCompile Include="ChatLogicServer\Chatter.cpp" />
+    <ClCompile Include="ChatLogicServer\ChatterManager.cpp" />
+    <ClCompile Include="ChatLogicServer\Message.cpp" />
+    <ClCompile Include="ChatLogicServer\MyEpoll.cpp" />
+    <ClCompile Include="ChatLogicServer\CSMsgBuff.cpp" />
+    <ClCompile Include="Util\CommonFactory.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Message.cpp" />
-    <ClCompile Include="MyEpoll.cpp" />
-    <ClCompile Include="RecvMsgBuff.cpp" />
-    <ClCompile Include="ThreadLock.cpp" />
+    <ClCompile Include="ChatLogicServer\MessageHandle.cpp" />
+    <ClCompile Include="ChatLogicServer\MessageHandleManager.cpp" />
+    <ClCompile Include="Util\Log.cpp" />
+    <ClCompile Include="Util\ThreadLock.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ChatClient.h" />
-    <ClInclude Include="ChatClientManager.h" />
-    <ClInclude Include="ChatServer.h" />
-    <ClInclude Include="Chatter.h" />
-    <ClInclude Include="ChatterManager.h" />
-    <ClInclude Include="ErrDefine.h" />
-    <ClInclude Include="Log.h" />
-    <ClInclude Include="LogPrint.h" />
-    <ClInclude Include="Message.h" />
-    <ClInclude Include="MyEpoll.h" />
-    <ClInclude Include="RecvMsgBuff.h" />
-    <ClInclude Include="Singleton.h" />
-    <ClInclude Include="ThreadLock.h" />
-    <ClInclude Include="Util.h" />
-    <ClInclude Include="CSProto.proto" />
+    <ClInclude Include="ChatLogicServer\ChatClient.h" />
+    <ClInclude Include="ChatLogicServer\ChatClientManager.h" />
+    <ClInclude Include="ChatLogicServer\ChatServer.h" />
+    <ClInclude Include="ChatLogicServer\Chatter.h" />
+    <ClInclude Include="ChatLogicServer\ChatterManager.h" />
+    <ClInclude Include="ChatLogicServer\Message.h" />
+    <ClInclude Include="ChatLogicServer\MyEpoll.h" />
+    <ClInclude Include="ChatLogicServer\CSMsgBuff.h" />
+    <ClInclude Include="ChatLogicServer\MessageHandle.h" />
+    <ClInclude Include="ChatLogicServer\MessageHandleManager.h" />
+    <ClInclude Include="Util\CommonFactory.h" />
+    <ClInclude Include="Util\ErrDefine.h" />
+    <ClInclude Include="Util\Log.h" />
+    <ClInclude Include="Util\LogPrint.h" />
+    <ClInclude Include="Util\Singleton.h" />
+    <ClInclude Include="Util\ThreadLock.h" />
+    <ClInclude Include="Util\Util.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Protocol\CSProtoPkgBodyDef.proto" />
+    <None Include="Protocol\CSProtoPkgDef.proto" />
+    <None Include="readme\readme.html" />
+    <None Include="readme\stylesheet.css" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
+      <AdditionalIncludeDirectories>E:\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeTwo\include;E:\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeOne;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CppLanguageStandard>c++98</CppLanguageStandard>
-      <AdditionalIncludeDirectories>C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeone\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ClCompile>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
-    <ClCompile>
-      <AdditionalIncludeDirectories>E:\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeOne;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

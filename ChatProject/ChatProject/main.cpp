@@ -1,5 +1,5 @@
 #include <cstdio>
-#include "ChatServer.h"
+#include "./ChatLogicServer/ChatServer.h"
 
 int main()
 {
@@ -7,5 +7,5 @@ int main()
 	chatServer.InitChatServer();
 	chatServer.Run();
 	chatServer.Stop();
-    return 0;
+	return 0;
 }

@@ -1,19 +1,19 @@
-#include "RecvMsgBuff.h"
+#include "CSMsgBuff.h"
 #include <string.h>
 #include <cstdio>
 
-RecvMsgBuff::RecvMsgBuff()
+CSMsgBuff::CSMsgBuff()
 {
 	memset(m_recvBuff, 0, MAX_DATA_LEN);
 	m_currBuffLen = 0;
 }
 
 
-RecvMsgBuff::~RecvMsgBuff()
+CSMsgBuff::~CSMsgBuff()
 {
 }
 
-bool RecvMsgBuff::InsertDataToBuff(char * data, UINT dataLen)
+bool CSMsgBuff::InsertDataToBuff(char * data, UINT dataLen)
 {
 	if (dataLen > MAX_DATA_LEN || dataLen + m_currBuffLen > MAX_DATA_LEN)
 	{
@@ -24,10 +24,15 @@ bool RecvMsgBuff::InsertDataToBuff(char * data, UINT dataLen)
 	m_recvBuff[m_currBuffLen] = 0;
 
 	printf("the data: %s\n", m_recvBuff);
+	if (IsNeedParseBuff())
+	{
+		
+	}
+
 	return true;
 }
 
-bool RecvMsgBuff::HaveCompletePkgInData()
+bool CSMsgBuff::IsNeedParseBuff()
 {
-	return false;
+	return true;
 }

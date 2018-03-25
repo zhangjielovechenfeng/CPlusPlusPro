@@ -1,0 +1,22 @@
+//*****************CS通信协议包体**********************//
+
+syntax = "proto3";
+
+package CSProtocol;
+
+//********************消息ID定义**********************//
+enum CSMsgIDDef
+{
+	CSMsg_HeartBeat = 1;	//心跳包
+}
+
+message CSMsgPkg_HeartBeat
+{
+	
+}
+
+//*******************包体定义*************************//
+message CSMsgPkgBody
+{
+	CSMsgPkg_HeartBeat csMsgPkgHeartBeat;
+}

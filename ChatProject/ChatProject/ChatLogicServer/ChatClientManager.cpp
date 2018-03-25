@@ -1,6 +1,6 @@
 #include "ChatClientManager.h"
-#include "LogPrint.h"
-#include "Util.h"
+#include "../Util/LogPrint.h"
+#include "../Util/Util.h"
 #include <iostream>
 
 using namespace std;

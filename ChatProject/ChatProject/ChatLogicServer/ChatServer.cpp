@@ -1,13 +1,13 @@
 #include "ChatServer.h"
 #include <fcntl.h>
-#include "LogPrint.h"
+#include "../Util/LogPrint.h"
 #include <sys/socket.h> 
 #include <string.h>
 #include <unistd.h>
-#include "ErrDefine.h"
+#include "../Util/ErrDefine.h"
 #include <errno.h>
 #include "ChatClientManager.h"
-#include "Util.h"
+#include "../Util/Util.h"
 
 ChatServer::ChatServer()
 {
