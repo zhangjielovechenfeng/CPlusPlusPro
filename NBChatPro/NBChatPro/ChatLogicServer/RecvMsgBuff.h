@@ -3,11 +3,11 @@
 #define MAX_DATA_LEN 64	// 接收数据最大长度
 #include "../Util/Util.h"
 
-class CSMsgBuff
+class RecvMsgBuff
 {
 public:
-	CSMsgBuff();
-	~CSMsgBuff();
+	RecvMsgBuff();
+	~RecvMsgBuff();
 
 	bool InsertDataToBuff(char* data, UINT dataLen);
 

@@ -74,6 +74,7 @@
     <ClCompile Include="ChatLogicServer\ChatServer.cpp" />
     <ClCompile Include="ChatLogicServer\Chatter.cpp" />
     <ClCompile Include="ChatLogicServer\ChatterManager.cpp" />
+    <ClCompile Include="ChatLogicServer\RecvMsgBuff.cpp" />
     <ClCompile Include="ChatLogicServer\Message.cpp" />
     <ClCompile Include="ChatLogicServer\MyEpoll.cpp" />
     <ClCompile Include="ChatLogicServer\RecvMsgBuff.cpp" />
@@ -87,6 +88,7 @@
     <ClInclude Include="ChatLogicServer\ChatServer.h" />
     <ClInclude Include="ChatLogicServer\Chatter.h" />
     <ClInclude Include="ChatLogicServer\ChatterManager.h" />
+    <ClInclude Include="ChatLogicServer\RecvMsgBuff.h" />
     <ClInclude Include="ChatLogicServer\Message.h" />
     <ClInclude Include="ChatLogicServer\MyEpoll.h" />
     <ClInclude Include="ChatLogicServer\RecvMsgBuff.h" />

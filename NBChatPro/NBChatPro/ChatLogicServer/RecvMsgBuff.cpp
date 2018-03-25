@@ -1,19 +1,19 @@
-#include "CSMsgBuff.h"
+#include "RecvMsgBuff.h"
 #include <string.h>
 #include <cstdio>
 
-CSMsgBuff::CSMsgBuff()
+RecvMsgBuff::RecvMsgBuff()
 {
 	memset(m_recvBuff, 0, MAX_DATA_LEN);
 	m_currBuffLen = 0;
 }
 
 
-CSMsgBuff::~CSMsgBuff()
+RecvMsgBuff::~RecvMsgBuff()
 {
 }
 
-bool CSMsgBuff::InsertDataToBuff(char * data, UINT dataLen)
+bool RecvMsgBuff::InsertDataToBuff(char * data, UINT dataLen)
 {
 	if (dataLen > MAX_DATA_LEN || dataLen + m_currBuffLen > MAX_DATA_LEN)
 	{
@@ -32,7 +32,7 @@ bool CSMsgBuff::InsertDataToBuff(char * data, UINT dataLen)
 	return true;
 }
 
-bool CSMsgBuff::IsNeedParseBuff()
+bool RecvMsgBuff::IsNeedParseBuff()
 {
 	return true;
 }
