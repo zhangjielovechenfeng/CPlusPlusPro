@@ -12,7 +12,7 @@ public:
 
 public:
 	
-	virtual void SetMsgData(char* data) = 0;
+	virtual void HandleMsgData(char* data) = 0;
 
 	char* GetMsgData();
 
@@ -34,7 +34,26 @@ public:
 	bool ParseMsgToPkg();
 
 	// 当buff中数据够一个包时，把包存储在此data中,并通知子类解析
-	virtual void SetMsgData(char* data);
+	virtual void HandleMsgData(char* data);
+
+};
+
+
+/*
+S->C过程中S发送的消息
+*/
+class SCMessage : public Message
+{
+public:
+	SCMessage();
+	virtual ~SCMessage();
+
+public:
+	// 解析消息,并通知消息处理handle
+	bool ParseMsgToPkg();
+
+	// 
+	virtual void HandleMsgData(char* data);
 
 };
 

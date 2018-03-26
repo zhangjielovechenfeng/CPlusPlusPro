@@ -27,7 +27,6 @@ private:
 	int				m_connFd;
 	int				m_port;
 	string			m_ip;
-	Message			m_msg;
 	CSMsgBuff		m_recvMsgData;
 };
 

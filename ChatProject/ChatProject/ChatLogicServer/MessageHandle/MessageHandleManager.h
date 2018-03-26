@@ -1,8 +1,9 @@
 #pragma once
 
-#include "../Util/Singleton.h"
+#include "../../Util/Singleton.h"
 #include "MessageHandle.h"
-#include "../Util/Util.h"
+#include "../../Util/Util.h"
+#include "../../Util/CommonFactory.h"
 
 class MessageHandleManager : public Singleton<MessageHandleManager>, CommonFactory<UINT, MessageHandle, MessageHandleManager>
 {

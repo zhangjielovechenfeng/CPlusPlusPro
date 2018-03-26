@@ -62,7 +62,10 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>E:\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeTwo\include;E:\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeOne;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includetwo\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeone\include;E:\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeTwo\include;E:\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeOne;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <IncludePath>C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includetwo\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeone\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemGroup>
     <ClCompile Include="ChatLogicServer\ChatClient.cpp" />
@@ -73,10 +76,9 @@
     <ClCompile Include="ChatLogicServer\Message.cpp" />
     <ClCompile Include="ChatLogicServer\MyEpoll.cpp" />
     <ClCompile Include="ChatLogicServer\CSMsgBuff.cpp" />
-    <ClCompile Include="Util\CommonFactory.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="ChatLogicServer\MessageHandle.cpp" />
-    <ClCompile Include="ChatLogicServer\MessageHandleManager.cpp" />
+    <ClCompile Include="ChatLogicServer\MessageHandle\MessageHandle.cpp" />
+    <ClCompile Include="ChatLogicServer\MessageHandle\MessageHandleManager.cpp" />
     <ClCompile Include="Util\Log.cpp" />
     <ClCompile Include="Util\ThreadLock.cpp" />
   </ItemGroup>
@@ -89,8 +91,8 @@
     <ClInclude Include="ChatLogicServer\Message.h" />
     <ClInclude Include="ChatLogicServer\MyEpoll.h" />
     <ClInclude Include="ChatLogicServer\CSMsgBuff.h" />
-    <ClInclude Include="ChatLogicServer\MessageHandle.h" />
-    <ClInclude Include="ChatLogicServer\MessageHandleManager.h" />
+    <ClInclude Include="ChatLogicServer\MessageHandle\MessageHandle.h" />
+    <ClInclude Include="ChatLogicServer\MessageHandle\MessageHandleManager.h" />
     <ClInclude Include="Util\CommonFactory.h" />
     <ClInclude Include="Util\ErrDefine.h" />
     <ClInclude Include="Util\Log.h" />
@@ -107,7 +109,13 @@
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>E:\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeTwo\include;E:\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeOne;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includetwo\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeone\include;E:\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeTwo\include;E:\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeOne;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CppLanguageStandard>c++98</CppLanguageStandard>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includetwo\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeone\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CppLanguageStandard>c++98</CppLanguageStandard>
     </ClCompile>
   </ItemDefinitionGroup>

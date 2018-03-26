@@ -1,5 +1,4 @@
 #include "MessageHandleManager.h"
-#include "../Util/CommonFactory.h"
 
 
 MessageHandleManager::MessageHandleManager()

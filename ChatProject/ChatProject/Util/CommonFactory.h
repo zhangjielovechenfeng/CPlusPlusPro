@@ -23,16 +23,34 @@ template <typename Type, typename ProductBase, typename FactoryChild>
 class CommonFactory
 {
 public:
-	CommonFactory();
-	virtual ~CommonFactory();
+	CommonFactory()
+	{
+		m_creatorMap.clear();
+	}
+	virtual ~CommonFactory()
+	{
+		m_creatorMap.clear();
+	}
 
-	ProductBase* CreateProduct(Type type);
+	virtual ProductBase* CreateProduct(Type type)
+	{
+		CreatorMapIter it = m_creatorMap.find(type);
+		if (it == m_creatorMap.end())
+		{
+			return NULL;
+		}
+		return (dynamic_cast<FactoryChild*>(this)->*(it->second))();
+	}
 
-	void ReleaseProduct();
+	void ReleaseProduct()
+	{
+		m_creatorMap.clear();
+	}
 
 protected:
 	typedef ProductBase* (FactoryChild :: *CreateProductFunc)();
 	typedef map<Type, CreateProductFunc> CreatorMap;
+	typedef typename CreatorMap::const_iterator CreatorMapIter;
 	CreatorMap m_creatorMap;
 };
 
