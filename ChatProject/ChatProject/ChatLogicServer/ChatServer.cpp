@@ -50,6 +50,7 @@ int ChatServer::InitChatServer()
 		return ERROR_CODE_SOCKET_LISTEN_FAILED;
 	}
 
+	LOG_RUN("Chat Server Init OK!!!");
 	cout << "Chat Server Init OK!!!" << endl;
 
 	return ERROR_CODE_NONE;
@@ -88,7 +89,7 @@ int ChatServer::Run()
 					return ERROR_CODE_EPOLL_ADD_FAILED;
 				}
 			}
-			else if (m_epoll->GetRecvEvents()[i].events & EPOLLIN) // 用户已连接进行读取
+			else if (m_epoll->CanReadData(i)) // 用户已连接进行读取
 			{
 				int connFd = m_epoll->GetRecvEvents()[i].data.fd;
 				if (connFd < 0)
@@ -112,7 +113,7 @@ int ChatServer::Run()
 					return ERROR_CODE_EPOLL_MOD_FAILED;
 				}
 			}
-			else if(m_epoll->GetRecvEvents()[i].events & EPOLLOUT)
+			else if(m_epoll->CanWriteData(i))
 			{
 				int connFd = m_epoll->GetRecvEvents()[i].data.fd;
 				if (connFd < 0)

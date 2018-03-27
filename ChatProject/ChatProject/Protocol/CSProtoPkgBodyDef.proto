@@ -7,10 +7,16 @@ package CSProtocol;
 //********************消息ID定义**********************//
 enum CSMsgIDDef
 {
-	CSMsg_HeartBeat = 1;	//心跳包
+	CSMsg_None = 0;
+	CSMsg_HeartBeat = 10001;	//心跳包
 }
 
-message CSMsgPkg_HeartBeat
+message CSMsgPkgHeartBeatReq
+{
+	
+}
+
+message CSMsgPkgHeartBeatRsp
 {
 	
 }
@@ -18,5 +24,6 @@ message CSMsgPkg_HeartBeat
 //*******************包体定义*************************//
 message CSMsgPkgBody
 {
-	CSMsgPkg_HeartBeat csMsgPkgHeartBeat;
+	CSMsgPkgHeartBeatReq csMsgPkgHeartBeatReq = 1;
+	CSMsgPkgHeartBeatRsp csMsgPkgHeartBeatRsp = 2;
 }

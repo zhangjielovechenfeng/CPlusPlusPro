@@ -2,6 +2,7 @@
 
 #include "Log.h"
 #include <stdio.h>
+#include <string.h>
 
 #define LOG_SIZE 1024
 
@@ -13,8 +14,7 @@
 	snprintf(_log_, sizeof(_log_)-1, "%s------[%s:%s():%d]\n",\
 	_msg_, __FILE__, __FUNCTION__, __LINE__);\
 	_log_[LOG_SIZE - 1] = 0;\
-	snprintf(_log_, sizeof(_msg_)-1, "%s/r/n", _log_);\
-	LogErr::WriteLogToFile(_log_, sizeof(_log_));\
+	LogErr::WriteLogToFile(_log_, strnlen(_log_, sizeof(_log_)));\
 }while(0)
 
 #define LOG_RUN(_s_, ...) do{\
@@ -25,8 +25,7 @@
 	snprintf(_log_, sizeof(_log_)-1, "%s------[%s:%s():%d]\n",\
 	_msg_, __FILE__, __FUNCTION__, __LINE__);\
 	_log_[LOG_SIZE - 1] = 0;\
-	snprintf(_log_, sizeof(_msg_)-1, "%s/r/n", _log_);\
-	LogErr::WriteLogToFile(_log_, sizeof(_log_));\
+	LogErr::WriteLogToFile(_log_, strnlen(_log_, sizeof(_log_)));\
 }while(0)
 
 	

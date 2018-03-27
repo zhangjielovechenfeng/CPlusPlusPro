@@ -83,7 +83,7 @@ bool MyEpoll::EpollDel(int connFd, uint32_t listenEvent)
 int MyEpoll::EpollWait()
 {
 	int eventNum = epoll_wait(m_epollFd, m_recvEvent, MAX_EVENTS, 500); //’‚¿Ô «500ms
-	if (eventNum <= 0)
+	if (eventNum < 0)
 	{
 		LOG_ERR("Epoll Wait Had Timeout!!!");
 		return ERROR_CODE_EPOLL_WAIT_TIMEOUT;
