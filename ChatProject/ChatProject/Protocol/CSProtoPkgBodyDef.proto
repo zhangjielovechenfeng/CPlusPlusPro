@@ -8,9 +8,16 @@ package CSProtocol;
 enum CSMsgIDDef
 {
 	CSMsg_None = 0;
-	CSMsg_HeartBeat = 10001;	//心跳包
+	CSMsg_HeartBeatReq		= 10001;	// 心跳包请求
+	CSMsg_HeartBeatRsp		= 10002;	// 心跳包返回
+	CSMsg_LoginReq			= 10003;	// 登录请求
+	CSMsg_LoginRsp			= 10004;	// 登录返回
+	CSMsg_RegisterReq		= 10005;	// 注册请求
+	CSMsg_RegisterRsp		= 10006;	// 注册返回
+
 }
 
+//*******************包体结构*************************//
 message CSMsgPkgHeartBeatReq
 {
 	
@@ -21,9 +28,33 @@ message CSMsgPkgHeartBeatRsp
 	
 }
 
+message CSMsgPkgLoginReq
+{
+
+}
+
+message CSMsgPkgLoginRsp
+{
+
+}
+
+message CSMsgPkgRegisterReq
+{
+
+}
+
+message CSMsgPkgRegisterRsp
+{
+
+}
+
 //*******************包体定义*************************//
 message CSMsgPkgBody
 {
-	CSMsgPkgHeartBeatReq csMsgPkgHeartBeatReq = 1;
-	CSMsgPkgHeartBeatRsp csMsgPkgHeartBeatRsp = 2;
+	CSMsgPkgHeartBeatReq	csMsgPkgHeartBeatReq	= 1;
+	CSMsgPkgHeartBeatRsp	csMsgPkgHeartBeatRsp	= 2;
+	CSMsgPkgLoginReq		csMsgPkgLoginReq		= 3;
+	CSMsgPkgLoginRsp		csMsgPkgLoginRsp		= 4;
+	CSMsgPkgRegisterReq		csMsgPkgRegisterReq		= 5;
+	CSMsgPkgRegisterRsp		csMsgPkgRegisterRsp		= 6;
 }
