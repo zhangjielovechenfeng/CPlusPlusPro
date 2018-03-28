@@ -5,11 +5,11 @@
 #include "../../Util/Util.h"
 #include "../../Util/CommonFactory.h"
 
-class MessageHandleManager : public Singleton<MessageHandleManager>, CommonFactory<UINT, MessageHandle, MessageHandleManager>
+class MessageHandleManager : public Singleton<MessageHandleManager>, public CommonFactory<UINT, MessageHandle, MessageHandleManager>
 {
 public:
 	MessageHandleManager();
-	~MessageHandleManager();
+	virtual ~MessageHandleManager();
 
 public:
 	MessageHandle * CreateMessageHandle(UINT type);

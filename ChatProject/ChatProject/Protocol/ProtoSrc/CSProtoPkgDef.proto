@@ -9,10 +9,9 @@ import public "CSProtoPkgBodyDef.proto";
 
 message CSMsgPkgHead
 {
-	uint32	msgID = 1;				// 消息ID
-	uint32	pkgHeadLen = 2;			// 包头长度
-	uint32	pkgBodyLen = 3;			// 包体长度
-	string	checkSum = 4;			// 校验和
+	uint32	msgID		= 1;			// 消息ID
+	uint32	pkgBodyLen	= 2;			// 包体长度
+	string	checkSum	= 3;			// 校验和
 }
 
 message CSMsgPkg

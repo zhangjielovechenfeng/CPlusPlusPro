@@ -62,7 +62,7 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includetwo\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeone\include;E:\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeTwo\include;E:\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeOne;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includetwo\include\google\protobuf;C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includetwo\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeone\include;E:\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeTwo\include;E:\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeOne;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <IncludePath>C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includetwo\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeone\include;$(IncludePath)</IncludePath>
@@ -79,6 +79,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ChatLogicServer\MessageHandle\MessageHandle.cpp" />
     <ClCompile Include="ChatLogicServer\MessageHandle\MessageHandleManager.cpp" />
+    <ClCompile Include="Protocol\ProtoDest\CSProtoPkgBodyDef.pb.cc" />
+    <ClCompile Include="Protocol\ProtoDest\CSProtoPkgDef.pb.cc" />
     <ClCompile Include="Util\Log.cpp" />
     <ClCompile Include="Util\ThreadLock.cpp" />
   </ItemGroup>
@@ -93,6 +95,8 @@
     <ClInclude Include="ChatLogicServer\CSMsgBuff.h" />
     <ClInclude Include="ChatLogicServer\MessageHandle\MessageHandle.h" />
     <ClInclude Include="ChatLogicServer\MessageHandle\MessageHandleManager.h" />
+    <ClInclude Include="Protocol\ProtoDest\CSProtoPkgBodyDef.pb.h" />
+    <ClInclude Include="Protocol\ProtoDest\CSProtoPkgDef.pb.h" />
     <ClInclude Include="Util\CommonFactory.h" />
     <ClInclude Include="Util\ErrDefine.h" />
     <ClInclude Include="Util\Log.h" />
@@ -102,8 +106,8 @@
     <ClInclude Include="Util\Util.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Protocol\CSProtoPkgBodyDef.proto" />
-    <None Include="Protocol\CSProtoPkgDef.proto" />
+    <None Include="Protocol\ProtoSrc\CSProtoPkgBodyDef.proto" />
+    <None Include="Protocol\ProtoSrc\CSProtoPkgDef.proto" />
     <None Include="readme\readme.html" />
     <None Include="readme\stylesheet.css" />
   </ItemGroup>
