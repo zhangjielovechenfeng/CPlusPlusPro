@@ -18,6 +18,7 @@ public:
 	~ChatClient();
 public:
 	string & GetIP();
+	int GetPort();
 
 public:
 	bool InitChatClient(SockAddr_In clientAddr);

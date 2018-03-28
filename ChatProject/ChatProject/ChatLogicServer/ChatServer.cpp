@@ -230,8 +230,6 @@ int ChatServer::_RecvMsgData(int connFd)
 	if (0 == factRecvSize)
 	{
 		// Client 主动断开连接
-		LOG_RUN("Client Disconnect, IP: %s", chatClient->GetIP().c_str());
-		cout << "The Client[ip: " << chatClient->GetIP().c_str() << "] Disconnect!!!" << endl;
 
 		if (!ChatClientManager::Instance().DelChatClient(connFd))
 		{

@@ -25,7 +25,7 @@
 	snprintf(_log_, sizeof(_log_)-1, "%s------[%s:%s():%d]\n",\
 	_msg_, __FILE__, __FUNCTION__, __LINE__);\
 	_log_[LOG_SIZE - 1] = 0;\
-	LogErr::WriteLogToFile(_log_, strnlen(_log_, sizeof(_log_)));\
+	LogRun::WriteLogToFile(_log_, strnlen(_log_, sizeof(_log_)));\
 }while(0)
 
 	

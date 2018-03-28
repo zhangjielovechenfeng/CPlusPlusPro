@@ -1,5 +1,10 @@
 #pragma once
 
+#include "../Protocol/ProtoDest/CSProtoPkgDef.pb.h"
+
+
+using namespace CSProtocol;
+
 #define MAX_ONE_PKG_SIZE 1024 // 一个包最大大小
 /*
 	Message : 聊天消息类
@@ -28,6 +33,8 @@ class CSMessage : public Message
 public:
 	CSMessage();
 	virtual ~CSMessage();
+public:
+	CSMsgPkg& GetMsgPkg();
 
 public:
 	// 解析消息,并通知消息处理handle
@@ -36,6 +43,8 @@ public:
 	// 当buff中数据够一个包时，把包存储在此data中,并通知子类解析
 	virtual void HandleMsgData(char* data);
 
+private:
+	CSMsgPkg		m_csMsgPkg;
 };
 
 

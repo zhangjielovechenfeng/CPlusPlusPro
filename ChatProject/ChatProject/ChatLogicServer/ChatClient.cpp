@@ -18,6 +18,11 @@ string & ChatClient::GetIP()
 	return m_ip;
 }
 
+int ChatClient::GetPort()
+{
+	return m_port;
+}
+
 bool ChatClient::InitChatClient(SockAddr_In clientAddr)
 {
 	m_port = clientAddr.sin_port;

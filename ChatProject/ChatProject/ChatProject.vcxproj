@@ -62,7 +62,7 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includetwo\include\google\protobuf;C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includetwo\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeone\include;E:\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeTwo\include;E:\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeOne;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includetwo\include\google\protobuf;C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includetwo\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeone\include;E:\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includetwo;E:\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeone;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <IncludePath>C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includetwo\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeone\include;$(IncludePath)</IncludePath>
@@ -113,9 +113,15 @@
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includetwo\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeone\include;E:\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeTwo\include;E:\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeOne;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includetwo\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeone\include;E:\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includetwo;E:\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeone;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CppLanguageStandard>c++98</CppLanguageStandard>
+      <AdditionalOptions>-lprotobuf %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <LibraryDependencies>%(LibraryDependencies)</LibraryDependencies>
+      <AdditionalOptions>-lprotobuf %(AdditionalOptions)</AdditionalOptions>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ClCompile>
