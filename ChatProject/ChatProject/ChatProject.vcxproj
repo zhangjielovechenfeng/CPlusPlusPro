@@ -76,11 +76,14 @@
     <ClCompile Include="ChatLogicServer\Message.cpp" />
     <ClCompile Include="ChatLogicServer\MyEpoll.cpp" />
     <ClCompile Include="ChatLogicServer\CSMsgBuff.cpp" />
+    <ClCompile Include="ChatLogicServer\HeartBeat.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ChatLogicServer\MessageHandle\MessageHandle.cpp" />
     <ClCompile Include="ChatLogicServer\MessageHandle\MessageHandleManager.cpp" />
+    <ClCompile Include="ChatLogicServer\MessageHandle\MessageHandleSubClass.cpp" />
     <ClCompile Include="Protocol\ProtoDest\CSProtoPkgBodyDef.pb.cc" />
     <ClCompile Include="Protocol\ProtoDest\CSProtoPkgDef.pb.cc" />
+    <ClCompile Include="Util\Timer.cpp" />
     <ClCompile Include="Util\Log.cpp" />
     <ClCompile Include="Util\ThreadLock.cpp" />
   </ItemGroup>
@@ -95,8 +98,11 @@
     <ClInclude Include="ChatLogicServer\CSMsgBuff.h" />
     <ClInclude Include="ChatLogicServer\MessageHandle\MessageHandle.h" />
     <ClInclude Include="ChatLogicServer\MessageHandle\MessageHandleManager.h" />
+    <ClInclude Include="ChatLogicServer\MessageHandle\MessageHandleSubClass.h" />
+    <ClInclude Include="ChatLogicServer\HeartBeat.h" />
     <ClInclude Include="Protocol\ProtoDest\CSProtoPkgBodyDef.pb.h" />
     <ClInclude Include="Protocol\ProtoDest\CSProtoPkgDef.pb.h" />
+    <ClInclude Include="Util\Timer.h" />
     <ClInclude Include="Util\CommonFactory.h" />
     <ClInclude Include="Util\ErrDefine.h" />
     <ClInclude Include="Util\Log.h" />

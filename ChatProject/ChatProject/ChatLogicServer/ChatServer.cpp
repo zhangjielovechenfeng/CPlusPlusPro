@@ -100,12 +100,8 @@ int ChatServer::Run()
 				int ret = _RecvMsgData(connFd);
 				if (ret != ERROR_CODE_NONE)
 				{
-					if (ERROR_CODE_CLIENT_HAD_OFFLINE == ret)
-					{
-						close(connFd);
-						continue;
-					}
-					return ret;
+					close(connFd);
+					continue;
 				}
 
 				if (!m_epoll->EpollMod(connFd))

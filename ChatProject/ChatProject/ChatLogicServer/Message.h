@@ -16,13 +16,8 @@ public:
 	virtual ~Message();
 
 public:
-	
-	virtual void HandleMsgData(char* data) = 0;
-
-	char* GetMsgData();
-
-protected:
-	char* m_data;		
+	// 消息处理函数，子类自己实现
+	virtual void HandleMsgData(char* data) = 0;		
 };
 
 /*
@@ -37,10 +32,10 @@ public:
 	CSMsgPkg& GetMsgPkg();
 
 public:
-	// 解析消息,并通知消息处理handle
-	bool ParseMsgToPkg();
+	// 通知消息处理handle
+	bool HandleMsg();
 
-	// 当buff中数据够一个包时，把包存储在此data中,并通知子类解析
+	// 解析
 	virtual void HandleMsgData(char* data);
 
 private:

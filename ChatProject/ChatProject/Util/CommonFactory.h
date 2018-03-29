@@ -11,9 +11,9 @@ using namespace std;
 
 
 #define REGISTER_PRODUCT(Type, Product, FactoryChild) \
-	m_productMap.insert(ProductMap::value_type(Type, FactoryChild::Create##Product));
+	m_creatorMap.insert(CreatorMap::value_type(Type, &FactoryChild::Create##Product));
 
-#define INSTANCE_PRODUCT(ProductBase, Product)\
+#define INSTANCE_PRODUCT(Product, ProductBase) \
 ProductBase* Create##Product()\
 {\
 	return new Product();\
@@ -32,7 +32,7 @@ public:
 		m_creatorMap.clear();
 	}
 
-	virtual ProductBase* CreateProduct(Type type)
+	ProductBase* CreateProduct(Type type)
 	{
 		CreatorMapIter it = m_creatorMap.find(type);
 		if (it == m_creatorMap.end())

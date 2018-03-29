@@ -1,6 +1,7 @@
 #include "CSMsgBuff.h"
 #include <string.h>
 #include <cstdio>
+#include "Message.h"
 
 CSMsgBuff::CSMsgBuff()
 {
@@ -24,9 +25,11 @@ bool CSMsgBuff::InsertDataToBuff(char * data, UINT dataLen)
 	m_recvBuff[m_currBuffLen] = 0;
 
 	printf("the data: %s\n", m_recvBuff);
+	// 如果可以解析，就解析，然后处理该包消息
 	if (IsNeedParseBuff())
 	{
-		
+		CSMessage csMessage;
+		csMessage.HandleMsgData(m_recvBuff);
 	}
 
 	return true;
@@ -34,5 +37,5 @@ bool CSMsgBuff::InsertDataToBuff(char * data, UINT dataLen)
 
 bool CSMsgBuff::IsNeedParseBuff()
 {
-	return true;
+	return false;
 }
