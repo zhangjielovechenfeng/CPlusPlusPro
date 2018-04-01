@@ -14,20 +14,24 @@ using namespace std;
 class ChatClient
 {
 public:
-	ChatClient(int connFd);
+	ChatClient(int sessionID);
 	~ChatClient();
 public:
 	string & GetIP();
 	int GetPort();
+	bool IsBuildLongConn();
+	void SetIsBuildLongConn(bool isBuildLongConn);
+	CSMsgBuff& GetCSMsgBuff();
 
 public:
 	bool InitChatClient(SockAddr_In clientAddr);
 
 	bool SaveMsgData(char* data, UINT dataLen);
 private:
-	int				m_connFd;
+	int				m_sessionID;
 	int				m_port;
 	string			m_ip;
 	CSMsgBuff		m_recvMsgData;
+	bool			m_isBuildLongConn; // 是否建立了长连接
 };
 

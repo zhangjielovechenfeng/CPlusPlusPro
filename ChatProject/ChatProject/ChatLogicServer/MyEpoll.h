@@ -1,6 +1,7 @@
 #pragma once
 
 #include <sys/epoll.h>
+#include "../Util/Util.h"
 
 #define MAX_FD 1024		// 最大句柄数
 #define MAX_EVENTS 10	// 最大处理事件数
@@ -21,9 +22,9 @@ public:
 
 public:
 	bool EpollCreate();
-	bool EpollAdd(int connFd, uint32_t listenEvent = EPOLLIN);
-	bool EpollMod(int connFd, uint32_t listenEvent = EPOLLOUT);
-	bool EpollDel(int connFd, uint32_t listenEvent);
+	bool EpollAdd(int sessionID, UINT listenEvent = EPOLLIN | EPOLLET);
+	bool EpollMod(int sessionID, UINT listenEvent = EPOLLOUT | EPOLLET);
+	bool EpollDel(int sessionID);
 	int  EpollWait();
 	bool CanReadData(int eventIndex);
 	bool CanWriteData(int eventIndex);

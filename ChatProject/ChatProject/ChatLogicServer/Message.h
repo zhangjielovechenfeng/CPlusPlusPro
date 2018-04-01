@@ -16,8 +16,18 @@ public:
 	virtual ~Message();
 
 public:
+	CSMsgPkg& GetMsgPkg();
+
+	void SetSessionID(int sessionID);
+	int GetSessionID();
+
+public:
 	// 消息处理函数，子类自己实现
 	virtual void HandleMsgData(char* data) = 0;		
+
+protected:
+	CSMsgPkg		m_csMsgPkg;
+	int				m_sessionID;
 };
 
 /*
@@ -38,8 +48,6 @@ public:
 	// 解析
 	virtual void HandleMsgData(char* data);
 
-private:
-	CSMsgPkg		m_csMsgPkg;
 };
 
 

@@ -12,6 +12,21 @@ Message::~Message()
 {
 }
 
+CSMsgPkg & Message::GetMsgPkg()
+{
+	return m_csMsgPkg;
+}
+
+void Message::SetSessionID(int sessionID)
+{
+	m_sessionID = sessionID;
+}
+
+int Message::GetSessionID()
+{
+	return m_sessionID;
+}
+
 CSMessage::CSMessage()
 {
 	m_csMsgPkg.Clear();

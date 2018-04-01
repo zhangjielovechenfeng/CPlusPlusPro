@@ -20,4 +20,5 @@ enum ERROR_CODE
 	ERROR_CODE_INSERT_MSG_TO_BUFF_FAILED		= -15,		// 接受数据保存失败
 	ERROR_CODE_INSERT_ONLINE_FAILED				= -16,		// client上线失败
 	ERROR_CODE_CLIENT_HAD_OFFLINE				= -17,		// client已离线
+	ERROR_CODE_GET_CURR_TIME_FAILED				= -18		// 获取当前时间失败
 };

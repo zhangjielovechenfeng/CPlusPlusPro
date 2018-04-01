@@ -83,9 +83,11 @@
     <ClCompile Include="ChatLogicServer\MessageHandle\MessageHandleSubClass.cpp" />
     <ClCompile Include="Protocol\ProtoDest\CSProtoPkgBodyDef.pb.cc" />
     <ClCompile Include="Protocol\ProtoDest\CSProtoPkgDef.pb.cc" />
+    <ClCompile Include="Util\Time.cpp" />
     <ClCompile Include="Util\Timer.cpp" />
     <ClCompile Include="Util\Log.cpp" />
     <ClCompile Include="Util\ThreadLock.cpp" />
+    <ClCompile Include="ChatLogicServer\WebSocketHandle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ChatLogicServer\ChatClient.h" />
@@ -102,6 +104,7 @@
     <ClInclude Include="ChatLogicServer\HeartBeat.h" />
     <ClInclude Include="Protocol\ProtoDest\CSProtoPkgBodyDef.pb.h" />
     <ClInclude Include="Protocol\ProtoDest\CSProtoPkgDef.pb.h" />
+    <ClInclude Include="Util\Time.h" />
     <ClInclude Include="Util\Timer.h" />
     <ClInclude Include="Util\CommonFactory.h" />
     <ClInclude Include="Util\ErrDefine.h" />
@@ -110,6 +113,7 @@
     <ClInclude Include="Util\Singleton.h" />
     <ClInclude Include="Util\ThreadLock.h" />
     <ClInclude Include="Util\Util.h" />
+    <ClInclude Include="ChatLogicServer\WebSocketHandle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Protocol\ProtoSrc\CSProtoPkgBodyDef.proto" />
@@ -121,12 +125,13 @@
     <ClCompile>
       <AdditionalIncludeDirectories>C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includetwo\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeone\include;E:\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includetwo;E:\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeone;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CppLanguageStandard>c++98</CppLanguageStandard>
-      <AdditionalOptions>-lprotobuf %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-lprotobuf -lboost_system %(AdditionalOptions)</AdditionalOptions>
+      <ObjectFileName>$(IntDir)%(filename).o</ObjectFileName>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LibraryDependencies>%(LibraryDependencies)</LibraryDependencies>
-      <AdditionalOptions>-lprotobuf %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-lprotobuf -lboost_system %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">

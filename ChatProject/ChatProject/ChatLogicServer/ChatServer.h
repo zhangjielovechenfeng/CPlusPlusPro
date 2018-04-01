@@ -3,6 +3,9 @@
 #include <iostream>
 #include "MyEpoll.h"
 #include <netinet/in.h>
+#include <map>
+#include "Message.h"
+#include <string>
 
 #define SERVER_PORT 8888		// 服务器端口号
 #define LISTEN_LEN 1024			// 监听队列长度
@@ -13,8 +16,9 @@ using namespace std;
 	ChatServer :  聊天服务器
 */
 
-typedef struct sockaddr_in SockAddr_In;
-typedef struct sockaddr SockAddr;
+typedef struct sockaddr_in	SockAddr_In;
+typedef struct sockaddr		SockAddr;
+typedef map<int /*fd*/,Message*>	SendMsgMap;	// 消息发送map
 
 class ChatServer
 {
@@ -30,6 +34,18 @@ public:
 
 	// 断开服务器
 	void Stop();
+
+	// 通过sessionID获取message
+	Message* GetMessageBySessionID(int sessionID);
+
+	// 通过sessionID删除message
+	bool DelMessageBySessionID(int sessionID);
+
+	// 添加新的message到Map
+	bool AddMessageToMessage(int sessionID, Message* message);
+
+	// 派发消息
+	bool SendMessage(Message* message);
 
 private:
 	// 创建socket连接
@@ -48,12 +64,17 @@ private:
 	bool _SetNonBlock(int fd);
 
 	// 接收消息
-	int _RecvMsgData(int connFd);
+	int _RecvMsgData(int sessionID);
 
-	bool _SendMsgData(int connFd);
+	// 发送数据
+	bool _SendMsgData(int sessionID);
+
+	// websocket握手处理
+	bool _WebSocketShakeHandsHandle();
 
 private:
-	MyEpoll*	m_epoll;
-	int			m_socketFd;
+	MyEpoll*		m_epoll;
+	int				m_socketFd;
+	SendMsgMap		m_sendMsgMap; // 消息发送map
 };
 

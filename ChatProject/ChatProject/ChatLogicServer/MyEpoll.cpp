@@ -38,12 +38,12 @@ bool MyEpoll::EpollCreate()
 	return true;
 }
 
-bool MyEpoll::EpollAdd(int connFd, uint32_t listenEvent)
+bool MyEpoll::EpollAdd(int sessionID, UINT listenEvent)
 {
 	m_listenEvent.events = listenEvent;
-	m_listenEvent.data.fd = connFd;
+	m_listenEvent.data.fd = sessionID;
 
-	int result = epoll_ctl(m_epollFd, EPOLL_CTL_ADD, connFd, &m_listenEvent);
+	int result = epoll_ctl(m_epollFd, EPOLL_CTL_ADD, sessionID, &m_listenEvent);
 	if (result < 0)
 	{
 		LOG_ERR("Add Epoll Event Failed!!!");
@@ -52,29 +52,28 @@ bool MyEpoll::EpollAdd(int connFd, uint32_t listenEvent)
 	return true;
 }
 
-bool MyEpoll::EpollMod(int connFd, uint32_t listenEvent)
+bool MyEpoll::EpollMod(int sessionID, UINT listenEvent)
 {
 	m_listenEvent.events = listenEvent;
-	m_listenEvent.data.fd = connFd;
+	m_listenEvent.data.fd = sessionID;
 
-	int result = epoll_ctl(m_epollFd, EPOLL_CTL_MOD, connFd, &m_listenEvent);
+	int result = epoll_ctl(m_epollFd, EPOLL_CTL_MOD, sessionID, &m_listenEvent);
 	if (result < 0)
 	{
-		LOG_ERR("Add Epoll Event Failed!!!");
+		LOG_ERR("Mod Epoll Event Failed!!!");
 		return false;
 	}
 	return true;
 }
 
-bool MyEpoll::EpollDel(int connFd, uint32_t listenEvent)
+bool MyEpoll::EpollDel(int sessionID)
 {
-	m_listenEvent.events = listenEvent;
-	m_listenEvent.data.fd = connFd;
+	m_listenEvent.data.fd = sessionID;
 
-	int result = epoll_ctl(m_epollFd, EPOLL_CTL_DEL, connFd, NULL);
+	int result = epoll_ctl(m_epollFd, EPOLL_CTL_DEL, sessionID, NULL);
 	if (result < 0)
 	{
-		LOG_ERR("Add Epoll Event Failed!!!");
+		LOG_ERR("Del Epoll Event Failed!!!");
 		return false;
 	}
 	return true;

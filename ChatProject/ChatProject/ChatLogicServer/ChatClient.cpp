@@ -1,11 +1,13 @@
 #include "ChatClient.h"
 #include <arpa/inet.h>
+#include "../Util/LogPrint.h"
+#include "WebSocketHandle.h"
 
-
-ChatClient::ChatClient(int connFd)
+ChatClient::ChatClient(int sessionID)
 {
-	m_connFd = connFd;
+	m_sessionID = sessionID;
 	m_ip.clear();
+	m_isBuildLongConn = false;
 }
 
 
@@ -23,6 +25,21 @@ int ChatClient::GetPort()
 	return m_port;
 }
 
+bool ChatClient::IsBuildLongConn()
+{
+	return m_isBuildLongConn;
+}
+
+void ChatClient::SetIsBuildLongConn(bool isBuildLongConn)
+{
+	m_isBuildLongConn = isBuildLongConn;
+}
+
+CSMsgBuff & ChatClient::GetCSMsgBuff()
+{
+	return m_recvMsgData;
+}
+
 bool ChatClient::InitChatClient(SockAddr_In clientAddr)
 {
 	m_port = clientAddr.sin_port;
@@ -32,5 +49,19 @@ bool ChatClient::InitChatClient(SockAddr_In clientAddr)
 
 bool ChatClient::SaveMsgData(char * data, UINT dataLen)
 {
-	return m_recvMsgData.InsertDataToBuff(data, dataLen);
+	if (!m_recvMsgData.InsertDataToBuff(data, dataLen))
+	{
+		LOG_ERR("Save To Msg Buff Failed!!!");
+		return false;
+	}
+
+	if (!m_isBuildLongConn)
+	{
+		return true;
+	}
+
+	if (m_recvMsgData.IsNeedParseBuff())
+	{
+		Message* message;
+	}
 }

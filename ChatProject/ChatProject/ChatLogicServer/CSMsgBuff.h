@@ -9,6 +9,12 @@ public:
 	CSMsgBuff();
 	~CSMsgBuff();
 
+public:
+	char* GetRecvBuff();
+	UINT GetCurrBuffLen();
+
+public:
+	// 保存数据到自定义缓存区
 	bool InsertDataToBuff(char* data, UINT dataLen);
 
 	// 是否需要解析buff

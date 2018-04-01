@@ -1,13 +1,14 @@
 #include "ChatServer.h"
 #include <fcntl.h>
-#include "../Util/LogPrint.h"
 #include <sys/socket.h> 
 #include <string.h>
 #include <unistd.h>
-#include "../Util/ErrDefine.h"
 #include <errno.h>
 #include "ChatClientManager.h"
+#include "../Util/LogPrint.h"
+#include "../Util/ErrDefine.h"
 #include "../Util/Util.h"
+#include "WebSocketHandle.h"
 
 ChatServer::ChatServer()
 {
@@ -73,46 +74,47 @@ int ChatServer::Run()
 		{
 			if (m_epoll->GetRecvEvents()[i].data.fd == m_socketFd) // 检测到有client连接
 			{
-				int connFd = _SocketAccept();
-				if (connFd < 0)
+				int sessionID = _SocketAccept();
+				if (sessionID < 0)
 				{
 					return ERROR_CODE_SOCKET_ACCEPT_FAILED;
 				}
 
-				if (!_SetNonBlock(connFd))
+				if (!_SetNonBlock(sessionID))
 				{
 					return ERROR_CODE_SET_NONBLOCK_FAILED;
 				}
 
-				if (!m_epoll->EpollAdd(connFd))
+				if (!m_epoll->EpollAdd(sessionID))
 				{
 					return ERROR_CODE_EPOLL_ADD_FAILED;
 				}
 			}
 			else if (m_epoll->CanReadData(i)) // 用户已连接进行读取
 			{
-				int connFd = m_epoll->GetRecvEvents()[i].data.fd;
-				if (connFd < 0)
+				int sessionID = m_epoll->GetRecvEvents()[i].data.fd;
+				if (sessionID < 0)
 				{
 					continue;
 				}
 
-				int ret = _RecvMsgData(connFd);
+				int ret = _RecvMsgData(sessionID);
 				if (ret != ERROR_CODE_NONE)
 				{
-					close(connFd);
+					m_epoll->EpollDel(sessionID);
+					close(sessionID);
 					continue;
 				}
 
-				if (!m_epoll->EpollMod(connFd))
+				if (!m_epoll->EpollMod(sessionID))
 				{
 					return ERROR_CODE_EPOLL_MOD_FAILED;
 				}
 			}
 			else if(m_epoll->CanWriteData(i))
 			{
-				int connFd = m_epoll->GetRecvEvents()[i].data.fd;
-				if (connFd < 0)
+				int sessionID = m_epoll->GetRecvEvents()[i].data.fd;
+				if (sessionID < 0)
 				{
 					continue;
 				}
@@ -120,13 +122,13 @@ int ChatServer::Run()
 				//给发送消息加锁
 				ThreadLock lock();
 
-				if (!_SendMsgData(connFd))
+				if (!_SendMsgData(sessionID))
 				{
 					LOG_ERR("Send Message Error!!!");
 					return ERROR_CODE_SEND_MSG_ERROR;
 				}
 
-				if (!m_epoll->EpollMod(connFd, EPOLLIN))
+				if (!m_epoll->EpollMod(sessionID, EPOLLIN))
 				{
 					return ERROR_CODE_EPOLL_MOD_FAILED;
 				}
@@ -178,18 +180,18 @@ int ChatServer::_SocketAccept()
 {
 	SockAddr_In clientAddr;
 	socklen_t clientAddSize = sizeof(SockAddr_In);
-	int connFd = accept(m_socketFd, (SockAddr*)&clientAddr, &clientAddSize);
-	if (connFd < 0)
+	int sessionID = accept(m_socketFd, (SockAddr*)&clientAddr, &clientAddSize);
+	if (sessionID < 0)
 	{
 		LOG_ERR("Socket Accept Client Failed!!!,error:[%s]", strerror(errno));
 		return ERROR_CODE_SOCKET_ACCEPT_FAILED;
 	}
 
-	if (!ChatClientManager::Instance().AddChatClient(connFd, clientAddr))
+	if (!ChatClientManager::Instance().AddChatClient(sessionID, clientAddr))
 	{
 		return ERROR_CODE_INSERT_ONLINE_FAILED;
 	}
-	return connFd;
+	return sessionID;
 }
 
 void ChatServer::Stop()
@@ -215,25 +217,36 @@ bool ChatServer::_SetNonBlock(int fd)
 	return true;
 }
 
-int ChatServer::_RecvMsgData(int connFd)
+int ChatServer::_RecvMsgData(int sessionID)
 {
-	ChatClient* chatClient = ChatClientManager::Instance().GetChatClient(connFd);
+	ChatClient* chatClient = ChatClientManager::Instance().GetChatClient(sessionID);
 	ASSERT_RETURN(chatClient != NULL, ERROR_CODE_CLIENT_NOT_EXIST);
 
 	char recvMsgBuff[DATA_BUFF_SIZE];
 	memset(recvMsgBuff, 0, DATA_BUFF_SIZE);
-	ssize_t  factRecvSize = recv(connFd, recvMsgBuff, DATA_BUFF_SIZE, 0);
-	if (0 == factRecvSize)
+
+	ssize_t recvSize = 0;
+	while ((recvSize = recv(sessionID, recvMsgBuff, DATA_BUFF_SIZE, 0)) > 0)
+	{
+		// 存储接收的消息
+		if (!chatClient->SaveMsgData(recvMsgBuff, (UINT)recvSize))
+		{
+			LOG_ERR("Insert Msg Buff Failed!!!");
+			return ERROR_CODE_INSERT_MSG_TO_BUFF_FAILED;
+		}
+		memset(recvMsgBuff, 0, DATA_BUFF_SIZE);
+	}
+	if (0 == recvSize)
 	{
 		// Client 主动断开连接
 
-		if (!ChatClientManager::Instance().DelChatClient(connFd))
+		if (!ChatClientManager::Instance().DelChatClient(sessionID))
 		{
 			return ERROR_CODE_CLIENT_OFFLINE_FAILED;
 		}
 		return ERROR_CODE_CLIENT_HAD_OFFLINE;
 	}
-	else if (factRecvSize < 0)
+	else if (recvSize < 0)
 	{
 		// 此三种情况连接为正常
 		if (EINTR == errno || EWOULDBLOCK == errno || EAGAIN == errno)
@@ -243,17 +256,112 @@ int ChatServer::_RecvMsgData(int connFd)
 		LOG_ERR("Recv Data Error!!!error: %s", strerror(errno));
 		return ERROR_CODE_RECV_MSG_ERROR;
 	}
-
-	// 存储接收的消息
-	if(!chatClient->SaveMsgData(recvMsgBuff, (UINT)factRecvSize))
+	ChatClient* chatClient = ChatClientManager::Instance().GetChatClient(sessionID);
+	ASSERT_RETURN(chatClient != NULL, ERROR_CODE_CLIENT_NOT_EXIST);
+	
+	if (!chatClient->IsBuildLongConn())
 	{
-		LOG_ERR("Insert Msg Buff Failed!!!");
-		return ERROR_CODE_INSERT_MSG_TO_BUFF_FAILED;
+		// 还没有建立长连接，处理握手包
+		WebSocketHandle webSocketHandle;
+		CSMsgBuff& csMsgBuff = chatClient->GetCSMsgBuff();
+		webSocketHandle.SetShakeHandsMsg(csMsgBuff.GetRecvBuff(), csMsgBuff.GetCurrBuffLen());
+		if (!webSocketHandle.IsWebSocketConn())
+		{
+			// 普通socket连接，本身就是长链接
+			chatClient->SetIsBuildLongConn(true);
+		}
+		else
+		{
+			// websocket连接，处理握手包
+		}
+
 	}
+
 	return ERROR_CODE_NONE;
 }
 
-bool ChatServer::_SendMsgData(int connFd)
+bool ChatServer::_SendMsgData(int sessionID)
 {
+	string serializeData = ""; // 序列化后的数据
+	Message* message = GetMessageBySessionID(sessionID);
+	ASSERT_RETURN(message != NULL, false)
+
+	CSMsgPkg& msgPkg = message->GetMsgPkg();
+	if (msgPkg.ParseFromString(serializeData)) // 序列化数据包
+	{
+		LOG_ERR("Serialize Msg Data Failed!!!");
+		return false;
+	}
+	UINT pkgSize = serializeData.size();
+	UINT factWriteSize = 0;
+
+	// 发送数据， ET模式下，当数据没有发完时，不会继续触发EPOLLOUT事件，因此需要循环检查发送数据
+	while (pkgSize > 0)
+	{
+		factWriteSize = send(sessionID, serializeData.c_str() + serializeData.size() - pkgSize, pkgSize, 0);
+		if (factWriteSize < 0 && errno != EAGAIN)
+		{
+			LOG_ERR("Write Data Error!!!, error: %s", strerror(errno));
+			return false;
+		}
+		pkgSize -= factWriteSize;
+	}
+	// 消息发送后从map中清除
+	DelMessageBySessionID(sessionID);
+	return true;
+}
+
+bool ChatServer::_WebSocketShakeHandsHandle()
+{
+	return false;
+}
+
+Message * ChatServer::GetMessageBySessionID(int sessionID)
+{
+	SendMsgMap::iterator it = m_sendMsgMap.find(sessionID);
+	if (it == m_sendMsgMap.end())
+	{
+		LOG_ERR("This Message Not Exist!!!");
+		return NULL;
+	}
+
+	return it->second;
+}
+
+bool ChatServer::DelMessageBySessionID(int sessionID)
+{
+	SendMsgMap::iterator it = m_sendMsgMap.find(sessionID);
+	if (it == m_sendMsgMap.end())
+	{
+		LOG_ERR("This Message Not Exist!!!");
+		return false;
+	}
+	Message* message = it->second;
+	SAFE_DELETE(message);
+	m_sendMsgMap.erase(it);
+
+	return true;
+}
+
+bool ChatServer::AddMessageToMessage(int sessionID, Message * message)
+{
+	ASSERT_RETURN(message != NULL, false);
+	m_sendMsgMap.insert(SendMsgMap::value_type(sessionID, message));
+	return true;
+}
+
+bool ChatServer::SendMessage(Message * message)
+{
+	ASSERT_RETURN(message != NULL, false);
+
+	if (!AddMessageToMessage(message->GetSessionID(), message))
+	{
+		return false;
+	}
+
+	if (!m_epoll->EpollMod(message->GetSessionID()))
+	{
+		return false;
+	}
 	return true;
 }
