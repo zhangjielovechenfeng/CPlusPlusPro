@@ -19,12 +19,12 @@ char * CSMsgBuff::GetRecvBuff()
 	return m_recvBuff;
 }
 
-UINT CSMsgBuff::GetCurrBuffLen()
+uint32_t CSMsgBuff::GetCurrBuffLen()
 {
 	return m_currBuffLen;
 }
 
-bool CSMsgBuff::InsertDataToBuff(char * data, UINT dataLen)
+bool CSMsgBuff::InsertDataToBuff(char * data, uint32_t dataLen)
 {
 	if (dataLen > MAX_DATA_LEN || dataLen + m_currBuffLen > MAX_DATA_LEN)
 	{

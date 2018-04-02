@@ -9,9 +9,6 @@
 			delete(p);\
 			p = NULL;\
 		}
-	
-#define		UINT	uint32_t	
-#define		ULONG	uint64_t	
 
 #define ASSERT_DO(assert_statement, do_statement)\
 {\

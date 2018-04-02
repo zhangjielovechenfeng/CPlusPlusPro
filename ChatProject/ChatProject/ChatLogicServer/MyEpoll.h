@@ -22,8 +22,8 @@ public:
 
 public:
 	bool EpollCreate();
-	bool EpollAdd(int sessionID, UINT listenEvent = EPOLLIN | EPOLLET);
-	bool EpollMod(int sessionID, UINT listenEvent = EPOLLOUT | EPOLLET);
+	bool EpollAdd(int sessionID, uint32_t listenEvent = EPOLLIN | EPOLLET);
+	bool EpollMod(int sessionID, uint32_t listenEvent = EPOLLOUT | EPOLLET);
 	bool EpollDel(int sessionID);
 	int  EpollWait();
 	bool CanReadData(int eventIndex);

@@ -7,6 +7,8 @@
 WebSocketHandle::WebSocketHandle()
 {
 	m_clientKeyBody.clear();
+	m_serverKeyBody.clear();
+	m_serverShakeHandsMsg.clear();
 	m_clientShakeHandsMsg = NULL;
 	m_len = 0;
 }
@@ -50,9 +52,9 @@ bool WebSocketHandle::IsWebSocketConn()
 	return true;
 }
 
-void WebSocketHandle::SetShakeHandsMsg(char* shakeHandsMsg, int len)
+void WebSocketHandle::SetClientShakeHandsMsg(char* clientShakeHandsMsg, int len)
 {
-	m_clientShakeHandsMsg = shakeHandsMsg;
+	m_clientShakeHandsMsg = clientShakeHandsMsg;
 	m_len = len;
 }
 

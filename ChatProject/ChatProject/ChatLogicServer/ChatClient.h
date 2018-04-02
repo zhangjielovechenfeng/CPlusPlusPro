@@ -26,7 +26,7 @@ public:
 public:
 	bool InitChatClient(SockAddr_In clientAddr);
 
-	bool SaveMsgData(char* data, UINT dataLen);
+	bool SaveMsgData(char* data, uint32_t dataLen);
 private:
 	int				m_sessionID;
 	int				m_port;

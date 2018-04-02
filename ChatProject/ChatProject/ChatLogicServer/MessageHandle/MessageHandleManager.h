@@ -6,7 +6,7 @@
 #include "../../Util/CommonFactory.h"
 #include "../../Protocol/ProtoDest/CSProtoPkgBodyDef.pb.h"
 
-class MessageHandleManager : public Singleton<MessageHandleManager>, public CommonFactory<UINT, MessageHandle, MessageHandleManager>
+class MessageHandleManager : public Singleton<MessageHandleManager>, public CommonFactory<uint32_t, MessageHandle, MessageHandleManager>
 {
 public:
 	MessageHandleManager()
@@ -17,7 +17,7 @@ public:
 	virtual ~MessageHandleManager() {}
 
 public:
-	MessageHandle * CreateMessageHandle(UINT type);
+	MessageHandle * CreateMessageHandle(uint32_t type);
 	void ReleaseMessageHandle();
 
 private:

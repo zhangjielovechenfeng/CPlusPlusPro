@@ -27,5 +27,4 @@
 	_log_[LOG_SIZE - 1] = 0;\
 	LogRun::WriteLogToFile(_log_, strnlen(_log_, sizeof(_log_)));\
 }while(0)
-
 	

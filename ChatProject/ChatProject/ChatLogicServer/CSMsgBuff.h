@@ -11,17 +11,17 @@ public:
 
 public:
 	char* GetRecvBuff();
-	UINT GetCurrBuffLen();
+	uint32_t GetCurrBuffLen();
 
 public:
 	// 保存数据到自定义缓存区
-	bool InsertDataToBuff(char* data, UINT dataLen);
+	bool InsertDataToBuff(char* data, uint32_t dataLen);
 
 	// 是否需要解析buff
 	bool IsNeedParseBuff();
 
 private:
 	char m_recvBuff[MAX_DATA_LEN];
-	UINT  m_currBuffLen;
+	uint32_t  m_currBuffLen;
 };
 

@@ -38,7 +38,7 @@ bool MyEpoll::EpollCreate()
 	return true;
 }
 
-bool MyEpoll::EpollAdd(int sessionID, UINT listenEvent)
+bool MyEpoll::EpollAdd(int sessionID, uint32_t listenEvent)
 {
 	m_listenEvent.events = listenEvent;
 	m_listenEvent.data.fd = sessionID;
@@ -52,7 +52,7 @@ bool MyEpoll::EpollAdd(int sessionID, UINT listenEvent)
 	return true;
 }
 
-bool MyEpoll::EpollMod(int sessionID, UINT listenEvent)
+bool MyEpoll::EpollMod(int sessionID, uint32_t listenEvent)
 {
 	m_listenEvent.events = listenEvent;
 	m_listenEvent.data.fd = sessionID;

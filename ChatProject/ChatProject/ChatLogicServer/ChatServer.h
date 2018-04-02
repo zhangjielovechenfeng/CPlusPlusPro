@@ -27,6 +27,7 @@ public:
 	~ChatServer();
 
 public:
+	// 初始化聊天服务器
 	int InitChatServer();
 
 	// 运行服务器
@@ -40,9 +41,6 @@ public:
 
 	// 通过sessionID删除message
 	bool DelMessageBySessionID(int sessionID);
-
-	// 添加新的message到Map
-	bool AddMessageToMessage(int sessionID, Message* message);
 
 	// 派发消息
 	bool SendMessage(Message* message);
@@ -64,14 +62,19 @@ private:
 	bool _SetNonBlock(int fd);
 
 	// 接收消息
-	int _RecvMsgData(int sessionID);
+	int _RecvMsg(int sessionID);
 
-	// 发送数据
-	bool _SendMsgData(int sessionID);
+	// 发送消息
+	bool _SendMsg(int sessionID);
+
+	// 发送握手消息
+	bool _SendShakeHandsMsg(int sessionID, string& msg);
 
 	// websocket握手处理
 	bool _WebSocketShakeHandsHandle();
 
+	// 添加新的message到Map
+	bool _AddMessageToMessage(int sessionID, Message* message);
 private:
 	MyEpoll*		m_epoll;
 	int				m_socketFd;

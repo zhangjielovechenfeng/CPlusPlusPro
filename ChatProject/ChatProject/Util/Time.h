@@ -16,7 +16,7 @@ public:
 
 public:
 	// 获取当前时间戳微秒
-	static ULONG GetCurrMTime();
+	static uint64_t GetCurrMTime();
 
 	// 获取当前日期
 	static string GetCurrDate();

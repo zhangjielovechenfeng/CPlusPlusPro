@@ -18,15 +18,15 @@ public:
 public:
 	void Sleep();
 
-	void Start(ULONG msecond, CallbackFunc* func);
+	void Start(uint64_t msecond, CallbackFunc* func);
 	bool Going();
 	void Stop();
 
 	// 获取接下来的时间触发点
-	ULONG GetNextTriggerMTime();
+	uint64_t GetNextTriggerMTime();
 private:
-	ULONG		m_triggerIntervalMTime; // 触发间隔时间
-	ULONG		m_nextTriggerMTime;		// 下次触发时间
+	uint64_t		m_triggerIntervalMTime; // 触发间隔时间
+	uint64_t		m_nextTriggerMTime;		// 下次触发时间
 	bool		m_stopFlag;
 	
 };

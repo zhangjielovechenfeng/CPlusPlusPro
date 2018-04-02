@@ -1,6 +1,6 @@
 #include "MessageHandleManager.h"
 
-MessageHandle * MessageHandleManager::CreateMessageHandle(UINT type)
+MessageHandle * MessageHandleManager::CreateMessageHandle(uint32_t type)
 {
 	return CreateProduct(type);
 }

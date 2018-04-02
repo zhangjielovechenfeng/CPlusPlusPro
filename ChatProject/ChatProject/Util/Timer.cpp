@@ -25,7 +25,7 @@ void Timer::Sleep()
 	select(0, NULL, NULL, NULL, &tv);
 }
 
-void Timer::Start(ULONG msecond, CallbackFunc * func)
+void Timer::Start(uint64_t msecond, CallbackFunc * func)
 {
 	m_stopFlag = true;
 
@@ -55,7 +55,7 @@ void Timer::Stop()
 	m_stopFlag = true;
 }
 
-ULONG Timer::GetNextTriggerMTime()
+uint64_t Timer::GetNextTriggerMTime()
 {
 	return m_nextTriggerMTime;
 }

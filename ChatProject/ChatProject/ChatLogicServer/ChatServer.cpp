@@ -98,7 +98,7 @@ int ChatServer::Run()
 					continue;
 				}
 
-				int ret = _RecvMsgData(sessionID);
+				int ret = _RecvMsg(sessionID);
 				if (ret != ERROR_CODE_NONE)
 				{
 					m_epoll->EpollDel(sessionID);
@@ -118,16 +118,17 @@ int ChatServer::Run()
 				{
 					continue;
 				}
+				ChatClient* chatClient = ChatClientManager::Instance().GetChatClient(sessionID);
+				ASSERT_RETURN(chatClient != NULL, ERROR_CODE_CLIENT_NOT_EXIST);
 
 				//给发送消息加锁
 				ThreadLock lock();
-
-				if (!_SendMsgData(sessionID))
+				if (!_SendMsg(sessionID))
 				{
 					LOG_ERR("Send Message Error!!!");
 					return ERROR_CODE_SEND_MSG_ERROR;
 				}
-
+				
 				if (!m_epoll->EpollMod(sessionID, EPOLLIN))
 				{
 					return ERROR_CODE_EPOLL_MOD_FAILED;
@@ -217,7 +218,7 @@ bool ChatServer::_SetNonBlock(int fd)
 	return true;
 }
 
-int ChatServer::_RecvMsgData(int sessionID)
+int ChatServer::_RecvMsg(int sessionID)
 {
 	ChatClient* chatClient = ChatClientManager::Instance().GetChatClient(sessionID);
 	ASSERT_RETURN(chatClient != NULL, ERROR_CODE_CLIENT_NOT_EXIST);
@@ -229,7 +230,7 @@ int ChatServer::_RecvMsgData(int sessionID)
 	while ((recvSize = recv(sessionID, recvMsgBuff, DATA_BUFF_SIZE, 0)) > 0)
 	{
 		// 存储接收的消息
-		if (!chatClient->SaveMsgData(recvMsgBuff, (UINT)recvSize))
+		if (!chatClient->SaveMsgData(recvMsgBuff, (uint32_t)recvSize))
 		{
 			LOG_ERR("Insert Msg Buff Failed!!!");
 			return ERROR_CODE_INSERT_MSG_TO_BUFF_FAILED;
@@ -256,15 +257,13 @@ int ChatServer::_RecvMsgData(int sessionID)
 		LOG_ERR("Recv Data Error!!!error: %s", strerror(errno));
 		return ERROR_CODE_RECV_MSG_ERROR;
 	}
-	ChatClient* chatClient = ChatClientManager::Instance().GetChatClient(sessionID);
-	ASSERT_RETURN(chatClient != NULL, ERROR_CODE_CLIENT_NOT_EXIST);
-	
+
 	if (!chatClient->IsBuildLongConn())
 	{
 		// 还没有建立长连接，处理握手包
 		WebSocketHandle webSocketHandle;
 		CSMsgBuff& csMsgBuff = chatClient->GetCSMsgBuff();
-		webSocketHandle.SetShakeHandsMsg(csMsgBuff.GetRecvBuff(), csMsgBuff.GetCurrBuffLen());
+		webSocketHandle.SetClientShakeHandsMsg(csMsgBuff.GetRecvBuff(), csMsgBuff.GetCurrBuffLen());
 		if (!webSocketHandle.IsWebSocketConn())
 		{
 			// 普通socket连接，本身就是长链接
@@ -273,14 +272,24 @@ int ChatServer::_RecvMsgData(int sessionID)
 		else
 		{
 			// websocket连接，处理握手包
+			if (!webSocketHandle.Handle())
+			{
+				LOG_ERR("Server Shake Hands Msg Generate Failed!!!");
+				return ERROR_CODE_GENERATE_SHAKE_HANDS_MSG_FAILED;
+			}
+			string& msg = webSocketHandle.GetServerShakeHandsMsg();
+			if (!_SendShakeHandsMsg(sessionID, msg)) // 发送握手包信息， 直接send
+			{
+				LOG_ERR("Send Shake Hands Msg Failed");
+				return ERROR_CODE_SEND_SHAKE_HANDS_MSG_FAILED;
+			}
 		}
-
 	}
 
 	return ERROR_CODE_NONE;
 }
 
-bool ChatServer::_SendMsgData(int sessionID)
+bool ChatServer::_SendMsg(int sessionID)
 {
 	string serializeData = ""; // 序列化后的数据
 	Message* message = GetMessageBySessionID(sessionID);
@@ -292,8 +301,8 @@ bool ChatServer::_SendMsgData(int sessionID)
 		LOG_ERR("Serialize Msg Data Failed!!!");
 		return false;
 	}
-	UINT pkgSize = serializeData.size();
-	UINT factWriteSize = 0;
+	size_t pkgSize = serializeData.size();
+	ssize_t factWriteSize = 0;
 
 	// 发送数据， ET模式下，当数据没有发完时，不会继续触发EPOLLOUT事件，因此需要循环检查发送数据
 	while (pkgSize > 0)
@@ -308,6 +317,25 @@ bool ChatServer::_SendMsgData(int sessionID)
 	}
 	// 消息发送后从map中清除
 	DelMessageBySessionID(sessionID);
+	return true;
+}
+
+bool ChatServer::_SendShakeHandsMsg(int sessionID, string& msg)
+{
+	size_t msgSize = msg.size();
+	ssize_t factWriteSize = 0;
+
+	// 发送数据， ET模式下，当数据没有发完时，不会继续触发EPOLLOUT事件，因此需要循环检查发送数据
+	while (msgSize > 0)
+	{
+		factWriteSize = send(sessionID, msg.c_str() - msgSize, msgSize, 0);
+		if (factWriteSize < 0 && errno != EAGAIN)
+		{
+			LOG_ERR("Write Data Error!!!, error: %s", strerror(errno));
+			return false;
+		}
+		msgSize -= factWriteSize;
+	}
 	return true;
 }
 
@@ -343,7 +371,7 @@ bool ChatServer::DelMessageBySessionID(int sessionID)
 	return true;
 }
 
-bool ChatServer::AddMessageToMessage(int sessionID, Message * message)
+bool ChatServer::_AddMessageToMessage(int sessionID, Message * message)
 {
 	ASSERT_RETURN(message != NULL, false);
 	m_sendMsgMap.insert(SendMsgMap::value_type(sessionID, message));
@@ -354,7 +382,7 @@ bool ChatServer::SendMessage(Message * message)
 {
 	ASSERT_RETURN(message != NULL, false);
 
-	if (!AddMessageToMessage(message->GetSessionID(), message))
+	if (!_AddMessageToMessage(message->GetSessionID(), message))
 	{
 		return false;
 	}

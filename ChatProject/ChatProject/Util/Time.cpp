@@ -15,7 +15,7 @@ Time::~Time()
 {
 }
 
-ULONG Time::GetCurrMTime()
+uint64_t Time::GetCurrMTime()
 {
 	struct timeval tv;
 
