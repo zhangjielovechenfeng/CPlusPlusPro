@@ -187,6 +187,13 @@ int ChatServer::_SocketAccept()
 		LOG_ERR("Socket Accept Client Failed!!!,error:[%s]", strerror(errno));
 		return ERROR_CODE_SOCKET_ACCEPT_FAILED;
 	}
+	// 相当于顶号
+	ChatClient* chatClient = ChatClientManager::Instance().GetChatClient(sessionID);
+	if (chatClient != NULL)
+	{
+		close(chatClient->GetSessionID());
+		ChatClientManager::Instance().DelChatClient(sessionID);
+	}
 
 	if (!ChatClientManager::Instance().AddChatClient(sessionID, clientAddr))
 	{
@@ -220,7 +227,7 @@ bool ChatServer::_SetNonBlock(int fd)
 
 int ChatServer::_RecvMsg(int sessionID)
 {
-	ChatClient* chatClient = ChatClientManager::Instance().GetChatClient(sessionID);
+ 	ChatClient* chatClient = ChatClientManager::Instance().GetChatClient(sessionID);
 	ASSERT_RETURN(chatClient != NULL, ERROR_CODE_CLIENT_NOT_EXIST);
 
 	char recvMsgBuff[DATA_BUFF_SIZE];
@@ -236,6 +243,10 @@ int ChatServer::_RecvMsg(int sessionID)
 			return ERROR_CODE_INSERT_MSG_TO_BUFF_FAILED;
 		}
 		memset(recvMsgBuff, 0, DATA_BUFF_SIZE);
+		if (recvSize <= DATA_BUFF_SIZE)
+		{
+			break;
+		}
 	}
 	if (0 == recvSize)
 	{
@@ -293,7 +304,10 @@ bool ChatServer::_SendMsg(int sessionID)
 {
 	string serializeData = ""; // 序列化后的数据
 	Message* message = GetMessageBySessionID(sessionID);
-	ASSERT_RETURN(message != NULL, false)
+	if (NULL == message) // 发送消息map中没有此sessionID需要发送的数据
+	{
+		return true;
+	}
 
 	CSMsgPkg& msgPkg = message->GetMsgPkg();
 	if (msgPkg.ParseFromString(serializeData)) // 序列化数据包

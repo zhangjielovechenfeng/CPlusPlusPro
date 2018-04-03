@@ -4,6 +4,7 @@
 #include <websocketpp/base64/base64.hpp>
 
 #define STORE_SHA1_RESULT_BUFF_SIZE 64	// 存储sha1结果的buff大小 
+#define MAX_KEY_LEN 64
 
 using namespace websocketpp::sha1;
 using namespace websocketpp;
@@ -43,7 +44,7 @@ private:
 	char*		m_clientShakeHandsMsg; // client握手数据
 	string		m_serverShakeHandsMsg;
 	int			m_len;
-	string		m_clientKeyBody;
+	char		m_clientKeyBody[MAX_KEY_LEN];
 	string		m_serverKeyBody;
 };
 

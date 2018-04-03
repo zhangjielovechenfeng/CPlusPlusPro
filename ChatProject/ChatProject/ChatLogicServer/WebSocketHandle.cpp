@@ -6,7 +6,7 @@
 
 WebSocketHandle::WebSocketHandle()
 {
-	m_clientKeyBody.clear();
+	//m_clientKeyBody.clear();
 	m_serverKeyBody.clear();
 	m_serverShakeHandsMsg.clear();
 	m_clientShakeHandsMsg = NULL;
@@ -16,6 +16,7 @@ WebSocketHandle::WebSocketHandle()
 
 WebSocketHandle::~WebSocketHandle()
 {
+	memset(m_clientShakeHandsMsg, 0, m_len);
 }
 
 bool WebSocketHandle::Handle()
@@ -43,7 +44,7 @@ string & WebSocketHandle::GetServerShakeHandsMsg()
 
 bool WebSocketHandle::IsWebSocketConn()
 {
-	string keyHead = "Sec - WebSocket - Accept:";
+	string keyHead = "Sec-WebSocket-Key:";
 	char* posPtr = strstr(m_clientShakeHandsMsg, keyHead.c_str());
 	if (NULL == posPtr)
 	{
@@ -60,26 +61,26 @@ void WebSocketHandle::SetClientShakeHandsMsg(char* clientShakeHandsMsg, int len)
 
 bool WebSocketHandle::_FetchClientKey()
 {
-	string keyHead = "Sec - WebSocket - Accept:";
+	string keyHead = "Sec-WebSocket-Key: "; // 此格式要求标准
 
 	char* posPtr = strstr(m_clientShakeHandsMsg, keyHead.c_str());
 	ASSERT_RETURN(posPtr != NULL, false);
 	posPtr = posPtr + strlen(keyHead.c_str());
 	for(int i = 0; i < m_len; ++i)
 	{
-		if (posPtr[i] == '\r\n')
+		if (posPtr[i] == '\r' || posPtr[i] == '\n')
 		{
 			break;
 		}
 		m_clientKeyBody[i] = posPtr[i];
 	}
 
-	return false;
+	return true;;
 }
 
 bool WebSocketHandle::_GenerateServerKey()
 {
-	char* tmpKey = strcat(const_cast<char *>(m_clientKeyBody.c_str()), "258EAFA5-E914-47DA-95CA-C5AB0DC85B11");
+	char* tmpKey = strcat(m_clientKeyBody, "258EAFA5-E914-47DA-95CA-C5AB0DC85B11");
 	ASSERT_RETURN(tmpKey != NULL, false);
 
 	unsigned char afterSha1Key[STORE_SHA1_RESULT_BUFF_SIZE];
@@ -91,10 +92,8 @@ bool WebSocketHandle::_GenerateServerKey()
 
 bool WebSocketHandle::_GenerateServerShakeHandsMsg()
 {
-	sprintf(const_cast<char*>(m_serverShakeHandsMsg.c_str()),	"HTTP / 1.1 101 Switching Protocols\r\n		\
-																Upgrade : websocke Connection : Upgrade\r\n \
-																Sec - WebSocket - Accept : %s\r\n			\
-																Sec - WebSocket - Protocol : ChatServer", m_serverKeyBody.c_str());
+	m_serverShakeHandsMsg = "HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: " + m_serverKeyBody + "\r\nSec-WebSocket-Protocol: chat\r\n\r\n";
+	printf("%s", m_serverShakeHandsMsg.c_str());
 	if (m_serverShakeHandsMsg.empty())
 	{
 		return false;

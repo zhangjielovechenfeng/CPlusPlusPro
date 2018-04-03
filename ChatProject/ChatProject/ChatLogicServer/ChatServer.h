@@ -18,7 +18,7 @@ using namespace std;
 
 typedef struct sockaddr_in	SockAddr_In;
 typedef struct sockaddr		SockAddr;
-typedef map<int /*fd*/,Message*>	SendMsgMap;	// 消息发送map
+typedef map<int /*sessionID*/,Message*>	SendMsgMap;	// 消息发送map
 
 class ChatServer
 {

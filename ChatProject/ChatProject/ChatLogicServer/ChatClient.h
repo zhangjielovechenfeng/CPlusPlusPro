@@ -19,6 +19,7 @@ public:
 public:
 	string & GetIP();
 	int GetPort();
+	int GetSessionID();
 	bool IsBuildLongConn();
 	void SetIsBuildLongConn(bool isBuildLongConn);
 	CSMsgBuff& GetCSMsgBuff();

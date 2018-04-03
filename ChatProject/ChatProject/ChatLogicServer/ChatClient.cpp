@@ -25,6 +25,11 @@ int ChatClient::GetPort()
 	return m_port;
 }
 
+int ChatClient::GetSessionID()
+{
+	return m_sessionID;
+}
+
 bool ChatClient::IsBuildLongConn()
 {
 	return m_isBuildLongConn;
