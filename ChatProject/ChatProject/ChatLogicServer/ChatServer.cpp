@@ -236,6 +236,31 @@ int ChatServer::_RecvMsg(int sessionID)
 	ssize_t recvSize = 0;
 	while ((recvSize = recv(sessionID, recvMsgBuff, DATA_BUFF_SIZE, 0)) > 0)
 	{
+		if (0 == recvSize)
+		{
+			// Client 主动断开连接
+
+			if (!ChatClientManager::Instance().DelChatClient(sessionID))
+			{
+				return ERROR_CODE_CLIENT_OFFLINE_FAILED;
+			}
+			return ERROR_CODE_CLIENT_HAD_OFFLINE;
+		}
+		else if (recvSize < 0)
+		{
+			// 此三种情况连接为正常
+			if (EINTR == errno)
+			{
+				continue;
+			}
+			else if(EWOULDBLOCK == errno || EAGAIN == errno)
+			{
+				return ERROR_CODE_NONE;
+			}
+			LOG_ERR("Recv Data Error!!!error: %s", strerror(errno));
+			return ERROR_CODE_RECV_MSG_ERROR;
+		}
+
 		// 存储接收的消息
 		if (!chatClient->SaveMsgData(recvMsgBuff, (uint32_t)recvSize))
 		{
@@ -243,31 +268,14 @@ int ChatServer::_RecvMsg(int sessionID)
 			return ERROR_CODE_INSERT_MSG_TO_BUFF_FAILED;
 		}
 		memset(recvMsgBuff, 0, DATA_BUFF_SIZE);
-		if (recvSize <= DATA_BUFF_SIZE)
+
+		//recvSize = recv(sessionID, recvMsgBuff, DATA_BUFF_SIZE, 0);
+		/*if (recvSize <= DATA_BUFF_SIZE)
 		{
 			break;
-		}
+		}*/
 	}
-	if (0 == recvSize)
-	{
-		// Client 主动断开连接
-
-		if (!ChatClientManager::Instance().DelChatClient(sessionID))
-		{
-			return ERROR_CODE_CLIENT_OFFLINE_FAILED;
-		}
-		return ERROR_CODE_CLIENT_HAD_OFFLINE;
-	}
-	else if (recvSize < 0)
-	{
-		// 此三种情况连接为正常
-		if (EINTR == errno || EWOULDBLOCK == errno || EAGAIN == errno)
-		{
-			return ERROR_CODE_NONE;
-		}
-		LOG_ERR("Recv Data Error!!!error: %s", strerror(errno));
-		return ERROR_CODE_RECV_MSG_ERROR;
-	}
+	
 
 	if (!chatClient->IsBuildLongConn())
 	{
@@ -294,6 +302,8 @@ int ChatServer::_RecvMsg(int sessionID)
 				LOG_ERR("Send Shake Hands Msg Failed");
 				return ERROR_CODE_SEND_SHAKE_HANDS_MSG_FAILED;
 			}
+			LOG_RUN("The Handshake With Websocket[ip: %s, port: %d] Has Been Established!!!", chatClient->GetIP().c_str(), chatClient->GetPort());
+			printf("The Handshake With Websocket[ip: %s, port: %d] Has Been Established!!!", chatClient->GetIP().c_str(), chatClient->GetPort());
 		}
 	}
 
@@ -342,7 +352,7 @@ bool ChatServer::_SendShakeHandsMsg(int sessionID, string& msg)
 	// 发送数据， ET模式下，当数据没有发完时，不会继续触发EPOLLOUT事件，因此需要循环检查发送数据
 	while (msgSize > 0)
 	{
-		factWriteSize = send(sessionID, msg.c_str() - msgSize, msgSize, 0);
+		factWriteSize = send(sessionID, msg.c_str() + factWriteSize, msgSize, 0);
 		if (factWriteSize < 0 && errno != EAGAIN)
 		{
 			LOG_ERR("Write Data Error!!!, error: %s", strerror(errno));

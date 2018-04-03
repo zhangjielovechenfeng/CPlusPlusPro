@@ -83,7 +83,7 @@ bool WebSocketHandle::_GenerateServerKey()
 	char* tmpKey = strcat(m_clientKeyBody, "258EAFA5-E914-47DA-95CA-C5AB0DC85B11");
 	ASSERT_RETURN(tmpKey != NULL, false);
 
-	unsigned char afterSha1Key[STORE_SHA1_RESULT_BUFF_SIZE];
+	unsigned char afterSha1Key[STORE_SHA1_RESULT_BUFF_SIZE] = "";
 	calc(tmpKey, strlen(tmpKey), afterSha1Key); // sha1¼ÓÃÜ
 
 	m_serverKeyBody = base64_encode(afterSha1Key, strlen((const char*)afterSha1Key)); // base64×ª»¯
@@ -92,11 +92,7 @@ bool WebSocketHandle::_GenerateServerKey()
 
 bool WebSocketHandle::_GenerateServerShakeHandsMsg()
 {
-	m_serverShakeHandsMsg = "HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: " + m_serverKeyBody + "\r\nSec-WebSocket-Protocol: chat\r\n\r\n";
-	printf("%s", m_serverShakeHandsMsg.c_str());
-	if (m_serverShakeHandsMsg.empty())
-	{
-		return false;
-	}
+	//Sec-WebSocket-Protocol: chat\r\n
+	m_serverShakeHandsMsg = "HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: " + m_serverKeyBody + "\r\n\r\n";
 	return true;
 }
