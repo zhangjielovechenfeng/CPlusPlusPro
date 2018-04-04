@@ -76,7 +76,6 @@
     <ClCompile Include="ChatLogicServer\Message.cpp" />
     <ClCompile Include="ChatLogicServer\MyEpoll.cpp" />
     <ClCompile Include="ChatLogicServer\CSMsgBuff.cpp" />
-    <ClCompile Include="ChatLogicServer\HeartBeat.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ChatLogicServer\MessageHandle\MessageHandle.cpp" />
     <ClCompile Include="ChatLogicServer\MessageHandle\MessageHandleManager.cpp" />
@@ -101,7 +100,6 @@
     <ClInclude Include="ChatLogicServer\MessageHandle\MessageHandle.h" />
     <ClInclude Include="ChatLogicServer\MessageHandle\MessageHandleManager.h" />
     <ClInclude Include="ChatLogicServer\MessageHandle\MessageHandleSubClass.h" />
-    <ClInclude Include="ChatLogicServer\HeartBeat.h" />
     <ClInclude Include="Protocol\ProtoDest\CSProtoPkgBodyDef.pb.h" />
     <ClInclude Include="Protocol\ProtoDest\CSProtoPkgDef.pb.h" />
     <ClInclude Include="Util\Time.h" />

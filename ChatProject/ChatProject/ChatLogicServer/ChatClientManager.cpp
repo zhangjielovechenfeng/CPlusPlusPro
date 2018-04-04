@@ -2,6 +2,8 @@
 #include "../Util/LogPrint.h"
 #include "../Util/Util.h"
 #include <iostream>
+#include "../Util/Time.h"
+#include <unistd.h>
 
 using namespace std;
 
@@ -21,6 +23,12 @@ ChatClientManager::~ChatClientManager()
 	m_chatClientMap.clear();
 }
 
+bool ChatClientManager::InitTickTimer()
+{
+	m_tickTimer.Start(5 * ONE_SECOND_TO_MSECOND, TIMER_IND_FUNC(&_CheckClientTick));
+	return true;
+}
+
 bool ChatClientManager::AddChatClient(int sessionID, SockAddr_In clientAddr)
 {
 	ChatClient* chatClient = new ChatClient(sessionID);
@@ -30,6 +38,7 @@ bool ChatClientManager::AddChatClient(int sessionID, SockAddr_In clientAddr)
 		return false;
 	}
 	m_chatClientMap.insert(ChatClientMap::value_type(sessionID, chatClient));
+
 	LOG_RUN("New Client[ip: %s][port: %d] Had Connected!!!", chatClient->GetIP().c_str(), chatClient->GetPort());
 	cout << "New Client[ip: "<<chatClient->GetIP().c_str()<<"] Had Connected!!!" << endl;
 	return true;
@@ -69,4 +78,32 @@ ChatClient * ChatClientManager::GetChatClient(int sessionID)
 		return NULL;
 	}
 	return it->second;
+}
+
+void ChatClientManager::_CheckClientTick()
+{
+	// 获取当前时间
+	time_t currMtime = Time::GetCurrMTime();
+
+	ChatClientMap::iterator it = m_chatClientMap.begin();
+	for (; it != m_chatClientMap.end(); ++it)
+	{
+		ChatClient* chatClient = it->second;
+		ASSERT_CONTINUE(chatClient != NULL);
+
+		time_t tmpMtime = currMtime - chatClient->GetRecvTickTime();
+
+		if (tmpMtime < 0)
+		{
+			LOG_ERR("Time Error!!!");
+			return;
+		}
+		// 5s没有和client交流，client下线
+		else if(tmpMtime > MAX_INTERVAL_TIME * ONE_SECOND_TO_MSECOND)
+		{
+			// 关闭连接，删除client
+			close(it->first);
+			DelChatClient(it->first);
+		}
+	}
 }

@@ -3,6 +3,10 @@
 #include "ChatClient.h"
 #include <map>
 #include "../Util/Singleton.h"
+#include "../Util/Timer.h"
+
+#define ONE_SECOND_TO_MSECOND 1000000 // 一秒和微秒的换算关系
+#define MAX_INTERVAL_TIME 5
 
 using namespace std;
 
@@ -17,6 +21,9 @@ public:
 	~ChatClientManager();
 
 public:
+
+	bool InitTickTimer();
+
 	// 添加聊天客户端（上线）
 	bool AddChatClient(int sessionID, SockAddr_In clientAddr);
 
@@ -29,6 +36,10 @@ public:
 	ChatClient* GetChatClient(int sessionID);
 
 private:
-	ChatClientMap m_chatClientMap; //客户端map
+	void _CheckClientTick();
+
+private:
+	ChatClientMap	m_chatClientMap; // 客户端map
+	Timer			m_tickTimer;	 // 心跳timer
 };
 

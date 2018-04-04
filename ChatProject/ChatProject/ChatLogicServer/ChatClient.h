@@ -9,7 +9,7 @@
 using namespace std;
 
 /*
-	聊天客户端
+	聊天客户端：websocket需要成功握手后才建立长连接
 */
 class ChatClient
 {
@@ -23,6 +23,8 @@ public:
 	bool IsBuildLongConn();
 	void SetIsBuildLongConn(bool isBuildLongConn);
 	CSMsgBuff& GetCSMsgBuff();
+	time_t& GetRecvTickTime();
+	void SetRecvTickTime(time_t recvTickTime);
 
 public:
 	bool InitChatClient(SockAddr_In clientAddr);
@@ -33,6 +35,8 @@ private:
 	int				m_port;
 	string			m_ip;
 	CSMsgBuff		m_recvMsgData;
-	bool			m_isBuildLongConn; // 是否建立了长连接
+	bool			m_isBuildLongConn;	// 是否建立了长连接
+	time_t			m_recvTickTime;		// 接收到心跳的时间 
+
 };
 

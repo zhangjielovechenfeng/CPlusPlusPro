@@ -51,6 +51,9 @@ int ChatServer::InitChatServer()
 		return ERROR_CODE_SOCKET_LISTEN_FAILED;
 	}
 
+	// 初始化心跳机制
+	ChatClientManager::Instance().InitTickTimer();
+
 	LOG_RUN("Chat Server Init OK!!!");
 	cout << "Chat Server Init OK!!!" << endl;
 
@@ -111,29 +114,29 @@ int ChatServer::Run()
 					return ERROR_CODE_EPOLL_MOD_FAILED;
 				}
 			}
-			else if(m_epoll->CanWriteData(i))
-			{
-				int sessionID = m_epoll->GetRecvEvents()[i].data.fd;
-				if (sessionID < 0)
-				{
-					continue;
-				}
-				ChatClient* chatClient = ChatClientManager::Instance().GetChatClient(sessionID);
-				ASSERT_RETURN(chatClient != NULL, ERROR_CODE_CLIENT_NOT_EXIST);
+			//else if(m_epoll->CanWriteData(i))
+			//{
+			//	int sessionID = m_epoll->GetRecvEvents()[i].data.fd;
+			//	if (sessionID < 0)
+			//	{
+			//		continue;
+			//	}
+			//	ChatClient* chatClient = ChatClientManager::Instance().GetChatClient(sessionID);
+			//	ASSERT_RETURN(chatClient != NULL, ERROR_CODE_CLIENT_NOT_EXIST);
 
-				//给发送消息加锁
-				ThreadLock lock();
-				if (!_SendMsg(sessionID))
-				{
-					LOG_ERR("Send Message Error!!!");
-					return ERROR_CODE_SEND_MSG_ERROR;
-				}
-				
-				if (!m_epoll->EpollMod(sessionID, EPOLLIN))
-				{
-					return ERROR_CODE_EPOLL_MOD_FAILED;
-				}
-			}
+			//	//给发送消息加锁
+			//	ThreadLock lock();
+			//	if (!_SendMsg(sessionID))
+			//	{
+			//		LOG_ERR("Send Message Error!!!");
+			//		return ERROR_CODE_SEND_MSG_ERROR;
+			//	}
+			//	
+			//	if (!m_epoll->EpollMod(sessionID, EPOLLIN))
+			//	{
+			//		return ERROR_CODE_EPOLL_MOD_FAILED;
+			//	}
+			//}
 		}
 	}
 	return ERROR_CODE_NONE;
@@ -159,7 +162,7 @@ bool ChatServer::_SocketBind()
 	serverAddr.sin_addr.s_addr = INADDR_ANY;
 	serverAddr.sin_port = htons(SERVER_PORT);
 
-	if (bind(m_socketFd, (SockAddr*)&serverAddr, sizeof(SockAddr))< 0)
+	if (bind(m_socketFd, (SockAddr*)&serverAddr, sizeof(SockAddr)) < 0)
 	{
 		LOG_ERR("Bind Socket Failed!!!");
 		return false;
@@ -209,7 +212,7 @@ void ChatServer::Stop()
 
 bool ChatServer::_SetNonBlock(int fd)
 {
-	int opt = fcntl(m_socketFd, F_GETFL);
+	int opt = fcntl(fd, F_GETFL);
 	if (opt < 0)
 	{
 		LOG_ERR("fcntl(%d, F_GETFL) failed! error:%s", m_socketFd, strerror(errno));
@@ -217,7 +220,7 @@ bool ChatServer::_SetNonBlock(int fd)
 	}
 
 	opt = opt | O_NONBLOCK | O_NDELAY;
-	if (fcntl(m_socketFd, F_SETFL, opt) < 0)
+	if (fcntl(fd, F_SETFL, opt) < 0)
 	{
 		LOG_ERR("fcntl(%d, F_GETFL, %d) failed! error:%s", m_socketFd, opt, strerror(errno));
 		return false;
@@ -239,7 +242,6 @@ int ChatServer::_RecvMsg(int sessionID)
 		if (0 == recvSize)
 		{
 			// Client 主动断开连接
-
 			if (!ChatClientManager::Instance().DelChatClient(sessionID))
 			{
 				return ERROR_CODE_CLIENT_OFFLINE_FAILED;
@@ -268,152 +270,86 @@ int ChatServer::_RecvMsg(int sessionID)
 			return ERROR_CODE_INSERT_MSG_TO_BUFF_FAILED;
 		}
 		memset(recvMsgBuff, 0, DATA_BUFF_SIZE);
-
-		//recvSize = recv(sessionID, recvMsgBuff, DATA_BUFF_SIZE, 0);
-		/*if (recvSize <= DATA_BUFF_SIZE)
-		{
-			break;
-		}*/
 	}
 	
 
 	if (!chatClient->IsBuildLongConn())
 	{
-		// 还没有建立长连接，处理握手包
-		WebSocketHandle webSocketHandle;
-		CSMsgBuff& csMsgBuff = chatClient->GetCSMsgBuff();
-		webSocketHandle.SetClientShakeHandsMsg(csMsgBuff.GetRecvBuff(), csMsgBuff.GetCurrBuffLen());
-		if (!webSocketHandle.IsWebSocketConn())
+		if (!_WebSocketShakeHandsHandle(chatClient))
 		{
-			// 普通socket连接，本身就是长链接
-			chatClient->SetIsBuildLongConn(true);
-		}
-		else
-		{
-			// websocket连接，处理握手包
-			if (!webSocketHandle.Handle())
-			{
-				LOG_ERR("Server Shake Hands Msg Generate Failed!!!");
-				return ERROR_CODE_GENERATE_SHAKE_HANDS_MSG_FAILED;
-			}
-			string& msg = webSocketHandle.GetServerShakeHandsMsg();
-			if (!_SendShakeHandsMsg(sessionID, msg)) // 发送握手包信息， 直接send
-			{
-				LOG_ERR("Send Shake Hands Msg Failed");
-				return ERROR_CODE_SEND_SHAKE_HANDS_MSG_FAILED;
-			}
-			LOG_RUN("The Handshake With Websocket[ip: %s, port: %d] Has Been Established!!!", chatClient->GetIP().c_str(), chatClient->GetPort());
-			printf("The Handshake With Websocket[ip: %s, port: %d] Has Been Established!!!", chatClient->GetIP().c_str(), chatClient->GetPort());
+			return ERROR_CODE_WEBSOCKET_SHAKE_HANDS_FAILED;
 		}
 	}
 
 	return ERROR_CODE_NONE;
 }
 
-bool ChatServer::_SendMsg(int sessionID)
+bool ChatServer::_WebSocketShakeHandsHandle(ChatClient* chatClient)
 {
-	string serializeData = ""; // 序列化后的数据
-	Message* message = GetMessageBySessionID(sessionID);
-	if (NULL == message) // 发送消息map中没有此sessionID需要发送的数据
+	ASSERT_RETURN(chatClient != NULL, false);
+	// 还没有建立长连接，处理握手包
+	WebSocketHandle webSocketHandle;
+	CSMsgBuff& csMsgBuff = chatClient->GetCSMsgBuff();
+	webSocketHandle.SetClientShakeHandsMsg(csMsgBuff.GetRecvBuff(), csMsgBuff.GetCurrBuffLen());
+	if (!webSocketHandle.IsWebSocketConn())
 	{
-		return true;
+		// 普通socket连接，本身就是长链接
+		chatClient->SetIsBuildLongConn(true);
 	}
-
-	CSMsgPkg& msgPkg = message->GetMsgPkg();
-	if (msgPkg.ParseFromString(serializeData)) // 序列化数据包
+	else
 	{
-		LOG_ERR("Serialize Msg Data Failed!!!");
-		return false;
-	}
-	size_t pkgSize = serializeData.size();
-	ssize_t factWriteSize = 0;
-
-	// 发送数据， ET模式下，当数据没有发完时，不会继续触发EPOLLOUT事件，因此需要循环检查发送数据
-	while (pkgSize > 0)
-	{
-		factWriteSize = send(sessionID, serializeData.c_str() + serializeData.size() - pkgSize, pkgSize, 0);
-		if (factWriteSize < 0 && errno != EAGAIN)
+		// websocket连接，处理握手包
+		if (!webSocketHandle.Handle())
 		{
-			LOG_ERR("Write Data Error!!!, error: %s", strerror(errno));
-			return false;
+			LOG_ERR("Server Shake Hands Msg Generate Failed!!!");
+			return ERROR_CODE_GENERATE_SHAKE_HANDS_MSG_FAILED;
 		}
-		pkgSize -= factWriteSize;
-	}
-	// 消息发送后从map中清除
-	DelMessageBySessionID(sessionID);
-	return true;
-}
-
-bool ChatServer::_SendShakeHandsMsg(int sessionID, string& msg)
-{
-	size_t msgSize = msg.size();
-	ssize_t factWriteSize = 0;
-
-	// 发送数据， ET模式下，当数据没有发完时，不会继续触发EPOLLOUT事件，因此需要循环检查发送数据
-	while (msgSize > 0)
-	{
-		factWriteSize = send(sessionID, msg.c_str() + factWriteSize, msgSize, 0);
-		if (factWriteSize < 0 && errno != EAGAIN)
+		string& msg = webSocketHandle.GetServerShakeHandsMsg();
+		if (!SendMessage(chatClient->GetSessionID(), msg)) // 发送握手包信息， 直接send
 		{
-			LOG_ERR("Write Data Error!!!, error: %s", strerror(errno));
-			return false;
+			LOG_ERR("Send Shake Hands Msg Failed");
+			return ERROR_CODE_SEND_SHAKE_HANDS_MSG_FAILED;
 		}
-		msgSize -= factWriteSize;
+		LOG_RUN("The Handshake With Websocket[ip: %s, port: %d] Has Been Established!!!", chatClient->GetIP().c_str(), chatClient->GetPort());
+		printf("The Handshake With Websocket[ip: %s, port: %d] Has Been Established!!!", chatClient->GetIP().c_str(), chatClient->GetPort());
 	}
-	return true;
-}
-
-bool ChatServer::_WebSocketShakeHandsHandle()
-{
 	return false;
 }
 
-Message * ChatServer::GetMessageBySessionID(int sessionID)
-{
-	SendMsgMap::iterator it = m_sendMsgMap.find(sessionID);
-	if (it == m_sendMsgMap.end())
-	{
-		LOG_ERR("This Message Not Exist!!!");
-		return NULL;
-	}
-
-	return it->second;
-}
-
-bool ChatServer::DelMessageBySessionID(int sessionID)
-{
-	SendMsgMap::iterator it = m_sendMsgMap.find(sessionID);
-	if (it == m_sendMsgMap.end())
-	{
-		LOG_ERR("This Message Not Exist!!!");
-		return false;
-	}
-	Message* message = it->second;
-	SAFE_DELETE(message);
-	m_sendMsgMap.erase(it);
-
-	return true;
-}
-
-bool ChatServer::_AddMessageToMessage(int sessionID, Message * message)
-{
-	ASSERT_RETURN(message != NULL, false);
-	m_sendMsgMap.insert(SendMsgMap::value_type(sessionID, message));
-	return true;
-}
 
 bool ChatServer::SendMessage(Message * message)
 {
 	ASSERT_RETURN(message != NULL, false);
+	SCMessage* scMsg = dynamic_cast<SCMessage*>(message);
+	if (NULL == scMsg)
+	{
+		LOG_ERR("Dynamic_cast Failed!!!");
+		return false;
+	}
+	string& data = scMsg->GetSerializeData();
 
-	if (!_AddMessageToMessage(message->GetSessionID(), message))
+	if (!SendMessage(scMsg->GetSessionID(), data))
 	{
 		return false;
 	}
+	return true;
+}
 
-	if (!m_epoll->EpollMod(message->GetSessionID()))
+bool ChatServer::SendMessage(int sessionID, string & message)
+{
+	size_t msgSize = message.size();
+	ssize_t factSendSize = 0;
+
+	// 发送数据， ET模式下，当数据没有发完时，不会继续触发EPOLLOUT事件，因此需要循环检查发送数据
+	while (msgSize > 0)
 	{
-		return false;
+		factSendSize = send(sessionID, message.c_str() + message.size() - msgSize, msgSize, 0);
+		if (factSendSize < 0 && errno != EAGAIN)
+		{
+			LOG_ERR("Send Data Error!!!, error: %s", strerror(errno));
+			return false;
+		}
+		msgSize -= factSendSize;
 	}
 	return true;
 }

@@ -38,11 +38,24 @@ bool ChatClient::IsBuildLongConn()
 void ChatClient::SetIsBuildLongConn(bool isBuildLongConn)
 {
 	m_isBuildLongConn = isBuildLongConn;
+	if (isBuildLongConn)
+	{
+	}
 }
 
 CSMsgBuff & ChatClient::GetCSMsgBuff()
 {
 	return m_recvMsgData;
+}
+
+time_t & ChatClient::GetRecvTickTime()
+{
+	return m_recvTickTime;
+}
+
+void ChatClient::SetRecvTickTime(time_t recvTickTime)
+{
+	m_recvTickTime = recvTickTime;
 }
 
 bool ChatClient::InitChatClient(SockAddr_In clientAddr)
@@ -67,6 +80,6 @@ bool ChatClient::SaveMsgData(char * data, uint32_t dataLen)
 
 	if (m_recvMsgData.IsNeedParseBuff())
 	{
-		Message* message;
+		CSMessage csMsg(m_sessionID);
 	}
 }

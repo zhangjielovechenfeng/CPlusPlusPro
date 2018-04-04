@@ -2,6 +2,7 @@
 #include "Util.h"
 #include <iostream>
 #include <boost/function.hpp>
+#include <boost/bind.hpp>
 
 /*
 	定时器：使用linux中select的第五个参数实现
@@ -18,7 +19,7 @@ public:
 public:
 	void Sleep();
 
-	void Start(uint64_t msecond, CallbackFunc* func);
+	void Start(uint64_t msecond, CallbackFunc func);
 	bool Going();
 	void Stop();
 
@@ -27,7 +28,7 @@ public:
 private:
 	uint64_t		m_triggerIntervalMTime; // 触发间隔时间
 	uint64_t		m_nextTriggerMTime;		// 下次触发时间
-	bool		m_stopFlag;
+	bool			m_stopFlag;
 	
 };
 

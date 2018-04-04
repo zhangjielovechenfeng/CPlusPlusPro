@@ -18,12 +18,11 @@ public:
 public:
 	CSMsgPkg& GetMsgPkg();
 
-	void SetSessionID(int sessionID);
 	int GetSessionID();
 
 public:
 	// 消息处理函数，子类自己实现
-	virtual void HandleMsgData(char* data) = 0;		
+	virtual void HandleMsgData() = 0;		
 
 protected:
 	CSMsgPkg		m_csMsgPkg;
@@ -36,7 +35,7 @@ protected:
 class CSMessage : public Message
 {
 public:
-	CSMessage();
+	CSMessage(int session);
 	virtual ~CSMessage();
 public:
 	CSMsgPkg& GetMsgPkg();
@@ -46,7 +45,11 @@ public:
 	bool HandleMsg();
 
 	// 解析
-	virtual void HandleMsgData(char* data);
+	virtual void HandleMsgData();
+
+	void SetMsgData(char* data);
+private:
+	string				m_data;
 
 };
 
@@ -57,15 +60,16 @@ S->C过程中S发送的消息
 class SCMessage : public Message
 {
 public:
-	SCMessage();
+	SCMessage(int sessionID);
 	virtual ~SCMessage();
 
 public:
-	// 解析消息,并通知消息处理handle
-	bool ParseMsgToPkg();
+	// 处理发送msg
+	virtual void HandleMsgData();
 
-	// 
-	virtual void HandleMsgData(char* data);
+	string& GetSerializeData();
+private:
+	string			m_serializeData; // 序列化后的数据
 
 };
 

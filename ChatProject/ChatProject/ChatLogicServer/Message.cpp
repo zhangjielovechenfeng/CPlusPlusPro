@@ -5,6 +5,8 @@
 
 Message::Message()
 {
+	m_csMsgPkg.Clear();
+	m_sessionID = 0;
 }
 
 
@@ -17,19 +19,15 @@ CSMsgPkg & Message::GetMsgPkg()
 	return m_csMsgPkg;
 }
 
-void Message::SetSessionID(int sessionID)
-{
-	m_sessionID = sessionID;
-}
-
 int Message::GetSessionID()
 {
 	return m_sessionID;
 }
 
-CSMessage::CSMessage()
+CSMessage::CSMessage(int sessionID)
 {
-	m_csMsgPkg.Clear();
+	m_sessionID = sessionID;
+	m_data = NULL;
 }
 
 CSMessage::~CSMessage()
@@ -64,13 +62,41 @@ bool CSMessage::HandleMsg()
 	return true;
 }
 
-void CSMessage::HandleMsgData(char * data)
+void CSMessage::HandleMsgData()
 {
-	ASSERT_RETURN_VOID(data != NULL)
-
 	m_csMsgPkg.Clear();
 
-	memcpy(&m_csMsgPkg, data, sizeof(m_csMsgPkg));
+	m_csMsgPkg.ParseFromString(m_data);
+	//memcpy(&m_csMsgPkg, data, sizeof(m_csMsgPkg));
 
 	HandleMsg();
+}
+
+void CSMessage::SetMsgData(char * data)
+{
+	m_data = data;
+}
+
+SCMessage::SCMessage(int sessionID)
+{
+	m_sessionID = sessionID;
+	m_serializeData.clear();
+}
+
+SCMessage::~SCMessage()
+{
+}
+
+void SCMessage::HandleMsgData()
+{
+	if (m_csMsgPkg.SerializeToString(&m_serializeData)) // 序列化数据包
+	{
+		LOG_ERR("Serialize Msg Data Failed!!!");
+		return;
+	}
+}
+
+string & SCMessage::GetSerializeData()
+{
+	return m_serializeData;
 }

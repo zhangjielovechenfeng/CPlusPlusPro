@@ -9,7 +9,7 @@
 
 #define SERVER_PORT 8888		// 服务器端口号
 #define LISTEN_LEN 1024			// 监听队列长度
-#define DATA_BUFF_SIZE 1024	    // 数据buff大小
+#define DATA_BUFF_SIZE 8 * 1024	    // 数据buff大小
 
 using namespace std;
 /*
@@ -18,7 +18,6 @@ using namespace std;
 
 typedef struct sockaddr_in	SockAddr_In;
 typedef struct sockaddr		SockAddr;
-typedef map<int /*sessionID*/,Message*>	SendMsgMap;	// 消息发送map
 
 class ChatServer
 {
@@ -36,14 +35,10 @@ public:
 	// 断开服务器
 	void Stop();
 
-	// 通过sessionID获取message
-	Message* GetMessageBySessionID(int sessionID);
-
-	// 通过sessionID删除message
-	bool DelMessageBySessionID(int sessionID);
-
 	// 派发消息
 	bool SendMessage(Message* message);
+
+	bool SendMessage(int sessionID, string& message);
 
 private:
 	// 创建socket连接
@@ -64,20 +59,11 @@ private:
 	// 接收消息
 	int _RecvMsg(int sessionID);
 
-	// 发送消息
-	bool _SendMsg(int sessionID);
-
-	// 发送握手消息
-	bool _SendShakeHandsMsg(int sessionID, string& msg);
-
 	// websocket握手处理
-	bool _WebSocketShakeHandsHandle();
+	bool _WebSocketShakeHandsHandle(ChatClient* chatClient);
 
-	// 添加新的message到Map
-	bool _AddMessageToMessage(int sessionID, Message* message);
 private:
 	MyEpoll*		m_epoll;
 	int				m_socketFd;
-	SendMsgMap		m_sendMsgMap; // 消息发送map
 };
 
