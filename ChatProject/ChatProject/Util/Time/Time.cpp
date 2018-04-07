@@ -2,9 +2,9 @@
 #include "stddef.h"
 #include <errno.h>
 #include <string.h>
-#include "LogPrint.h"
-#include "ErrDefine.h"
-#include "Util.h"
+#include "../LogPrint.h"
+#include "../ErrDefine.h"
+#include "../Util.h"
 
 Time::Time()
 {
@@ -24,7 +24,7 @@ uint64_t Time::GetCurrMTime()
 		LOG_ERR("Get Curr Time Failed!!!, error: %s", strerror(errno));
 		return ERROR_CODE_GET_CURR_TIME_FAILED;
 	}
-	return tv.tv_sec * 1000000 + tv.tv_usec;
+	return (tv.tv_sec * 1000000 + tv.tv_usec) / 1000;
 }
 
 string Time::GetCurrDate()
@@ -41,4 +41,14 @@ string Time::GetCurrDate()
 	ASSERT_RETURN(tm != NULL, NULL)
 
 	return asctime(tm);
+}
+
+void Time::MSleep(time_t msecond)
+{
+	struct timeval tv;
+
+	tv.tv_sec = msecond / 1000;
+	tv.tv_usec = (msecond % 1000) * 1000; //’‚¿Ô «Œ¢√Î
+
+	select(0, NULL, NULL, NULL, &tv);
 }

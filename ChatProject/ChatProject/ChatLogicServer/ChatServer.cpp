@@ -9,6 +9,7 @@
 #include "../Util/ErrDefine.h"
 #include "../Util/Util.h"
 #include "WebSocketHandle.h"
+#include "../Util/Time/TimeWheelManager.h"
 
 ChatServer::ChatServer()
 {
@@ -314,6 +315,18 @@ bool ChatServer::_WebSocketShakeHandsHandle(ChatClient* chatClient)
 		printf("The Handshake With Websocket[ip: %s, port: %d] Has Been Established!!!", chatClient->GetIP().c_str(), chatClient->GetPort());
 	}
 	return false;
+}
+
+bool ChatServer::StartTimeWheelThread()
+{
+	TimeWheelManager& timeWheelManager = TimeWheelManager::Instance();
+	m_timerWheelThread = new boost::thread(boost::bind(&TimeWheelManager::Run, &timeWheelManager));
+	return true;
+}
+
+void ChatServer::WaitTimeWheelThreadExit()
+{
+	m_timerWheelThread->join();
 }
 
 

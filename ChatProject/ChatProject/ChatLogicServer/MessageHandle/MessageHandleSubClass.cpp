@@ -2,8 +2,9 @@
 
 bool MessageHandleHeartBeatReq::Handle()
 {
-	Message Message();
-	m_msg->GetMsgPkg()
-	m_msg->GetSessionID()
+	SCMessage scMsg(m_msg->GetSessionID());
+
+	m_msg->GetMsgPkg();
+	
 	return true;;
 }

@@ -1,6 +1,6 @@
 #pragma once
 #include "sys/time.h"
-#include "Util.h"
+#include "../Util.h"
 #include <string>
 
 using namespace std;
@@ -15,10 +15,12 @@ public:
 	~Time();
 
 public:
-	// 获取当前时间戳微秒
+	// 获取当前时间戳毫秒
 	static uint64_t GetCurrMTime();
 
 	// 获取当前日期
 	static string GetCurrDate();
+
+	static void MSleep(time_t msecond);
 };
 

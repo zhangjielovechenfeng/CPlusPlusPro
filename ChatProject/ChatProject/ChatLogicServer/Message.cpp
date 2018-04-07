@@ -27,7 +27,7 @@ int Message::GetSessionID()
 CSMessage::CSMessage(int sessionID)
 {
 	m_sessionID = sessionID;
-	m_data = NULL;
+	m_data.clear();
 }
 
 CSMessage::~CSMessage()

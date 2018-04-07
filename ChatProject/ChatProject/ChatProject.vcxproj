@@ -82,8 +82,11 @@
     <ClCompile Include="ChatLogicServer\MessageHandle\MessageHandleSubClass.cpp" />
     <ClCompile Include="Protocol\ProtoDest\CSProtoPkgBodyDef.pb.cc" />
     <ClCompile Include="Protocol\ProtoDest\CSProtoPkgDef.pb.cc" />
-    <ClCompile Include="Util\Time.cpp" />
-    <ClCompile Include="Util\Timer.cpp" />
+    <ClCompile Include="Util\Time\TimeWheelBucket.cpp" />
+    <ClCompile Include="Util\Time\TimeWheel.cpp" />
+    <ClCompile Include="Util\Time\TimeWheelManager.cpp" />
+    <ClCompile Include="Util\Time\Time.cpp" />
+    <ClCompile Include="Util\Time\Timer.cpp" />
     <ClCompile Include="Util\Log.cpp" />
     <ClCompile Include="Util\ThreadLock.cpp" />
     <ClCompile Include="ChatLogicServer\WebSocketHandle.cpp" />
@@ -102,8 +105,11 @@
     <ClInclude Include="ChatLogicServer\MessageHandle\MessageHandleSubClass.h" />
     <ClInclude Include="Protocol\ProtoDest\CSProtoPkgBodyDef.pb.h" />
     <ClInclude Include="Protocol\ProtoDest\CSProtoPkgDef.pb.h" />
-    <ClInclude Include="Util\Time.h" />
-    <ClInclude Include="Util\Timer.h" />
+    <ClInclude Include="Util\Time\TimeWheelBucket.h" />
+    <ClInclude Include="Util\Time\TimeWheel.h" />
+    <ClInclude Include="Util\Time\TimeWheelManager.h" />
+    <ClInclude Include="Util\Time\Time.h" />
+    <ClInclude Include="Util\Time\Timer.h" />
     <ClInclude Include="Util\CommonFactory.h" />
     <ClInclude Include="Util\ErrDefine.h" />
     <ClInclude Include="Util\Log.h" />
@@ -124,13 +130,13 @@
     <ClCompile>
       <AdditionalIncludeDirectories>C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includetwo\include;C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeone\include;E:\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includetwo;E:\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\Linux\include\usr\includeone;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CppLanguageStandard>c++98</CppLanguageStandard>
-      <AdditionalOptions>-lprotobuf -lboost_system %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-lprotobuf -L/usr/local/lib -lboost_system -lboost_filesystem -lboost_thread %(AdditionalOptions)</AdditionalOptions>
       <ObjectFileName>$(IntDir)%(filename).o</ObjectFileName>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LibraryDependencies>%(LibraryDependencies)</LibraryDependencies>
-      <AdditionalOptions>-lprotobuf -lboost_system %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-lprotobuf -L/usr/local/lib -lboost_system -lboost_filesystem -lboost_thread %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">

@@ -6,6 +6,7 @@
 #include <map>
 #include "Message.h"
 #include <string>
+#include <boost/thread.hpp>
 
 #define SERVER_PORT 8888		// 服务器端口号
 #define LISTEN_LEN 1024			// 监听队列长度
@@ -19,6 +20,7 @@ using namespace std;
 typedef struct sockaddr_in	SockAddr_In;
 typedef struct sockaddr		SockAddr;
 
+class ChatClient;
 class ChatServer
 {
 public:
@@ -39,6 +41,10 @@ public:
 	bool SendMessage(Message* message);
 
 	bool SendMessage(int sessionID, string& message);
+
+	bool StartTimeWheelThread();
+
+	void WaitTimeWheelThreadExit();
 
 private:
 	// 创建socket连接
@@ -65,5 +71,6 @@ private:
 private:
 	MyEpoll*		m_epoll;
 	int				m_socketFd;
+	boost::thread*  m_timerWheelThread;
 };
 

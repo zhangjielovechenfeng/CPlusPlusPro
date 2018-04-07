@@ -2,7 +2,7 @@
 #include "../Util/LogPrint.h"
 #include "../Util/Util.h"
 #include <iostream>
-#include "../Util/Time.h"
+#include "../Util/Time/Time.h"
 #include <unistd.h>
 
 using namespace std;
@@ -25,7 +25,7 @@ ChatClientManager::~ChatClientManager()
 
 bool ChatClientManager::InitTickTimer()
 {
-	m_tickTimer.Start(5 * ONE_SECOND_TO_MSECOND, TIMER_IND_FUNC(&_CheckClientTick));
+	m_tickTimer.Start(5 * ONE_SECOND_TO_MSECOND, TIMER_IND_FUNC(&ChatClientManager::_CheckClientTick));
 	return true;
 }
 

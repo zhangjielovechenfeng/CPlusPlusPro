@@ -17,7 +17,7 @@ public:
 public:
 	virtual bool Handle() = 0;
 
-private:
+protected:
 	Message*	m_msg;
 };
 

@@ -1,7 +1,9 @@
 #pragma once
 
 #include "../Protocol/ProtoDest/CSProtoPkgDef.pb.h"
+#include <string>
 
+using namespace std;
 
 using namespace CSProtocol;
 
