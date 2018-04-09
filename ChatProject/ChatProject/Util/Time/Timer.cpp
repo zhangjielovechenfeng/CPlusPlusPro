@@ -3,12 +3,14 @@
 #include <cstddef>
 #include "Time.h"
 #include "TimeWheelManager.h"
+#include <cstdio>
 
 Timer::Timer()
 {
 	m_triggerIntervalMTime = 0;
 	m_nextTriggerMTime = 0;
 	m_stopFlag = true;
+	m_isTrigger = false;
 }
 
 
@@ -17,8 +19,19 @@ Timer::~Timer()
 	Stop();
 }
 
+void Timer::SetIsTrigger(bool isTrigger)
+{
+	m_isTrigger = isTrigger;
+}
+
+bool Timer::IsTrigger()
+{
+	return m_isTrigger;
+}
+
 void Timer::Start(time_t msecond, CallbackFunc func)
 {
+	Time::MSleep(3000);
 	m_stopFlag = false;
 	m_triggerIntervalMTime = msecond;
 	m_func = func;
@@ -40,6 +53,8 @@ void Timer::Stop()
 
 void Timer::Trigger()
 {
+	m_isTrigger = true;
+	printf("%s", Time::GetCurrDate().c_str());
 	m_func();
 }
 

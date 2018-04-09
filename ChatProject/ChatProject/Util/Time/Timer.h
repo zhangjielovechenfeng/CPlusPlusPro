@@ -41,8 +41,15 @@ public:
 	~Timer();
 
 public:
+	void SetIsTrigger(bool isTrigger);
+
+	bool IsTrigger();
+
+public:
 	void Start(time_t msecond, CallbackFunc func);
+
 	bool Going();
+
 	void Stop();
 
 	void Trigger();
@@ -70,6 +77,7 @@ private:
 	time_t				m_triggerIntervalMTime; // 触发间隔时间
 	time_t				m_nextTriggerMTime;		// 下次触发时间
 	bool				m_stopFlag;
+	bool				m_isTrigger;			// 是否触发
 	TimerTrackInfoList	m_timerTrackInfoList;	// Timer跟踪信息列表
 };
 

@@ -47,7 +47,7 @@ bool TimeWheelManager::InsertTimer(Timer & timer)
 {
 	int timeWheelIndex = 0;
 
-	if (timer.GetTimerInfoTrackList().empty())
+	if (timer.GetTimerInfoTrackList().empty() || timer.IsTrigger())
 	{
 		for ( ; timeWheelIndex < (int)m_timeWheelVec.size(); ++timeWheelIndex)
 		{
@@ -64,7 +64,6 @@ bool TimeWheelManager::InsertTimer(Timer & timer)
 		ASSERT_RETURN(oldTimer != NULL, false);
 		
 		timeWheelIndex = oldTimer->m_timeWheelIndex;	
-
 	}
 	
 	m_timeWheelVec[timeWheelIndex - 1]->InsertTimer(timer);
@@ -82,7 +81,12 @@ time_t TimeWheelManager::GetCurrTime()
 		{
 			return 0;
 		}
-		currTime += (timeWheel->GetCursor() + 1) * m_tickIntervalMs * pow(m_bucketNum, i);
+		// 表示时间轮还没开始运行，直接返回0,方便计算位置
+		if (timeWheel->GetCursor() < 0)
+		{
+			return 0;
+		}
+		currTime += timeWheel->GetCursor() * m_tickIntervalMs * pow(m_bucketNum, i);  
 	}
 	return currTime;
 }

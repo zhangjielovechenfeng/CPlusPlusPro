@@ -55,10 +55,11 @@ void TimeWheel::InsertTimer(Timer & timer)
 
 
 	int bucketIndex = 0;
-	if (timer.GetTimerInfoTrackList().empty())
+	if (timer.GetTimerInfoTrackList().empty() || timer.IsTrigger())
 	{
 		bucketIndex = (timer.GetTriggerIntervalMTime() + TimeWheelManager::Instance().GetCurrTime()) / GetBucketTimeSpan() ;
 		timerInfo->m_leftMTimeToTrigger = (timer.GetTriggerIntervalMTime() + TimeWheelManager::Instance().GetCurrTime()) % GetBucketTimeSpan();
+		timer.SetIsTrigger(false);
 	}
 	else
 	{
@@ -73,6 +74,19 @@ void TimeWheel::InsertTimer(Timer & timer)
 	timer.AddTimerInfoToList(timerInfo);
 
 	GetTimeWheelBucketByIndex(bucketIndex)->InsertTimer(timer);
+
+	// 如果添加的时间段正在触发，立即向下一轮移动，最低层直接处理
+	if (bucketIndex == GetCursor())
+	{
+		if (m_index != LOWEST_LAYER_TIMEWHEEL_INDEX)
+		{
+			timer.MoveToNextTimeWheel();
+		}
+		else
+		{
+			m_timeWheelBucketVec[bucketIndex]->HandleTask();
+		}
+	}
 }
 
 int TimeWheel::GetCursor()
