@@ -17,7 +17,8 @@ public:
 
 	int GetCursor();
 
-	void SetCursor(int cursor);
+	// 返回false表示时间轮走完一轮，需重置重新开始
+	bool SetCursor(int cursor);
 
 	bool InitTimeWheel(int bucketNum);
 
@@ -26,8 +27,8 @@ public:
 	// 插入定时器
 	void InsertTimer(Timer& timer);
 
-	// 获取更低索引的时间轮时间跨度
-	time_t GetLowerIndexTimeSpan();
+	// 获取桶的时间跨度
+	time_t GetBucketTimeSpan();
 
 	// 根据索引获取时间轮桶
 	TimeWheelBucket* GetTimeWheelBucketByIndex(int index);

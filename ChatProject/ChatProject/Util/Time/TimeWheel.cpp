@@ -7,6 +7,8 @@ TimeWheel::TimeWheel(int index)
 {
 	m_index = index;
 	m_cursor = -1;
+	m_taskCount = 0;
+	m_timeWheelBucketVec.clear();
 }
 
 
@@ -26,23 +28,22 @@ bool TimeWheel::InitTimeWheel(int bucketNum)
 		TimeWheelBucket* timeWheelBucket = new TimeWheelBucket(m_index);
 		m_timeWheelBucketVec.push_back(timeWheelBucket);
 	}
-	return false;
+	return true;
 }
 
 bool TimeWheel::Run()
 {
-	for (int i = 0; i < (int)m_timeWheelBucketVec.size(); ++i)
+	while(1)
 	{
 		// 只最低层次轮子调用MSleep，先MSleep后再进行处理
 		Time::MSleep(TimeWheelManager::Instance().GetTickIntervalMs());
 
-		// 处理桶上的任务
-		TimeWheelBucket* timeWheelBucket = m_timeWheelBucketVec[i];
-		if (!timeWheelBucket->IsEmpty())
+		if (!SetCursor(GetCursor() + 1))
 		{
-			timeWheelBucket->HandleTask();
+			// 重置轮子
+			TimeWheelManager::Instance().ResetTimeWheel();
+			continue;
 		}
-		SetCursor(GetCursor() + 1);
 	}
 	return true;
 }
@@ -56,19 +57,21 @@ void TimeWheel::InsertTimer(Timer & timer)
 	int bucketIndex = 0;
 	if (timer.GetTimerInfoTrackList().empty())
 	{
-		bucketIndex = (timer.GetTriggerIntervalMTime() + TimeWheelManager::Instance().GetCurrTime()) / GetLowerIndexTimeSpan();
-		timerInfo->m_leftMTimeToTrigger = (timer.GetTriggerIntervalMTime() + TimeWheelManager::Instance().GetCurrTime()) % GetLowerIndexTimeSpan();
+		bucketIndex = (timer.GetTriggerIntervalMTime() + TimeWheelManager::Instance().GetCurrTime()) / GetBucketTimeSpan() ;
+		timerInfo->m_leftMTimeToTrigger = (timer.GetTriggerIntervalMTime() + TimeWheelManager::Instance().GetCurrTime()) % GetBucketTimeSpan();
 	}
 	else
 	{
 		TimerInfo* oldTimerInfo = timer.GetLastTimerTrackInfo();
 		ASSERT_RETURN_VOID(oldTimerInfo != NULL);
 
-		bucketIndex = oldTimerInfo->m_leftMTimeToTrigger / GetLowerIndexTimeSpan();
-		timerInfo->m_leftMTimeToTrigger = oldTimerInfo->m_leftMTimeToTrigger % GetLowerIndexTimeSpan();
+		bucketIndex = oldTimerInfo->m_leftMTimeToTrigger / GetBucketTimeSpan();
+		timerInfo->m_leftMTimeToTrigger = oldTimerInfo->m_leftMTimeToTrigger % GetBucketTimeSpan();
 	}
 
 	timerInfo->m_bucketIndex = bucketIndex;
+	timer.AddTimerInfoToList(timerInfo);
+
 	GetTimeWheelBucketByIndex(bucketIndex)->InsertTimer(timer);
 }
 
@@ -77,29 +80,47 @@ int TimeWheel::GetCursor()
 	return m_cursor;
 }
 
-void TimeWheel::SetCursor(int cursor)
+bool TimeWheel::SetCursor(int cursor)
 {
 	m_cursor = cursor;
-	// 此时需要进位
-	if (m_cursor == (int)m_timeWheelBucketVec.size() )
+
+	if (m_cursor == 0)
+	{
+		TimeWheel* timeWheel = TimeWheelManager::Instance().GetTimeWheelByIndex(m_index + 1);
+		if (timeWheel != NULL)
+		{
+			timeWheel->SetCursor(0);
+		}
+	}
+
+	if (m_cursor == (int)m_timeWheelBucketVec.size())
 	{
 		TimeWheel* timeWheel = TimeWheelManager::Instance().GetTimeWheelByIndex(m_index + 1);
 		if (NULL == timeWheel)
 		{
-			// 已经是最上层时间轮，运行结束，重新开始
-			TimeWheelManager::Instance().ResetTimeWheel();
-			TimeWheelManager::Instance().Run();
-			return;
+			return false;
 		}
-		timeWheel->SetCursor(timeWheel->GetCursor() + 1);
+		
+		if (!timeWheel->SetCursor(timeWheel->GetCursor() + 1))
+		{
+			return false;
+		}
 		m_cursor = 0;
 	}
+
+	// 处理桶上的任务
+	TimeWheelBucket* timeWheelBucket = m_timeWheelBucketVec[m_cursor];
+	if (!timeWheelBucket->IsEmpty())
+	{
+		timeWheelBucket->HandleTask();
+	}
+	return true;
 }
 
-time_t TimeWheel::GetLowerIndexTimeSpan()
+time_t TimeWheel::GetBucketTimeSpan()
 {
 
-	return pow(TimeWheelManager::Instance().GetTickIntervalMs() * m_timeWheelBucketVec.size(), m_index);
+	return pow(TimeWheelManager::Instance().GetTickIntervalMs(), m_index + 1);
 }
 
 TimeWheelBucket * TimeWheel::GetTimeWheelBucketByIndex(int index)

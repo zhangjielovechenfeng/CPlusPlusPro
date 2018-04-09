@@ -5,7 +5,7 @@
 #include "../Util/Singleton.h"
 #include "../Util/Time/Timer.h"
 
-#define ONE_SECOND_TO_MSECOND 1000000 // 一秒和微秒的换算关系
+#define ONE_SECOND_TO_MSECOND 1000 // 一秒和毫秒的换算关系
 #define MAX_INTERVAL_TIME 5
 
 using namespace std;
@@ -35,8 +35,7 @@ public:
 
 	ChatClient* GetChatClient(int sessionID);
 
-private:
-	void _CheckClientTick();
+	void CheckClientTick();
 
 private:
 	ChatClientMap	m_chatClientMap; // 客户端map

@@ -48,6 +48,15 @@ public:
 	// 移除定时器任务
 	bool RemoveTimerTask(Timer & timer);
 
+	// 把最低桶上的定时器任务派往下一个时间轮
+	bool DistributeTimerTaskToLower();
+
+	// 设置任务链根节点
+	void SetRootNode(TaskQueueNode * rootNode);
+
+	// 获取任务链根节点
+	TaskQueueNode* GetRootNode();
+
 private:
 	int					m_timeWheelIndex;	// 时间轮索引
 	TaskQueueNode*		m_rootNode;			// 任务链根节点

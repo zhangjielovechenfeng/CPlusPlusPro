@@ -51,7 +51,7 @@ bool TimeWheelManager::InsertTimer(Timer & timer)
 	{
 		for ( ; timeWheelIndex < (int)m_timeWheelVec.size(); ++timeWheelIndex)
 		{
-			if (1 < (GetCurrTime() + timer.GetTriggerIntervalMTime()) / pow(m_tickIntervalMs * m_bucketNum, timeWheelIndex + 1))
+			if (1 <= (GetCurrTime() + timer.GetTriggerIntervalMTime()) / pow(m_tickIntervalMs * m_bucketNum, timeWheelIndex))
 			{
 				continue;
 			}
@@ -62,12 +62,11 @@ bool TimeWheelManager::InsertTimer(Timer & timer)
 	{
 		TimerInfo * oldTimer = timer.GetLastTimerTrackInfo();
 		ASSERT_RETURN(oldTimer != NULL, false);
-
+		
 		timeWheelIndex = oldTimer->m_timeWheelIndex;	
+
 	}
 	
-	//timerInfo->m_timeWheelIndex = timeWheelIndex - 1;
-	//timer.AddTimerInfoToList(timerInfo);
 	m_timeWheelVec[timeWheelIndex - 1]->InsertTimer(timer);
 
 	return true;
@@ -83,19 +82,23 @@ time_t TimeWheelManager::GetCurrTime()
 		{
 			return 0;
 		}
-		currTime += timeWheel->GetCursor() * m_tickIntervalMs * pow(m_bucketNum, i);
+		currTime += (timeWheel->GetCursor() + 1) * m_tickIntervalMs * pow(m_bucketNum, i);
 	}
 	return currTime;
 }
 
-TimeWheel * TimeWheelManager::GetTimeWheelByIndex(int index)
+TimeWheel* TimeWheelManager::GetTimeWheelByIndex(int index)
 {
+	if (index == m_timeWheelVec.size())
+	{
+		return NULL;
+	}
 	return m_timeWheelVec[index];
 }
 
 bool TimeWheelManager::ResetTimeWheel()
 {
-	for (int i = 0; i < m_timeWheelVec.size(); ++i)
+	for (int i = 0; i < (int)m_timeWheelVec.size(); ++i)
 	{
 		m_timeWheelVec[i]->SetCursor(-1);
 	}

@@ -14,6 +14,14 @@ using namespace std;
 */
 class TimerInfo
 {
+public: 
+	TimerInfo() 
+	{
+		m_timeWheelIndex = -1;
+		m_bucketIndex = -1;
+		m_leftMTimeToTrigger = -1;
+	}
+	~TimerInfo() {}
 public:
 	int		m_timeWheelIndex;		// 时间轮索引
 	int		m_bucketIndex;			// 桶索引

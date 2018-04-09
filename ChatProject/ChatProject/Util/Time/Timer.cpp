@@ -20,6 +20,10 @@ Timer::~Timer()
 void Timer::Start(time_t msecond, CallbackFunc func)
 {
 	m_stopFlag = false;
+	m_triggerIntervalMTime = msecond;
+	m_func = func;
+
+	ThreadLock ThreadLock();
 	TimeWheelManager::Instance().InsertTimer(*this);
 }
 
@@ -52,7 +56,7 @@ time_t Timer::GetTriggerIntervalMTime()
 TimerInfo * Timer::GetLastTimerTrackInfo()
 {
 	TimerTrackInfoList::iterator it = m_timerTrackInfoList.end();
-	if (NULL == *it)
+	if (NULL == *(--it))
 	{
 		return NULL;
 	}

@@ -25,7 +25,7 @@ ChatClientManager::~ChatClientManager()
 
 bool ChatClientManager::InitTickTimer()
 {
-	m_tickTimer.Start(5 * ONE_SECOND_TO_MSECOND, TIMER_IND_FUNC(&ChatClientManager::_CheckClientTick));
+	m_tickTimer.Start(5 * ONE_SECOND_TO_MSECOND, TIMER_IND_FUNC(&ChatClientManager::CheckClientTick));
 	return true;
 }
 
@@ -80,7 +80,7 @@ ChatClient * ChatClientManager::GetChatClient(int sessionID)
 	return it->second;
 }
 
-void ChatClientManager::_CheckClientTick()
+void ChatClientManager::CheckClientTick()
 {
 	// 获取当前时间
 	time_t currMtime = Time::GetCurrMTime();

@@ -12,11 +12,17 @@ TimeWheelBucket::TimeWheelBucket(int timeWheelIndex)
 
 TimeWheelBucket::~TimeWheelBucket()
 {
+	while (!IsEmpty())
+	{
+		TaskQueueNode * firstNode = PopFirst();
+		SAFE_DELETE(firstNode);
+	}
+	SAFE_DELETE(m_rootNode);
 }
 
 bool TimeWheelBucket::IsEmpty()
 {
-	if (m_rootNode->m_next == m_rootNode->m_prev && NULL == m_rootNode->m_next && NULL == m_rootNode->m_next)
+	if (m_rootNode->m_next == m_rootNode->m_prev && m_rootNode == m_rootNode->m_next && m_rootNode == m_rootNode->m_next)
 	{
 		return true;
 	}
@@ -103,4 +109,30 @@ bool TimeWheelBucket::RemoveTimerTask(Timer & timer)
 	tmpNode->m_prev->m_next = tmpNode->m_next;
 	tmpNode->m_next->m_prev = tmpNode->m_prev;
 	return true;
+}
+
+bool TimeWheelBucket::DistributeTimerTaskToLower()
+{
+	while (!IsEmpty())
+	{
+		TaskQueueNode * firstNode = PopFirst();
+		Timer* timer = firstNode->m_timer;
+		if (NULL == timer)
+		{
+			LOG_ERR("Add Timer Error!!!");
+			continue;
+		}
+		TimeWheelManager::Instance().GetTimeWheelByIndex(m_timeWheelIndex - 1)->InsertTimer(*timer);
+	}
+	return true;
+}
+
+void TimeWheelBucket::SetRootNode(TaskQueueNode * rootNode)
+{
+	m_rootNode = rootNode;
+}
+
+TaskQueueNode * TimeWheelBucket::GetRootNode()
+{
+	return m_rootNode;
 }

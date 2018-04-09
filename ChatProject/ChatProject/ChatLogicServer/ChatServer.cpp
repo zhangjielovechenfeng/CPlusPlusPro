@@ -22,7 +22,29 @@ ChatServer::~ChatServer()
 	SAFE_DELETE(m_epoll);
 }
 
-int ChatServer::InitChatServer()
+bool ChatServer::Init()
+{
+	if (ERROR_CODE_NONE != InitChatServerConn())
+	{
+		LOG_ERR("Init Chat Server Connect Failed!!!");
+		return false;
+	}
+	if (!TimeWheelManager::Instance().InitTimeWheelManager(4, 100, 100))
+	{
+		LOG_ERR("Init TimeWheel Manager Failed!!!");
+		return false;
+	}
+	// 初始化心跳机制
+	if (!ChatClientManager::Instance().InitTickTimer())
+	{
+		LOG_ERR("Init Tick Timer Failed!!!");
+		return false;
+	}
+
+	return true;
+}
+
+int ChatServer::InitChatServerConn()
 {
 	if (!_CreateScoketConnect())
 	{
@@ -52,16 +74,27 @@ int ChatServer::InitChatServer()
 		return ERROR_CODE_SOCKET_LISTEN_FAILED;
 	}
 
-	// 初始化心跳机制
-	ChatClientManager::Instance().InitTickTimer();
-
 	LOG_RUN("Chat Server Init OK!!!");
 	cout << "Chat Server Init OK!!!" << endl;
 
 	return ERROR_CODE_NONE;
 }
 
-int ChatServer::Run()
+bool ChatServer::Run()
+{
+	if (!StartTimeWheelThread())
+	{
+		return false;
+	}
+	if (ERROR_CODE_NONE != RunChatServer())
+	{
+		LOG_ERR("Chat Server Run Error!!!");
+		return false;
+	}
+	return true;
+}
+
+int ChatServer::RunChatServer()
 {
 	m_epoll = new MyEpoll();
 
@@ -208,6 +241,8 @@ int ChatServer::_SocketAccept()
 
 void ChatServer::Stop()
 {
+	m_timerWheelThread->interrupt();
+	m_timerWheelThread->join();
 	close(m_socketFd);
 }
 
@@ -323,12 +358,6 @@ bool ChatServer::StartTimeWheelThread()
 	m_timerWheelThread = new boost::thread(boost::bind(&TimeWheelManager::Run, &timeWheelManager));
 	return true;
 }
-
-void ChatServer::WaitTimeWheelThreadExit()
-{
-	m_timerWheelThread->join();
-}
-
 
 bool ChatServer::SendMessage(Message * message)
 {
