@@ -6,8 +6,7 @@
 TimeWheel::TimeWheel(int index)
 {
 	m_index = index;
-	m_cursor = -1;
-	m_taskCount = 0;
+	m_cursor = 0;
 	m_timeWheelBucketVec.clear();
 }
 
@@ -98,15 +97,7 @@ bool TimeWheel::SetCursor(int cursor)
 {
 	m_cursor = cursor;
 
-	if (m_cursor == 0)
-	{
-		TimeWheel* timeWheel = TimeWheelManager::Instance().GetTimeWheelByIndex(m_index + 1);
-		if (timeWheel != NULL)
-		{
-			timeWheel->SetCursor(0);
-		}
-	}
-
+	// 时间轮进位
 	if (m_cursor == (int)m_timeWheelBucketVec.size())
 	{
 		TimeWheel* timeWheel = TimeWheelManager::Instance().GetTimeWheelByIndex(m_index + 1);

@@ -23,9 +23,9 @@ ChatClientManager::~ChatClientManager()
 	m_chatClientMap.clear();
 }
 
-bool ChatClientManager::InitTickTimer()
+bool ChatClientManager::RunTickTimer()
 {
-	m_tickTimer.Start(5 * ONE_SECOND_TO_MSECOND, TIMER_IND_FUNC(&ChatClientManager::CheckClientTick));
+	m_tickTimer.Start(10 * ONE_SECOND_TO_MSECOND, TIMER_IND_FUNC(&ChatClientManager::CheckClientTick));
 	return true;
 }
 

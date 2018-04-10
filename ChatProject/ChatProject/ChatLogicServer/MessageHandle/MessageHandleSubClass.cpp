@@ -1,10 +1,13 @@
 #include "MessageHandleSubClass.h"
+#include "../ChatClientManager.h"
+#include "../../Util/Time/Time.h"
 
 bool MessageHandleHeartBeatReq::Handle()
 {
-	SCMessage scMsg(m_msg->GetSessionID());
+	ChatClient* chatClient = ChatClientManager::Instance().GetChatClient(m_msg->GetSessionID());
+	ASSERT_RETURN(chatClient != NULL, false);
 
-	m_msg->GetMsgPkg();
-	
+	chatClient->SetRecvTickTime(Time::GetCurrMTime());
+
 	return true;;
 }

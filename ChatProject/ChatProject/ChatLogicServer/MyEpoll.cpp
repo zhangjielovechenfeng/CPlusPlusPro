@@ -81,13 +81,7 @@ bool MyEpoll::EpollDel(int sessionID)
 
 int MyEpoll::EpollWait()
 {
-	int eventNum = epoll_wait(m_epollFd, m_recvEvent, MAX_EVENTS, 500); //这里是500ms
-	if (eventNum < 0)
-	{
-		LOG_ERR("Epoll Wait Had Timeout!!!");
-		return ERROR_CODE_EPOLL_WAIT_TIMEOUT;
-	}
-	return eventNum;
+	return epoll_wait(m_epollFd, m_recvEvent, MAX_EVENTS, 500); //这里是500ms
 }
 
 bool MyEpoll::CanReadData(int eventIndex)

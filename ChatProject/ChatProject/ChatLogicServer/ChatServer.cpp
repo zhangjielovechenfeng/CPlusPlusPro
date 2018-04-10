@@ -34,12 +34,6 @@ bool ChatServer::Init()
 		LOG_ERR("Init TimeWheel Manager Failed!!!");
 		return false;
 	}
-	// 初始化心跳机制
-	if (!ChatClientManager::Instance().InitTickTimer())
-	{
-		LOG_ERR("Init Tick Timer Failed!!!");
-		return false;
-	}
 
 	return true;
 }
@@ -86,11 +80,18 @@ bool ChatServer::Run()
 	{
 		return false;
 	}
+	if (!ChatClientManager::Instance().RunTickTimer())
+	{
+		LOG_ERR("Run Tick Timer Failed!!!");
+		return false;
+	}
+
 	if (ERROR_CODE_NONE != RunChatServer())
 	{
 		LOG_ERR("Chat Server Run Error!!!");
 		return false;
 	}
+
 	return true;
 }
 
@@ -148,29 +149,6 @@ int ChatServer::RunChatServer()
 					return ERROR_CODE_EPOLL_MOD_FAILED;
 				}
 			}
-			//else if(m_epoll->CanWriteData(i))
-			//{
-			//	int sessionID = m_epoll->GetRecvEvents()[i].data.fd;
-			//	if (sessionID < 0)
-			//	{
-			//		continue;
-			//	}
-			//	ChatClient* chatClient = ChatClientManager::Instance().GetChatClient(sessionID);
-			//	ASSERT_RETURN(chatClient != NULL, ERROR_CODE_CLIENT_NOT_EXIST);
-
-			//	//给发送消息加锁
-			//	ThreadLock lock();
-			//	if (!_SendMsg(sessionID))
-			//	{
-			//		LOG_ERR("Send Message Error!!!");
-			//		return ERROR_CODE_SEND_MSG_ERROR;
-			//	}
-			//	
-			//	if (!m_epoll->EpollMod(sessionID, EPOLLIN))
-			//	{
-			//		return ERROR_CODE_EPOLL_MOD_FAILED;
-			//	}
-			//}
 		}
 	}
 	return ERROR_CODE_NONE;
@@ -228,7 +206,6 @@ int ChatServer::_SocketAccept()
 	ChatClient* chatClient = ChatClientManager::Instance().GetChatClient(sessionID);
 	if (chatClient != NULL)
 	{
-		close(chatClient->GetSessionID());
 		ChatClientManager::Instance().DelChatClient(sessionID);
 	}
 
@@ -346,8 +323,8 @@ bool ChatServer::_WebSocketShakeHandsHandle(ChatClient* chatClient)
 			LOG_ERR("Send Shake Hands Msg Failed");
 			return ERROR_CODE_SEND_SHAKE_HANDS_MSG_FAILED;
 		}
-		LOG_RUN("The Handshake With Websocket[ip: %s, port: %d] Has Been Established!!!", chatClient->GetIP().c_str(), chatClient->GetPort());
-		printf("The Handshake With Websocket[ip: %s, port: %d] Has Been Established!!!", chatClient->GetIP().c_str(), chatClient->GetPort());
+		LOG_RUN("The Handshake With Websocket[ip: %s, port: %d] Has Been Established!!!\n", chatClient->GetIP().c_str(), chatClient->GetPort());
+		printf("The Handshake With Websocket[ip: %s, port: %d] Has Been Established!!!\n", chatClient->GetIP().c_str(), chatClient->GetPort());
 	}
 	return false;
 }

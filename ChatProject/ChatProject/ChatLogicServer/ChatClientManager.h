@@ -22,7 +22,8 @@ public:
 
 public:
 
-	bool InitTickTimer();
+	// 运行心跳
+	bool RunTickTimer();
 
 	// 添加聊天客户端（上线）
 	bool AddChatClient(int sessionID, SockAddr_In clientAddr);

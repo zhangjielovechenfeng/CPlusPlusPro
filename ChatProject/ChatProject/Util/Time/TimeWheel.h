@@ -20,8 +20,10 @@ public:
 	// 返回false表示时间轮走完一轮，需重置重新开始
 	bool SetCursor(int cursor);
 
+	// 初始化轮子
 	bool InitTimeWheel(int bucketNum);
 
+	// 运行轮子
 	bool Run();
 
 	// 插入定时器
@@ -39,7 +41,6 @@ public:
 private:
 	int					m_index;				// 时间轮的索引号，从0开始，方便数组索引
 	int					m_cursor;				// 轮上游标，相当于时钟的指针针
-	int					m_taskCount;			// 时间轮中任务数量
 	TimeWheelBucketVec	m_timeWheelBucketVec;	// 时间轮桶vec
 };
 

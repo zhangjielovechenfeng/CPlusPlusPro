@@ -6,6 +6,8 @@
 TimeWheelManager::TimeWheelManager()
 {
 	m_timeWheelVec.clear();
+	m_tickIntervalMs = 0;
+	m_bucketNum = 0;
 }
 
 
@@ -45,8 +47,10 @@ time_t TimeWheelManager::GetTickIntervalMs()
 
 bool TimeWheelManager::InsertTimer(Timer & timer)
 {
-	int timeWheelIndex = 0;
+	// Ïß³ÌËø
+	ThreadLock ThreadLock();
 
+	int timeWheelIndex = 0;
 	if (timer.GetTimerInfoTrackList().empty() || timer.IsTrigger())
 	{
 		for ( ; timeWheelIndex < (int)m_timeWheelVec.size(); ++timeWheelIndex)

@@ -16,7 +16,8 @@ class TimeWheelManager : public Singleton<TimeWheelManager>
 public:
 	TimeWheelManager();
 	~TimeWheelManager();
-
+	
+public:
 	bool InitTimeWheelManager(int timeWheelNum, time_t tickIntervalMs, int bucketNum);
 
 	// 运行时间轮
