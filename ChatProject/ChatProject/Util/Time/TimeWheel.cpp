@@ -56,8 +56,8 @@ void TimeWheel::InsertTimer(Timer & timer)
 	int bucketIndex = 0;
 	if (timer.GetTimerInfoTrackList().empty() || timer.IsTrigger())
 	{
-		bucketIndex = (timer.GetTriggerIntervalMTime() + TimeWheelManager::Instance().GetCurrTime()) / GetBucketTimeSpan() ;
-		timerInfo->m_leftMTimeToTrigger = (timer.GetTriggerIntervalMTime() + TimeWheelManager::Instance().GetCurrTime()) % GetBucketTimeSpan();
+		bucketIndex = (timer.GetTriggerIntervalMTime() + TimeWheelManager::Instance().GetCurrTime()) / TimeWheelManager::Instance().GetBucketTimeSpan(m_index);
+		timerInfo->m_leftMTimeToTrigger = (timer.GetTriggerIntervalMTime() + TimeWheelManager::Instance().GetCurrTime()) % TimeWheelManager::Instance().GetBucketTimeSpan(m_index);
 		timer.SetIsTrigger(false);
 	}
 	else
@@ -65,8 +65,8 @@ void TimeWheel::InsertTimer(Timer & timer)
 		TimerInfo* oldTimerInfo = timer.GetLastTimerTrackInfo();
 		ASSERT_RETURN_VOID(oldTimerInfo != NULL);
 
-		bucketIndex = oldTimerInfo->m_leftMTimeToTrigger / GetBucketTimeSpan();
-		timerInfo->m_leftMTimeToTrigger = oldTimerInfo->m_leftMTimeToTrigger % GetBucketTimeSpan();
+		bucketIndex = oldTimerInfo->m_leftMTimeToTrigger / TimeWheelManager::Instance().GetBucketTimeSpan(m_index);
+		timerInfo->m_leftMTimeToTrigger = oldTimerInfo->m_leftMTimeToTrigger % TimeWheelManager::Instance().GetBucketTimeSpan(m_index);
 	}
 
 	timerInfo->m_bucketIndex = bucketIndex;
@@ -120,12 +120,6 @@ bool TimeWheel::SetCursor(int cursor)
 		timeWheelBucket->HandleTask();
 	}
 	return true;
-}
-
-time_t TimeWheel::GetBucketTimeSpan()
-{
-
-	return pow(TimeWheelManager::Instance().GetTickIntervalMs(), m_index + 1);
 }
 
 TimeWheelBucket * TimeWheel::GetTimeWheelBucketByIndex(int index)

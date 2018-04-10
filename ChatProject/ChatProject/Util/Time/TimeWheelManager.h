@@ -40,6 +40,9 @@ public:
 	// 移除定时器任务
 	bool RemoveTimerTask(Timer & timer);
 
+	// 获取某个时间轮桶的时间跨度
+	time_t GetBucketTimeSpan(int timeWheelIndex);
+
 private:
 	TimeWheelVec		m_timeWheelVec;
 	time_t				m_tickIntervalMs;

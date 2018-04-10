@@ -55,7 +55,7 @@ bool TimeWheelManager::InsertTimer(Timer & timer)
 	{
 		for ( ; timeWheelIndex < (int)m_timeWheelVec.size(); ++timeWheelIndex)
 		{
-			if (1 <= (GetCurrTime() + timer.GetTriggerIntervalMTime()) / pow(m_tickIntervalMs * m_bucketNum, timeWheelIndex))
+			if (1 <= (GetCurrTime() + timer.GetTriggerIntervalMTime()) / GetBucketTimeSpan(timeWheelIndex)) 
 			{
 				continue;
 			}
@@ -117,4 +117,9 @@ bool TimeWheelManager::RemoveTimerTask(Timer & timer)
 {
 	m_timeWheelVec[timer.GetLastTimerTrackInfo()->m_timeWheelIndex]->RemoveTimerTask(timer);
 	return true;
+}
+
+time_t TimeWheelManager::GetBucketTimeSpan(int timeWheelIndex)
+{
+	return TimeWheelManager::Instance().GetTickIntervalMs() * pow(m_bucketNum, timeWheelIndex);
 }

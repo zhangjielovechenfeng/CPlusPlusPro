@@ -29,9 +29,6 @@ public:
 	// 插入定时器
 	void InsertTimer(Timer& timer);
 
-	// 获取桶的时间跨度
-	time_t GetBucketTimeSpan();
-
 	// 根据索引获取时间轮桶
 	TimeWheelBucket* GetTimeWheelBucketByIndex(int index);
 

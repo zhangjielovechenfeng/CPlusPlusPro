@@ -29,7 +29,7 @@ bool ChatServer::Init()
 		LOG_ERR("Init Chat Server Connect Failed!!!");
 		return false;
 	}
-	if (!TimeWheelManager::Instance().InitTimeWheelManager(4, 100, 100))
+	if (!TimeWheelManager::Instance().InitTimeWheelManager(3, 1000, 5))
 	{
 		LOG_ERR("Init TimeWheel Manager Failed!!!");
 		return false;
