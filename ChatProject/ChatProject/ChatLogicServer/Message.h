@@ -9,7 +9,7 @@ using namespace CSProtocol;
 
 #define MAX_ONE_PKG_SIZE 1024 // 一个包最大大小
 /*
-	Message : 聊天消息类
+	Message : 聊天消息类 
 */
 class Message
 {
