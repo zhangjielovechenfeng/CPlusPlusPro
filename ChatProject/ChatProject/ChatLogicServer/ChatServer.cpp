@@ -29,7 +29,7 @@ bool ChatServer::Init()
 		LOG_ERR("Init Chat Server Connect Failed!!!");
 		return false;
 	}
-	if (!TimeWheelManager::Instance().InitTimeWheelManager(3, 1000, 5))
+	if (!TimeWheelManager::Instance().InitTimeWheelManager(4, 100, 100))
 	{
 		LOG_ERR("Init TimeWheel Manager Failed!!!");
 		return false;
@@ -76,7 +76,7 @@ int ChatServer::InitChatServerConn()
 
 bool ChatServer::Run()
 {
-	if (!StartTimeWheelThread())
+	if (!RunTimeWheelThread())
 	{
 		return false;
 	}
@@ -141,12 +141,8 @@ int ChatServer::RunChatServer()
 				{
 					m_epoll->EpollDel(sessionID);
 					close(sessionID);
+					ChatClientManager::Instance().DelChatClient(sessionID);
 					continue;
-				}
-
-				if (!m_epoll->EpollMod(sessionID))
-				{
-					return ERROR_CODE_EPOLL_MOD_FAILED;
 				}
 			}
 		}
@@ -290,6 +286,7 @@ int ChatServer::_RecvMsg(int sessionID)
 	{
 		if (!_WebSocketShakeHandsHandle(chatClient))
 		{
+			LOG_ERR("Server Shake Hands Msg Generate Failed!!!");
 			return ERROR_CODE_WEBSOCKET_SHAKE_HANDS_FAILED;
 		}
 	}
@@ -325,11 +322,14 @@ bool ChatServer::_WebSocketShakeHandsHandle(ChatClient* chatClient)
 		}
 		LOG_RUN("The Handshake With Websocket[ip: %s, port: %d] Has Been Established!!!\n", chatClient->GetIP().c_str(), chatClient->GetPort());
 		printf("The Handshake With Websocket[ip: %s, port: %d] Has Been Established!!!\n", chatClient->GetIP().c_str(), chatClient->GetPort());
+		chatClient->SetIsBuildLongConn(true);
+		// 回包发送后，清理buff
+		csMsgBuff.ClearBuff(csMsgBuff.GetCurrBuffLen());
 	}
-	return false;
+	return true;
 }
 
-bool ChatServer::StartTimeWheelThread()
+bool ChatServer::RunTimeWheelThread()
 {
 	TimeWheelManager& timeWheelManager = TimeWheelManager::Instance();
 	m_timerWheelThread = new boost::thread(boost::bind(&TimeWheelManager::Run, &timeWheelManager));

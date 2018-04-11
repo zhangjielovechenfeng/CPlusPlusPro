@@ -66,8 +66,13 @@ void CSMessage::HandleMsgData()
 {
 	m_csMsgPkg.Clear();
 
-	m_csMsgPkg.ParseFromString(m_data);
-	//memcpy(&m_csMsgPkg, data, sizeof(m_csMsgPkg));
+	// 先解析出头
+	memcpy(m_csMsgPkg.csmsgpkghead, m_data.c_str(), sizeof(CSMsgPkgHead)); 
+
+	// 反序列化出包体
+	m_csMsgPkg.csmsgpkgbody.ParseFromString(m_data.c_str() + sizeof(CSMsgPkgHead)); 
+
+	// 反乱序处理
 
 	HandleMsg();
 }
@@ -89,7 +94,9 @@ SCMessage::~SCMessage()
 
 void SCMessage::HandleMsgData()
 {
-	if (m_csMsgPkg.SerializeToString(&m_serializeData)) // 序列化数据包
+	// 先乱序处理
+	// 序列化数据包包体
+	if (m_csMsgPkg.csmsgpkgbody.SerializeToString(&m_serializeData)) 
 	{
 		LOG_ERR("Serialize Msg Data Failed!!!");
 		return;

@@ -38,9 +38,6 @@ bool ChatClient::IsBuildLongConn()
 void ChatClient::SetIsBuildLongConn(bool isBuildLongConn)
 {
 	m_isBuildLongConn = isBuildLongConn;
-	if (isBuildLongConn)
-	{
-	}
 }
 
 CSMsgBuff & ChatClient::GetCSMsgBuff()
@@ -81,5 +78,6 @@ bool ChatClient::SaveMsgData(char * data, uint32_t dataLen)
 	if (m_recvMsgData.IsNeedParseBuff())
 	{
 		CSMessage csMsg(m_sessionID);
+		csMsg.SetMsgData(data);
 	}
 }

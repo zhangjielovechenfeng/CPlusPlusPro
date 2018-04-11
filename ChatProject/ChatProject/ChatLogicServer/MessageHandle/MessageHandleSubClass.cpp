@@ -9,5 +9,5 @@ bool MessageHandleHeartBeatReq::Handle()
 
 	chatClient->SetRecvTickTime(Time::GetCurrMTime());
 
-	return true;;
+	return true;
 }

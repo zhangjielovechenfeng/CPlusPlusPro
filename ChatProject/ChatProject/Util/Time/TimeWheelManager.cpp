@@ -108,7 +108,7 @@ bool TimeWheelManager::ResetTimeWheel()
 {
 	for (int i = 0; i < (int)m_timeWheelVec.size(); ++i)
 	{
-		m_timeWheelVec[i]->SetCursor(-1);
+		m_timeWheelVec[i]->SetCursor(0);
 	}
 	return true;
 }

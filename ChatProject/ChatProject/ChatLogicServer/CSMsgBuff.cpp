@@ -39,5 +39,20 @@ bool CSMsgBuff::InsertDataToBuff(char * data, uint32_t dataLen)
 
 bool CSMsgBuff::IsNeedParseBuff()
 {
-	return false;
+	if (m_currBuffLen < sizeof(CSMsgPkgHead))
+	{
+		return false;
+	}
+
+	CSMsgPkgHead csMsgPkgHead;
+	if (m_currBuffLen < sizeof(CSMsgPkgHead) + csMsgPkgHead.pkgbodylen)
+	{
+		return false;
+	}
+	return true;
+}
+
+void CSMsgBuff::ClearBuff(uint32_t len)
+{
+	memset(m_recvBuff, 0, len);
 }

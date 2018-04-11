@@ -50,7 +50,8 @@ public:
 
 	bool SendMessage(int sessionID, string& message);
 
-	bool StartTimeWheelThread();
+	// 运行时间轮
+	bool RunTimeWheelThread();
 
 private:
 	// 创建socket连接

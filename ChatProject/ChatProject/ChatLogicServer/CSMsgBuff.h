@@ -1,6 +1,6 @@
 #pragma once
 
-#define MAX_DATA_LEN 2*1024*1024	// 接收数据最大长度
+#define MAX_DATA_LEN 1024*1024	// 接收数据最大长度
 #include "../Util/Util.h"
 
 class CSMsgBuff
@@ -20,8 +20,10 @@ public:
 	// 是否需要解析buff
 	bool IsNeedParseBuff();
 
+	void ClearBuff(uint32_t len);
+
 private:
-	char m_recvBuff[MAX_DATA_LEN];
-	uint32_t  m_currBuffLen;
+	char		m_recvBuff[MAX_DATA_LEN];
+	uint32_t	m_currBuffLen;
 };
 
