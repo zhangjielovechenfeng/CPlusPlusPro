@@ -26,14 +26,6 @@ public:
 	// 消息处理函数，子类自己实现
 	virtual void HandleMsgData() = 0;		
 
-private:
-	// 乱序加密
-	char* Encrypt(char* data);
-
-	// 反乱序解密
-	char* Decrypt(char* data);
-
-
 protected:
 	CSMsgPkg		m_csMsgPkg;
 	int				m_sessionID;

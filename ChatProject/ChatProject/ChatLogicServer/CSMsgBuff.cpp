@@ -2,6 +2,7 @@
 #include <string.h>
 #include <cstdio>
 #include "Message.h"
+#include "../Util/OutOfOrderTool.h"
 
 CSMsgBuff::CSMsgBuff()
 {
@@ -43,8 +44,10 @@ bool CSMsgBuff::IsNeedParseBuff()
 	{
 		return false;
 	}
-
-	CSMsgPkgHead csMsgPkgHead;
+	char tmpData[sizeof(CSMsgPkgHead)] = {0};
+	memcpy(tmpData, m_recvBuff, sizeof(CSMsgPkgHead));
+	 //OutOfOrderTool::NegativeOrder(tmpData);
+	 CSMsgPkgHead csMsgPkgHead;
 	if (m_currBuffLen < (sizeof(CSMsgPkgHead) + csMsgPkgHead.pkgbodylen()))
 	{
 		return false;

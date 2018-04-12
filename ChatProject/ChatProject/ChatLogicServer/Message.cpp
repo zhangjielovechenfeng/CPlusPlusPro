@@ -2,6 +2,7 @@
 #include "../Util/Util.h"
 #include "MessageHandle/MessageHandleManager.h"
 #include "../Util/LogPrint.h"
+#include "../Util/OutOfOrderTool.h"
 
 Message::Message()
 {
@@ -96,7 +97,6 @@ SCMessage::~SCMessage()
 
 void SCMessage::HandleMsgData()
 {
-	// 先乱序处理
 	// 序列化数据包包体
 	string serializeBodyData = "";
 	if (m_csMsgPkg.csmsgpkgbody().SerializeToString(&serializeBodyData))
@@ -106,6 +106,9 @@ void SCMessage::HandleMsgData()
 	}
 	string serializeHeadData = (char*)(const_cast<CSMsgPkgHead*>(&m_csMsgPkg.csmsgpkghead()));
 	m_serializeData = serializeHeadData + serializeBodyData;
+
+	// 再乱序处理
+	m_serializeData = OutOfOrderTool::PositiveOrder(const_cast<char*>(m_serializeData.c_str()));
 }
 
 string & SCMessage::GetSerializeData()
