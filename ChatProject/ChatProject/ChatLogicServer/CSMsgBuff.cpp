@@ -45,7 +45,7 @@ bool CSMsgBuff::IsNeedParseBuff()
 	}
 
 	CSMsgPkgHead csMsgPkgHead;
-	if (m_currBuffLen < sizeof(CSMsgPkgHead) + csMsgPkgHead.pkgbodylen)
+	if (m_currBuffLen < (sizeof(CSMsgPkgHead) + csMsgPkgHead.pkgbodylen()))
 	{
 		return false;
 	}

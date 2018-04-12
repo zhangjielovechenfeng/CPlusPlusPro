@@ -25,7 +25,7 @@ ChatClientManager::~ChatClientManager()
 
 bool ChatClientManager::RunTickTimer()
 {
-	m_tickTimer.Start(60 * ONE_SECOND_TO_MSECOND, TIMER_IND_FUNC(&ChatClientManager::CheckClientTick));
+	m_tickTimer.Start(10 * ONE_SECOND_TO_MSECOND, TIMER_IND_FUNC(&ChatClientManager::CheckClientTick));
 	return true;
 }
 
