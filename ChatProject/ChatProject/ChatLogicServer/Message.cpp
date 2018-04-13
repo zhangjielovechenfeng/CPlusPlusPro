@@ -68,14 +68,17 @@ void CSMessage::HandleMsgData()
 	m_csMsgPkg.Clear();
 
 	// 先解析出头
-	memcpy(const_cast<CSMsgPkgHead*>(&m_csMsgPkg.csmsgpkghead()), m_data.c_str(), sizeof(CSMsgPkgHead));
+	CSMsgPkgHead csMsgPkgHead;
+	memcpy(&csMsgPkgHead, m_data.c_str(), sizeof(CSMsgPkgHead));
+	m_csMsgPkg.set_allocated_csmsgpkghead(&csMsgPkgHead);
+
+	// 正序处理
+	string tmpPkgBody = "";
+	tmpPkgBody = OutOfOrderTool::NegativeOrder((char*)m_data.c_str() + sizeof(CSMsgPkgHead));
 
 	// 反序列化出包体
 	CSMsgPkgBody* csMsgPkgBody = const_cast<CSMsgPkgBody*>(&m_csMsgPkg.csmsgpkgbody());
-	string data(m_data.c_str() + sizeof(CSMsgPkgHead));
-	csMsgPkgBody->ParseFromString(data);
-
-	// 反乱序处理
+	csMsgPkgBody->ParseFromString(tmpPkgBody);
 
 	HandleMsg();
 }
@@ -104,10 +107,12 @@ void SCMessage::HandleMsgData()
 		LOG_ERR("Serialize Msg Data Failed!!!");
 		return;
 	}
-	string serializeHeadData = (char*)(const_cast<CSMsgPkgHead*>(&m_csMsgPkg.csmsgpkghead()));
+	char tmpData[sizeof(CSMsgPkgHead)] = { 0 };
+	memcpy(tmpData, &m_csMsgPkg.csmsgpkghead(), sizeof(CSMsgPkgHead));
+	string serializeHeadData = tmpData;
 	m_serializeData = serializeHeadData + serializeBodyData;
 
-	// 再乱序处理
+	// 反序处理
 	m_serializeData = OutOfOrderTool::PositiveOrder(const_cast<char*>(m_serializeData.c_str()));
 }
 

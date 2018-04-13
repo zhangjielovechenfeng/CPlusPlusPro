@@ -7,6 +7,7 @@ int OutOfOrderTool::m_key[] = { 0xae, 0xbf, 0x56, 0x78, 0xab, 0xcd, 0xef, 0xf1 }
 char * OutOfOrderTool::PositiveOrder(char * data)
 {
 	int convertData[strlen(data)];
+	memset(convertData, 0, strlen(data) * sizeof(int));
 	for (int i = 0; i < strlen(data); ++i)
 	{
 		convertData[i] = data[i];
@@ -35,6 +36,8 @@ char * OutOfOrderTool::NegativeOrder(char * data)
 {
 	int convertData[strlen(data)];
 	int tmpData[strlen(data)];
+	memset(convertData, 0, strlen(data) * sizeof(int));
+	memset(tmpData, 0, strlen(data) * sizeof(int));
 
 	for (int i = 0; i < strlen(data); ++i)
 	{

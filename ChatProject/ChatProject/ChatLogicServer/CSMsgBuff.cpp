@@ -45,9 +45,15 @@ bool CSMsgBuff::IsNeedParseBuff()
 		return false;
 	}
 	char tmpData[sizeof(CSMsgPkgHead)] = {0};
+	//char *tmpPtr = NULL;
 	memcpy(tmpData, m_recvBuff, sizeof(CSMsgPkgHead));
-	 //OutOfOrderTool::NegativeOrder(tmpData);
-	 CSMsgPkgHead csMsgPkgHead;
+	strncpy(tmpData, OutOfOrderTool::NegativeOrder(tmpData), sizeof(CSMsgPkgHead));
+	//tmpPtr = OutOfOrderTool::NegativeOrder(tmpData);
+
+	CSMsgPkgHead csMsgPkgHead;
+	memset(&csMsgPkgHead, 0, sizeof(CSMsgPkgHead));
+	memcpy(&csMsgPkgHead, tmpData, sizeof(CSMsgPkgHead));
+
 	if (m_currBuffLen < (sizeof(CSMsgPkgHead) + csMsgPkgHead.pkgbodylen()))
 	{
 		return false;
