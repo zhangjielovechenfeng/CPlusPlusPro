@@ -3,6 +3,7 @@
 #include <cstdio>
 #include "Message.h"
 #include "../Util/OutOfOrderTool.h"
+#include "../Util/CommonDef.h"
 
 CSMsgBuff::CSMsgBuff()
 {
@@ -40,21 +41,20 @@ bool CSMsgBuff::InsertDataToBuff(char * data, uint32_t dataLen)
 
 bool CSMsgBuff::IsNeedParseBuff()
 {
-	if (m_currBuffLen < sizeof(CSMsgPkgHead))
+	if (m_currBuffLen < CS_MSG_PKG_CONSTANT_HEAD_SIZE)
 	{
 		return false;
 	}
-	char tmpData[sizeof(CSMsgPkgHead)] = {0};
-	//char *tmpPtr = NULL;
-	memcpy(tmpData, m_recvBuff, sizeof(CSMsgPkgHead));
-	strncpy(tmpData, OutOfOrderTool::NegativeOrder(tmpData), sizeof(CSMsgPkgHead));
-	//tmpPtr = OutOfOrderTool::NegativeOrder(tmpData);
+	char* tmpData = NULL;
+	int pkgbodylen = 0;
 
-	CSMsgPkgHead csMsgPkgHead;
-	memset(&csMsgPkgHead, 0, sizeof(CSMsgPkgHead));
-	memcpy(&csMsgPkgHead, tmpData, sizeof(CSMsgPkgHead));
+	// 正序数据
+	tmpData = OutOfOrderTool::PositiveOrder(m_recvBuff, CS_MSG_PKG_CONSTANT_HEAD_SIZE);
 
-	if (m_currBuffLen < (sizeof(CSMsgPkgHead) + csMsgPkgHead.pkgbodylen()))
+	// 提出包体长度
+	memcpy(&pkgbodylen, tmpData + CS_MSG_PKG_CONSTANT_HEAD_SIZE / 2, CS_MSG_PKG_CONSTANT_HEAD_SIZE / 2);
+
+	if (m_currBuffLen < pkgbodylen + CS_MSG_PKG_CONSTANT_HEAD_SIZE)
 	{
 		return false;
 	}

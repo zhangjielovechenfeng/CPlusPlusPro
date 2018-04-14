@@ -38,110 +38,8 @@ void protobuf_AssignDesc_CSProtoPkgDef_2eproto();
 void protobuf_ShutdownFile_CSProtoPkgDef_2eproto();
 
 class CSMsgPkg;
-class CSMsgPkgHead;
 
 // ===================================================================
-
-class CSMsgPkgHead : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:CSProtocol.CSMsgPkgHead) */ {
- public:
-  CSMsgPkgHead();
-  virtual ~CSMsgPkgHead();
-
-  CSMsgPkgHead(const CSMsgPkgHead& from);
-
-  inline CSMsgPkgHead& operator=(const CSMsgPkgHead& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const CSMsgPkgHead& default_instance();
-
-  void Swap(CSMsgPkgHead* other);
-
-  // implements Message ----------------------------------------------
-
-  inline CSMsgPkgHead* New() const { return New(NULL); }
-
-  CSMsgPkgHead* New(::google::protobuf::Arena* arena) const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const CSMsgPkgHead& from);
-  void MergeFrom(const CSMsgPkgHead& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
-      bool deterministic, ::google::protobuf::uint8* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const {
-    return InternalSerializeWithCachedSizesToArray(false, output);
-  }
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  void InternalSwap(CSMsgPkgHead* other);
-  private:
-  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
-    return _internal_metadata_.arena();
-  }
-  inline void* MaybeArenaPtr() const {
-    return _internal_metadata_.raw_arena_ptr();
-  }
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // optional uint32 msgID = 1;
-  void clear_msgid();
-  static const int kMsgIDFieldNumber = 1;
-  ::google::protobuf::uint32 msgid() const;
-  void set_msgid(::google::protobuf::uint32 value);
-
-  // optional uint32 pkgBodyLen = 2;
-  void clear_pkgbodylen();
-  static const int kPkgBodyLenFieldNumber = 2;
-  ::google::protobuf::uint32 pkgbodylen() const;
-  void set_pkgbodylen(::google::protobuf::uint32 value);
-
-  // optional string checkSum = 3;
-  void clear_checksum();
-  static const int kCheckSumFieldNumber = 3;
-  const ::std::string& checksum() const;
-  void set_checksum(const ::std::string& value);
-  void set_checksum(const char* value);
-  void set_checksum(const char* value, size_t size);
-  ::std::string* mutable_checksum();
-  ::std::string* release_checksum();
-  void set_allocated_checksum(::std::string* checksum);
-
-  // @@protoc_insertion_point(class_scope:CSProtocol.CSMsgPkgHead)
- private:
-
-  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  bool _is_default_instance_;
-  ::google::protobuf::uint32 msgid_;
-  ::google::protobuf::uint32 pkgbodylen_;
-  ::google::protobuf::internal::ArenaStringPtr checksum_;
-  mutable int _cached_size_;
-  friend void  protobuf_AddDesc_CSProtoPkgDef_2eproto();
-  friend void protobuf_AssignDesc_CSProtoPkgDef_2eproto();
-  friend void protobuf_ShutdownFile_CSProtoPkgDef_2eproto();
-
-  void InitAsDefaultInstance();
-  static CSMsgPkgHead* default_instance_;
-};
-// -------------------------------------------------------------------
 
 class CSMsgPkg : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:CSProtocol.CSMsgPkg) */ {
  public:
@@ -203,19 +101,22 @@ class CSMsgPkg : public ::google::protobuf::Message /* @@protoc_insertion_point(
 
   // accessors -------------------------------------------------------
 
-  // optional .CSProtocol.CSMsgPkgHead csMsgPkgHead = 1;
-  bool has_csmsgpkghead() const;
-  void clear_csmsgpkghead();
-  static const int kCsMsgPkgHeadFieldNumber = 1;
-  const ::CSProtocol::CSMsgPkgHead& csmsgpkghead() const;
-  ::CSProtocol::CSMsgPkgHead* mutable_csmsgpkghead();
-  ::CSProtocol::CSMsgPkgHead* release_csmsgpkghead();
-  void set_allocated_csmsgpkghead(::CSProtocol::CSMsgPkgHead* csmsgpkghead);
+  // optional uint32 msgID = 1;
+  void clear_msgid();
+  static const int kMsgIDFieldNumber = 1;
+  ::google::protobuf::uint32 msgid() const;
+  void set_msgid(::google::protobuf::uint32 value);
 
-  // optional .CSProtocol.CSMsgPkgBody csMsgPkgBody = 2;
+  // optional uint32 pkgBodyLen = 2;
+  void clear_pkgbodylen();
+  static const int kPkgBodyLenFieldNumber = 2;
+  ::google::protobuf::uint32 pkgbodylen() const;
+  void set_pkgbodylen(::google::protobuf::uint32 value);
+
+  // optional .CSProtocol.CSMsgPkgBody csMsgPkgBody = 3;
   bool has_csmsgpkgbody() const;
   void clear_csmsgpkgbody();
-  static const int kCsMsgPkgBodyFieldNumber = 2;
+  static const int kCsMsgPkgBodyFieldNumber = 3;
   const ::CSProtocol::CSMsgPkgBody& csmsgpkgbody() const;
   ::CSProtocol::CSMsgPkgBody* mutable_csmsgpkgbody();
   ::CSProtocol::CSMsgPkgBody* release_csmsgpkgbody();
@@ -226,7 +127,8 @@ class CSMsgPkg : public ::google::protobuf::Message /* @@protoc_insertion_point(
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   bool _is_default_instance_;
-  ::CSProtocol::CSMsgPkgHead* csmsgpkghead_;
+  ::google::protobuf::uint32 msgid_;
+  ::google::protobuf::uint32 pkgbodylen_;
   ::CSProtocol::CSMsgPkgBody* csmsgpkgbody_;
   mutable int _cached_size_;
   friend void  protobuf_AddDesc_CSProtoPkgDef_2eproto();
@@ -242,123 +144,37 @@ class CSMsgPkg : public ::google::protobuf::Message /* @@protoc_insertion_point(
 // ===================================================================
 
 #if !PROTOBUF_INLINE_NOT_IN_HEADERS
-// CSMsgPkgHead
+// CSMsgPkg
 
 // optional uint32 msgID = 1;
-inline void CSMsgPkgHead::clear_msgid() {
+inline void CSMsgPkg::clear_msgid() {
   msgid_ = 0u;
 }
-inline ::google::protobuf::uint32 CSMsgPkgHead::msgid() const {
-  // @@protoc_insertion_point(field_get:CSProtocol.CSMsgPkgHead.msgID)
+inline ::google::protobuf::uint32 CSMsgPkg::msgid() const {
+  // @@protoc_insertion_point(field_get:CSProtocol.CSMsgPkg.msgID)
   return msgid_;
 }
-inline void CSMsgPkgHead::set_msgid(::google::protobuf::uint32 value) {
+inline void CSMsgPkg::set_msgid(::google::protobuf::uint32 value) {
   
   msgid_ = value;
-  // @@protoc_insertion_point(field_set:CSProtocol.CSMsgPkgHead.msgID)
+  // @@protoc_insertion_point(field_set:CSProtocol.CSMsgPkg.msgID)
 }
 
 // optional uint32 pkgBodyLen = 2;
-inline void CSMsgPkgHead::clear_pkgbodylen() {
+inline void CSMsgPkg::clear_pkgbodylen() {
   pkgbodylen_ = 0u;
 }
-inline ::google::protobuf::uint32 CSMsgPkgHead::pkgbodylen() const {
-  // @@protoc_insertion_point(field_get:CSProtocol.CSMsgPkgHead.pkgBodyLen)
+inline ::google::protobuf::uint32 CSMsgPkg::pkgbodylen() const {
+  // @@protoc_insertion_point(field_get:CSProtocol.CSMsgPkg.pkgBodyLen)
   return pkgbodylen_;
 }
-inline void CSMsgPkgHead::set_pkgbodylen(::google::protobuf::uint32 value) {
+inline void CSMsgPkg::set_pkgbodylen(::google::protobuf::uint32 value) {
   
   pkgbodylen_ = value;
-  // @@protoc_insertion_point(field_set:CSProtocol.CSMsgPkgHead.pkgBodyLen)
+  // @@protoc_insertion_point(field_set:CSProtocol.CSMsgPkg.pkgBodyLen)
 }
 
-// optional string checkSum = 3;
-inline void CSMsgPkgHead::clear_checksum() {
-  checksum_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline const ::std::string& CSMsgPkgHead::checksum() const {
-  // @@protoc_insertion_point(field_get:CSProtocol.CSMsgPkgHead.checkSum)
-  return checksum_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline void CSMsgPkgHead::set_checksum(const ::std::string& value) {
-  
-  checksum_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:CSProtocol.CSMsgPkgHead.checkSum)
-}
-inline void CSMsgPkgHead::set_checksum(const char* value) {
-  
-  checksum_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:CSProtocol.CSMsgPkgHead.checkSum)
-}
-inline void CSMsgPkgHead::set_checksum(const char* value, size_t size) {
-  
-  checksum_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:CSProtocol.CSMsgPkgHead.checkSum)
-}
-inline ::std::string* CSMsgPkgHead::mutable_checksum() {
-  
-  // @@protoc_insertion_point(field_mutable:CSProtocol.CSMsgPkgHead.checkSum)
-  return checksum_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline ::std::string* CSMsgPkgHead::release_checksum() {
-  // @@protoc_insertion_point(field_release:CSProtocol.CSMsgPkgHead.checkSum)
-  
-  return checksum_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline void CSMsgPkgHead::set_allocated_checksum(::std::string* checksum) {
-  if (checksum != NULL) {
-    
-  } else {
-    
-  }
-  checksum_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), checksum);
-  // @@protoc_insertion_point(field_set_allocated:CSProtocol.CSMsgPkgHead.checkSum)
-}
-
-// -------------------------------------------------------------------
-
-// CSMsgPkg
-
-// optional .CSProtocol.CSMsgPkgHead csMsgPkgHead = 1;
-inline bool CSMsgPkg::has_csmsgpkghead() const {
-  return !_is_default_instance_ && csmsgpkghead_ != NULL;
-}
-inline void CSMsgPkg::clear_csmsgpkghead() {
-  if (GetArenaNoVirtual() == NULL && csmsgpkghead_ != NULL) delete csmsgpkghead_;
-  csmsgpkghead_ = NULL;
-}
-inline const ::CSProtocol::CSMsgPkgHead& CSMsgPkg::csmsgpkghead() const {
-  // @@protoc_insertion_point(field_get:CSProtocol.CSMsgPkg.csMsgPkgHead)
-  return csmsgpkghead_ != NULL ? *csmsgpkghead_ : *default_instance_->csmsgpkghead_;
-}
-inline ::CSProtocol::CSMsgPkgHead* CSMsgPkg::mutable_csmsgpkghead() {
-  
-  if (csmsgpkghead_ == NULL) {
-    csmsgpkghead_ = new ::CSProtocol::CSMsgPkgHead;
-  }
-  // @@protoc_insertion_point(field_mutable:CSProtocol.CSMsgPkg.csMsgPkgHead)
-  return csmsgpkghead_;
-}
-inline ::CSProtocol::CSMsgPkgHead* CSMsgPkg::release_csmsgpkghead() {
-  // @@protoc_insertion_point(field_release:CSProtocol.CSMsgPkg.csMsgPkgHead)
-  
-  ::CSProtocol::CSMsgPkgHead* temp = csmsgpkghead_;
-  csmsgpkghead_ = NULL;
-  return temp;
-}
-inline void CSMsgPkg::set_allocated_csmsgpkghead(::CSProtocol::CSMsgPkgHead* csmsgpkghead) {
-  delete csmsgpkghead_;
-  csmsgpkghead_ = csmsgpkghead;
-  if (csmsgpkghead) {
-    
-  } else {
-    
-  }
-  // @@protoc_insertion_point(field_set_allocated:CSProtocol.CSMsgPkg.csMsgPkgHead)
-}
-
-// optional .CSProtocol.CSMsgPkgBody csMsgPkgBody = 2;
+// optional .CSProtocol.CSMsgPkgBody csMsgPkgBody = 3;
 inline bool CSMsgPkg::has_csmsgpkgbody() const {
   return !_is_default_instance_ && csmsgpkgbody_ != NULL;
 }
@@ -397,8 +213,6 @@ inline void CSMsgPkg::set_allocated_csmsgpkgbody(::CSProtocol::CSMsgPkgBody* csm
 }
 
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
-// -------------------------------------------------------------------
-
 
 // @@protoc_insertion_point(namespace_scope)
 

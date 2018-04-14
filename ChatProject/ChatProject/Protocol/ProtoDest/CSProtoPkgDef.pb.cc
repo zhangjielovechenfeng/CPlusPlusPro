@@ -21,9 +21,6 @@ namespace CSProtocol {
 
 namespace {
 
-const ::google::protobuf::Descriptor* CSMsgPkgHead_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  CSMsgPkgHead_reflection_ = NULL;
 const ::google::protobuf::Descriptor* CSMsgPkg_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   CSMsgPkg_reflection_ = NULL;
@@ -38,26 +35,10 @@ void protobuf_AssignDesc_CSProtoPkgDef_2eproto() {
     ::google::protobuf::DescriptorPool::generated_pool()->FindFileByName(
       "CSProtoPkgDef.proto");
   GOOGLE_CHECK(file != NULL);
-  CSMsgPkgHead_descriptor_ = file->message_type(0);
-  static const int CSMsgPkgHead_offsets_[3] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CSMsgPkgHead, msgid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CSMsgPkgHead, pkgbodylen_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CSMsgPkgHead, checksum_),
-  };
-  CSMsgPkgHead_reflection_ =
-    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
-      CSMsgPkgHead_descriptor_,
-      CSMsgPkgHead::default_instance_,
-      CSMsgPkgHead_offsets_,
-      -1,
-      -1,
-      -1,
-      sizeof(CSMsgPkgHead),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CSMsgPkgHead, _internal_metadata_),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CSMsgPkgHead, _is_default_instance_));
-  CSMsgPkg_descriptor_ = file->message_type(1);
-  static const int CSMsgPkg_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CSMsgPkg, csmsgpkghead_),
+  CSMsgPkg_descriptor_ = file->message_type(0);
+  static const int CSMsgPkg_offsets_[3] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CSMsgPkg, msgid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CSMsgPkg, pkgbodylen_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CSMsgPkg, csmsgpkgbody_),
   };
   CSMsgPkg_reflection_ =
@@ -85,16 +66,12 @@ void protobuf_RegisterTypes(const ::std::string&) GOOGLE_ATTRIBUTE_COLD;
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-      CSMsgPkgHead_descriptor_, &CSMsgPkgHead::default_instance());
-  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
       CSMsgPkg_descriptor_, &CSMsgPkg::default_instance());
 }
 
 }  // namespace
 
 void protobuf_ShutdownFile_CSProtoPkgDef_2eproto() {
-  delete CSMsgPkgHead::default_instance_;
-  delete CSMsgPkgHead_reflection_;
   delete CSMsgPkg::default_instance_;
   delete CSMsgPkg_reflection_;
 }
@@ -109,17 +86,13 @@ void protobuf_AddDesc_CSProtoPkgDef_2eproto() {
   ::CSProtocol::protobuf_AddDesc_CSProtoPkgBodyDef_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\023CSProtoPkgDef.proto\022\nCSProtocol\032\027CSPro"
-    "toPkgBodyDef.proto\"C\n\014CSMsgPkgHead\022\r\n\005ms"
-    "gID\030\001 \001(\r\022\022\n\npkgBodyLen\030\002 \001(\r\022\020\n\010checkSu"
-    "m\030\003 \001(\t\"j\n\010CSMsgPkg\022.\n\014csMsgPkgHead\030\001 \001("
-    "\0132\030.CSProtocol.CSMsgPkgHead\022.\n\014csMsgPkgB"
-    "ody\030\002 \001(\0132\030.CSProtocol.CSMsgPkgBodyP\000b\006p"
-    "roto3", 245);
+    "toPkgBodyDef.proto\"]\n\010CSMsgPkg\022\r\n\005msgID\030"
+    "\001 \001(\r\022\022\n\npkgBodyLen\030\002 \001(\r\022.\n\014csMsgPkgBod"
+    "y\030\003 \001(\0132\030.CSProtocol.CSMsgPkgBodyP\000b\006pro"
+    "to3", 163);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "CSProtoPkgDef.proto", &protobuf_RegisterTypes);
-  CSMsgPkgHead::default_instance_ = new CSMsgPkgHead();
   CSMsgPkg::default_instance_ = new CSMsgPkg();
-  CSMsgPkgHead::default_instance_->InitAsDefaultInstance();
   CSMsgPkg::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_CSProtoPkgDef_2eproto);
 }
@@ -134,416 +107,8 @@ struct StaticDescriptorInitializer_CSProtoPkgDef_2eproto {
 // ===================================================================
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int CSMsgPkgHead::kMsgIDFieldNumber;
-const int CSMsgPkgHead::kPkgBodyLenFieldNumber;
-const int CSMsgPkgHead::kCheckSumFieldNumber;
-#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
-
-CSMsgPkgHead::CSMsgPkgHead()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  SharedCtor();
-  // @@protoc_insertion_point(constructor:CSProtocol.CSMsgPkgHead)
-}
-
-void CSMsgPkgHead::InitAsDefaultInstance() {
-  _is_default_instance_ = true;
-}
-
-CSMsgPkgHead::CSMsgPkgHead(const CSMsgPkgHead& from)
-  : ::google::protobuf::Message(),
-    _internal_metadata_(NULL) {
-  SharedCtor();
-  MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:CSProtocol.CSMsgPkgHead)
-}
-
-void CSMsgPkgHead::SharedCtor() {
-    _is_default_instance_ = false;
-  ::google::protobuf::internal::GetEmptyString();
-  _cached_size_ = 0;
-  msgid_ = 0u;
-  pkgbodylen_ = 0u;
-  checksum_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-
-CSMsgPkgHead::~CSMsgPkgHead() {
-  // @@protoc_insertion_point(destructor:CSProtocol.CSMsgPkgHead)
-  SharedDtor();
-}
-
-void CSMsgPkgHead::SharedDtor() {
-  checksum_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  if (this != default_instance_) {
-  }
-}
-
-void CSMsgPkgHead::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-}
-const ::google::protobuf::Descriptor* CSMsgPkgHead::descriptor() {
-  protobuf_AssignDescriptorsOnce();
-  return CSMsgPkgHead_descriptor_;
-}
-
-const CSMsgPkgHead& CSMsgPkgHead::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_CSProtoPkgDef_2eproto();
-  return *default_instance_;
-}
-
-CSMsgPkgHead* CSMsgPkgHead::default_instance_ = NULL;
-
-CSMsgPkgHead* CSMsgPkgHead::New(::google::protobuf::Arena* arena) const {
-  CSMsgPkgHead* n = new CSMsgPkgHead;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
-}
-
-void CSMsgPkgHead::Clear() {
-// @@protoc_insertion_point(message_clear_start:CSProtocol.CSMsgPkgHead)
-#if defined(__clang__)
-#define ZR_HELPER_(f) \
-  _Pragma("clang diagnostic push") \
-  _Pragma("clang diagnostic ignored \"-Winvalid-offsetof\"") \
-  __builtin_offsetof(CSMsgPkgHead, f) \
-  _Pragma("clang diagnostic pop")
-#else
-#define ZR_HELPER_(f) reinterpret_cast<char*>(\
-  &reinterpret_cast<CSMsgPkgHead*>(16)->f)
-#endif
-
-#define ZR_(first, last) do {\
-  ::memset(&first, 0,\
-           ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last));\
-} while (0)
-
-  ZR_(msgid_, pkgbodylen_);
-  checksum_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-
-#undef ZR_HELPER_
-#undef ZR_
-
-}
-
-bool CSMsgPkgHead::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:CSProtocol.CSMsgPkgHead)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional uint32 msgID = 1;
-      case 1: {
-        if (tag == 8) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &msgid_)));
-
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_pkgBodyLen;
-        break;
-      }
-
-      // optional uint32 pkgBodyLen = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_pkgBodyLen:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &pkgbodylen_)));
-
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_checkSum;
-        break;
-      }
-
-      // optional string checkSum = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_checkSum:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_checksum()));
-          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-            this->checksum().data(), this->checksum().length(),
-            ::google::protobuf::internal::WireFormatLite::PARSE,
-            "CSProtocol.CSMsgPkgHead.checkSum"));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:CSProtocol.CSMsgPkgHead)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:CSProtocol.CSMsgPkgHead)
-  return false;
-#undef DO_
-}
-
-void CSMsgPkgHead::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:CSProtocol.CSMsgPkgHead)
-  // optional uint32 msgID = 1;
-  if (this->msgid() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->msgid(), output);
-  }
-
-  // optional uint32 pkgBodyLen = 2;
-  if (this->pkgbodylen() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->pkgbodylen(), output);
-  }
-
-  // optional string checkSum = 3;
-  if (this->checksum().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->checksum().data(), this->checksum().length(),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "CSProtocol.CSMsgPkgHead.checkSum");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      3, this->checksum(), output);
-  }
-
-  // @@protoc_insertion_point(serialize_end:CSProtocol.CSMsgPkgHead)
-}
-
-::google::protobuf::uint8* CSMsgPkgHead::InternalSerializeWithCachedSizesToArray(
-    bool deterministic, ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:CSProtocol.CSMsgPkgHead)
-  // optional uint32 msgID = 1;
-  if (this->msgid() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->msgid(), target);
-  }
-
-  // optional uint32 pkgBodyLen = 2;
-  if (this->pkgbodylen() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->pkgbodylen(), target);
-  }
-
-  // optional string checkSum = 3;
-  if (this->checksum().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->checksum().data(), this->checksum().length(),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "CSProtocol.CSMsgPkgHead.checkSum");
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        3, this->checksum(), target);
-  }
-
-  // @@protoc_insertion_point(serialize_to_array_end:CSProtocol.CSMsgPkgHead)
-  return target;
-}
-
-int CSMsgPkgHead::ByteSize() const {
-// @@protoc_insertion_point(message_byte_size_start:CSProtocol.CSMsgPkgHead)
-  int total_size = 0;
-
-  // optional uint32 msgID = 1;
-  if (this->msgid() != 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::UInt32Size(
-        this->msgid());
-  }
-
-  // optional uint32 pkgBodyLen = 2;
-  if (this->pkgbodylen() != 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::UInt32Size(
-        this->pkgbodylen());
-  }
-
-  // optional string checkSum = 3;
-  if (this->checksum().size() > 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::StringSize(
-        this->checksum());
-  }
-
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void CSMsgPkgHead::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:CSProtocol.CSMsgPkgHead)
-  if (GOOGLE_PREDICT_FALSE(&from == this)) {
-    ::google::protobuf::internal::MergeFromFail(__FILE__, __LINE__);
-  }
-  const CSMsgPkgHead* source = 
-      ::google::protobuf::internal::DynamicCastToGenerated<const CSMsgPkgHead>(
-          &from);
-  if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:CSProtocol.CSMsgPkgHead)
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:CSProtocol.CSMsgPkgHead)
-    MergeFrom(*source);
-  }
-}
-
-void CSMsgPkgHead::MergeFrom(const CSMsgPkgHead& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:CSProtocol.CSMsgPkgHead)
-  if (GOOGLE_PREDICT_FALSE(&from == this)) {
-    ::google::protobuf::internal::MergeFromFail(__FILE__, __LINE__);
-  }
-  if (from.msgid() != 0) {
-    set_msgid(from.msgid());
-  }
-  if (from.pkgbodylen() != 0) {
-    set_pkgbodylen(from.pkgbodylen());
-  }
-  if (from.checksum().size() > 0) {
-
-    checksum_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.checksum_);
-  }
-}
-
-void CSMsgPkgHead::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:CSProtocol.CSMsgPkgHead)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void CSMsgPkgHead::CopyFrom(const CSMsgPkgHead& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:CSProtocol.CSMsgPkgHead)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool CSMsgPkgHead::IsInitialized() const {
-
-  return true;
-}
-
-void CSMsgPkgHead::Swap(CSMsgPkgHead* other) {
-  if (other == this) return;
-  InternalSwap(other);
-}
-void CSMsgPkgHead::InternalSwap(CSMsgPkgHead* other) {
-  std::swap(msgid_, other->msgid_);
-  std::swap(pkgbodylen_, other->pkgbodylen_);
-  checksum_.Swap(&other->checksum_);
-  _internal_metadata_.Swap(&other->_internal_metadata_);
-  std::swap(_cached_size_, other->_cached_size_);
-}
-
-::google::protobuf::Metadata CSMsgPkgHead::GetMetadata() const {
-  protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::Metadata metadata;
-  metadata.descriptor = CSMsgPkgHead_descriptor_;
-  metadata.reflection = CSMsgPkgHead_reflection_;
-  return metadata;
-}
-
-#if PROTOBUF_INLINE_NOT_IN_HEADERS
-// CSMsgPkgHead
-
-// optional uint32 msgID = 1;
-void CSMsgPkgHead::clear_msgid() {
-  msgid_ = 0u;
-}
- ::google::protobuf::uint32 CSMsgPkgHead::msgid() const {
-  // @@protoc_insertion_point(field_get:CSProtocol.CSMsgPkgHead.msgID)
-  return msgid_;
-}
- void CSMsgPkgHead::set_msgid(::google::protobuf::uint32 value) {
-  
-  msgid_ = value;
-  // @@protoc_insertion_point(field_set:CSProtocol.CSMsgPkgHead.msgID)
-}
-
-// optional uint32 pkgBodyLen = 2;
-void CSMsgPkgHead::clear_pkgbodylen() {
-  pkgbodylen_ = 0u;
-}
- ::google::protobuf::uint32 CSMsgPkgHead::pkgbodylen() const {
-  // @@protoc_insertion_point(field_get:CSProtocol.CSMsgPkgHead.pkgBodyLen)
-  return pkgbodylen_;
-}
- void CSMsgPkgHead::set_pkgbodylen(::google::protobuf::uint32 value) {
-  
-  pkgbodylen_ = value;
-  // @@protoc_insertion_point(field_set:CSProtocol.CSMsgPkgHead.pkgBodyLen)
-}
-
-// optional string checkSum = 3;
-void CSMsgPkgHead::clear_checksum() {
-  checksum_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
- const ::std::string& CSMsgPkgHead::checksum() const {
-  // @@protoc_insertion_point(field_get:CSProtocol.CSMsgPkgHead.checkSum)
-  return checksum_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
- void CSMsgPkgHead::set_checksum(const ::std::string& value) {
-  
-  checksum_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:CSProtocol.CSMsgPkgHead.checkSum)
-}
- void CSMsgPkgHead::set_checksum(const char* value) {
-  
-  checksum_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:CSProtocol.CSMsgPkgHead.checkSum)
-}
- void CSMsgPkgHead::set_checksum(const char* value, size_t size) {
-  
-  checksum_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:CSProtocol.CSMsgPkgHead.checkSum)
-}
- ::std::string* CSMsgPkgHead::mutable_checksum() {
-  
-  // @@protoc_insertion_point(field_mutable:CSProtocol.CSMsgPkgHead.checkSum)
-  return checksum_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
- ::std::string* CSMsgPkgHead::release_checksum() {
-  // @@protoc_insertion_point(field_release:CSProtocol.CSMsgPkgHead.checkSum)
-  
-  return checksum_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
- void CSMsgPkgHead::set_allocated_checksum(::std::string* checksum) {
-  if (checksum != NULL) {
-    
-  } else {
-    
-  }
-  checksum_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), checksum);
-  // @@protoc_insertion_point(field_set_allocated:CSProtocol.CSMsgPkgHead.checkSum)
-}
-
-#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
-
-// ===================================================================
-
-#if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int CSMsgPkg::kCsMsgPkgHeadFieldNumber;
+const int CSMsgPkg::kMsgIDFieldNumber;
+const int CSMsgPkg::kPkgBodyLenFieldNumber;
 const int CSMsgPkg::kCsMsgPkgBodyFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
@@ -555,7 +120,6 @@ CSMsgPkg::CSMsgPkg()
 
 void CSMsgPkg::InitAsDefaultInstance() {
   _is_default_instance_ = true;
-  csmsgpkghead_ = const_cast< ::CSProtocol::CSMsgPkgHead*>(&::CSProtocol::CSMsgPkgHead::default_instance());
   csmsgpkgbody_ = const_cast< ::CSProtocol::CSMsgPkgBody*>(&::CSProtocol::CSMsgPkgBody::default_instance());
 }
 
@@ -570,7 +134,8 @@ CSMsgPkg::CSMsgPkg(const CSMsgPkg& from)
 void CSMsgPkg::SharedCtor() {
     _is_default_instance_ = false;
   _cached_size_ = 0;
-  csmsgpkghead_ = NULL;
+  msgid_ = 0u;
+  pkgbodylen_ = 0u;
   csmsgpkgbody_ = NULL;
 }
 
@@ -581,7 +146,6 @@ CSMsgPkg::~CSMsgPkg() {
 
 void CSMsgPkg::SharedDtor() {
   if (this != default_instance_) {
-    delete csmsgpkghead_;
     delete csmsgpkgbody_;
   }
 }
@@ -613,10 +177,29 @@ CSMsgPkg* CSMsgPkg::New(::google::protobuf::Arena* arena) const {
 
 void CSMsgPkg::Clear() {
 // @@protoc_insertion_point(message_clear_start:CSProtocol.CSMsgPkg)
-  if (GetArenaNoVirtual() == NULL && csmsgpkghead_ != NULL) delete csmsgpkghead_;
-  csmsgpkghead_ = NULL;
+#if defined(__clang__)
+#define ZR_HELPER_(f) \
+  _Pragma("clang diagnostic push") \
+  _Pragma("clang diagnostic ignored \"-Winvalid-offsetof\"") \
+  __builtin_offsetof(CSMsgPkg, f) \
+  _Pragma("clang diagnostic pop")
+#else
+#define ZR_HELPER_(f) reinterpret_cast<char*>(\
+  &reinterpret_cast<CSMsgPkg*>(16)->f)
+#endif
+
+#define ZR_(first, last) do {\
+  ::memset(&first, 0,\
+           ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last));\
+} while (0)
+
+  ZR_(msgid_, pkgbodylen_);
   if (GetArenaNoVirtual() == NULL && csmsgpkgbody_ != NULL) delete csmsgpkgbody_;
   csmsgpkgbody_ = NULL;
+
+#undef ZR_HELPER_
+#undef ZR_
+
 }
 
 bool CSMsgPkg::MergePartialFromCodedStream(
@@ -629,21 +212,38 @@ bool CSMsgPkg::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .CSProtocol.CSMsgPkgHead csMsgPkgHead = 1;
+      // optional uint32 msgID = 1;
       case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_csmsgpkghead()));
+        if (tag == 8) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &msgid_)));
+
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(18)) goto parse_csMsgPkgBody;
+        if (input->ExpectTag(16)) goto parse_pkgBodyLen;
         break;
       }
 
-      // optional .CSProtocol.CSMsgPkgBody csMsgPkgBody = 2;
+      // optional uint32 pkgBodyLen = 2;
       case 2: {
-        if (tag == 18) {
+        if (tag == 16) {
+         parse_pkgBodyLen:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &pkgbodylen_)));
+
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(26)) goto parse_csMsgPkgBody;
+        break;
+      }
+
+      // optional .CSProtocol.CSMsgPkgBody csMsgPkgBody = 3;
+      case 3: {
+        if (tag == 26) {
          parse_csMsgPkgBody:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_csmsgpkgbody()));
@@ -678,16 +278,20 @@ failure:
 void CSMsgPkg::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // @@protoc_insertion_point(serialize_start:CSProtocol.CSMsgPkg)
-  // optional .CSProtocol.CSMsgPkgHead csMsgPkgHead = 1;
-  if (this->has_csmsgpkghead()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, *this->csmsgpkghead_, output);
+  // optional uint32 msgID = 1;
+  if (this->msgid() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->msgid(), output);
   }
 
-  // optional .CSProtocol.CSMsgPkgBody csMsgPkgBody = 2;
+  // optional uint32 pkgBodyLen = 2;
+  if (this->pkgbodylen() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->pkgbodylen(), output);
+  }
+
+  // optional .CSProtocol.CSMsgPkgBody csMsgPkgBody = 3;
   if (this->has_csmsgpkgbody()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, *this->csmsgpkgbody_, output);
+      3, *this->csmsgpkgbody_, output);
   }
 
   // @@protoc_insertion_point(serialize_end:CSProtocol.CSMsgPkg)
@@ -696,18 +300,21 @@ void CSMsgPkg::SerializeWithCachedSizes(
 ::google::protobuf::uint8* CSMsgPkg::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   // @@protoc_insertion_point(serialize_to_array_start:CSProtocol.CSMsgPkg)
-  // optional .CSProtocol.CSMsgPkgHead csMsgPkgHead = 1;
-  if (this->has_csmsgpkghead()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      InternalWriteMessageNoVirtualToArray(
-        1, *this->csmsgpkghead_, false, target);
+  // optional uint32 msgID = 1;
+  if (this->msgid() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->msgid(), target);
   }
 
-  // optional .CSProtocol.CSMsgPkgBody csMsgPkgBody = 2;
+  // optional uint32 pkgBodyLen = 2;
+  if (this->pkgbodylen() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->pkgbodylen(), target);
+  }
+
+  // optional .CSProtocol.CSMsgPkgBody csMsgPkgBody = 3;
   if (this->has_csmsgpkgbody()) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageNoVirtualToArray(
-        2, *this->csmsgpkgbody_, false, target);
+        3, *this->csmsgpkgbody_, false, target);
   }
 
   // @@protoc_insertion_point(serialize_to_array_end:CSProtocol.CSMsgPkg)
@@ -718,14 +325,21 @@ int CSMsgPkg::ByteSize() const {
 // @@protoc_insertion_point(message_byte_size_start:CSProtocol.CSMsgPkg)
   int total_size = 0;
 
-  // optional .CSProtocol.CSMsgPkgHead csMsgPkgHead = 1;
-  if (this->has_csmsgpkghead()) {
+  // optional uint32 msgID = 1;
+  if (this->msgid() != 0) {
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        *this->csmsgpkghead_);
+      ::google::protobuf::internal::WireFormatLite::UInt32Size(
+        this->msgid());
   }
 
-  // optional .CSProtocol.CSMsgPkgBody csMsgPkgBody = 2;
+  // optional uint32 pkgBodyLen = 2;
+  if (this->pkgbodylen() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt32Size(
+        this->pkgbodylen());
+  }
+
+  // optional .CSProtocol.CSMsgPkgBody csMsgPkgBody = 3;
   if (this->has_csmsgpkgbody()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
@@ -760,8 +374,11 @@ void CSMsgPkg::MergeFrom(const CSMsgPkg& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) {
     ::google::protobuf::internal::MergeFromFail(__FILE__, __LINE__);
   }
-  if (from.has_csmsgpkghead()) {
-    mutable_csmsgpkghead()->::CSProtocol::CSMsgPkgHead::MergeFrom(from.csmsgpkghead());
+  if (from.msgid() != 0) {
+    set_msgid(from.msgid());
+  }
+  if (from.pkgbodylen() != 0) {
+    set_pkgbodylen(from.pkgbodylen());
   }
   if (from.has_csmsgpkgbody()) {
     mutable_csmsgpkgbody()->::CSProtocol::CSMsgPkgBody::MergeFrom(from.csmsgpkgbody());
@@ -792,7 +409,8 @@ void CSMsgPkg::Swap(CSMsgPkg* other) {
   InternalSwap(other);
 }
 void CSMsgPkg::InternalSwap(CSMsgPkg* other) {
-  std::swap(csmsgpkghead_, other->csmsgpkghead_);
+  std::swap(msgid_, other->msgid_);
+  std::swap(pkgbodylen_, other->pkgbodylen_);
   std::swap(csmsgpkgbody_, other->csmsgpkgbody_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
@@ -809,45 +427,35 @@ void CSMsgPkg::InternalSwap(CSMsgPkg* other) {
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
 // CSMsgPkg
 
-// optional .CSProtocol.CSMsgPkgHead csMsgPkgHead = 1;
-bool CSMsgPkg::has_csmsgpkghead() const {
-  return !_is_default_instance_ && csmsgpkghead_ != NULL;
+// optional uint32 msgID = 1;
+void CSMsgPkg::clear_msgid() {
+  msgid_ = 0u;
 }
-void CSMsgPkg::clear_csmsgpkghead() {
-  if (GetArenaNoVirtual() == NULL && csmsgpkghead_ != NULL) delete csmsgpkghead_;
-  csmsgpkghead_ = NULL;
+ ::google::protobuf::uint32 CSMsgPkg::msgid() const {
+  // @@protoc_insertion_point(field_get:CSProtocol.CSMsgPkg.msgID)
+  return msgid_;
 }
-const ::CSProtocol::CSMsgPkgHead& CSMsgPkg::csmsgpkghead() const {
-  // @@protoc_insertion_point(field_get:CSProtocol.CSMsgPkg.csMsgPkgHead)
-  return csmsgpkghead_ != NULL ? *csmsgpkghead_ : *default_instance_->csmsgpkghead_;
-}
-::CSProtocol::CSMsgPkgHead* CSMsgPkg::mutable_csmsgpkghead() {
+ void CSMsgPkg::set_msgid(::google::protobuf::uint32 value) {
   
-  if (csmsgpkghead_ == NULL) {
-    csmsgpkghead_ = new ::CSProtocol::CSMsgPkgHead;
-  }
-  // @@protoc_insertion_point(field_mutable:CSProtocol.CSMsgPkg.csMsgPkgHead)
-  return csmsgpkghead_;
-}
-::CSProtocol::CSMsgPkgHead* CSMsgPkg::release_csmsgpkghead() {
-  // @@protoc_insertion_point(field_release:CSProtocol.CSMsgPkg.csMsgPkgHead)
-  
-  ::CSProtocol::CSMsgPkgHead* temp = csmsgpkghead_;
-  csmsgpkghead_ = NULL;
-  return temp;
-}
-void CSMsgPkg::set_allocated_csmsgpkghead(::CSProtocol::CSMsgPkgHead* csmsgpkghead) {
-  delete csmsgpkghead_;
-  csmsgpkghead_ = csmsgpkghead;
-  if (csmsgpkghead) {
-    
-  } else {
-    
-  }
-  // @@protoc_insertion_point(field_set_allocated:CSProtocol.CSMsgPkg.csMsgPkgHead)
+  msgid_ = value;
+  // @@protoc_insertion_point(field_set:CSProtocol.CSMsgPkg.msgID)
 }
 
-// optional .CSProtocol.CSMsgPkgBody csMsgPkgBody = 2;
+// optional uint32 pkgBodyLen = 2;
+void CSMsgPkg::clear_pkgbodylen() {
+  pkgbodylen_ = 0u;
+}
+ ::google::protobuf::uint32 CSMsgPkg::pkgbodylen() const {
+  // @@protoc_insertion_point(field_get:CSProtocol.CSMsgPkg.pkgBodyLen)
+  return pkgbodylen_;
+}
+ void CSMsgPkg::set_pkgbodylen(::google::protobuf::uint32 value) {
+  
+  pkgbodylen_ = value;
+  // @@protoc_insertion_point(field_set:CSProtocol.CSMsgPkg.pkgBodyLen)
+}
+
+// optional .CSProtocol.CSMsgPkgBody csMsgPkgBody = 3;
 bool CSMsgPkg::has_csmsgpkgbody() const {
   return !_is_default_instance_ && csmsgpkgbody_ != NULL;
 }

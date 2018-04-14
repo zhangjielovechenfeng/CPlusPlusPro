@@ -7,7 +7,7 @@ package CSProtocol;
 //********************消息ID定义**********************//
 enum CSMsgIDDef
 {
-	CSMsg_None = 0;
+	CSMsg_None				= 0;
 	CSMsg_HeartBeatReq		= 10001;	// 心跳包请求
 	CSMsg_HeartBeatRsp		= 10002;	// 心跳包返回
 	CSMsg_LoginReq			= 10003;	// 登录请求
@@ -48,13 +48,12 @@ message CSMsgPkgRegisterRsp
 
 }
 
-//*******************包体定义*************************//
 message CSMsgPkgBody
 {
-	CSMsgPkgHeartBeatReq	csMsgPkgHeartBeatReq	= 1;
-	CSMsgPkgHeartBeatRsp	csMsgPkgHeartBeatRsp	= 2;
-	CSMsgPkgLoginReq		csMsgPkgLoginReq		= 3;
-	CSMsgPkgLoginRsp		csMsgPkgLoginRsp		= 4;
-	CSMsgPkgRegisterReq		csMsgPkgRegisterReq		= 5;
-	CSMsgPkgRegisterRsp		csMsgPkgRegisterRsp		= 6;
+	CSMsgPkgHeartBeatReq		csMsgPkgHeartBeatReq		= 1;
+	CSMsgPkgHeartBeatRsp		csMsgPkgHeartBeatRsp		= 2;
+	CSMsgPkgLoginReq			csMsgPkgLoginReq			= 3;
+	CSMsgPkgLoginRsp			csMsgPkgLoginRsp			= 4;
+	CSMsgPkgRegisterReq			csMsgPkgRegisterReq			= 5;
+	CSMsgPkgRegisterRsp			csMsgPkgRegisterRsp			= 6;
 }

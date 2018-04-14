@@ -7,15 +7,12 @@ package CSProtocol;
 
 import public "CSProtoPkgBodyDef.proto";
 
-message CSMsgPkgHead
-{
-	uint32	msgID		= 1;			// 消息ID
-	uint32	pkgBodyLen	= 2;			// 包体长度
-	string	checkSum	= 3;			// 校验和
-}
-
 message CSMsgPkg
 {
-	CSMsgPkgHead	csMsgPkgHead = 1;
-	CSMsgPkgBody	csMsgPkgBody = 2;
+//******************* Message Head**********************//
+	uint32			msgID			= 1;		// 消息ID
+	uint32			pkgBodyLen		= 2;		// 包体长度
+
+//********************Message Body*********************//
+	CSMsgPkgBody	csMsgPkgBody	= 3;		// 包体
 }

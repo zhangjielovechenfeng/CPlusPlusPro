@@ -104,6 +104,7 @@
     <ClInclude Include="ChatLogicServer\MessageHandle\MessageHandle.h" />
     <ClInclude Include="ChatLogicServer\MessageHandle\MessageHandleManager.h" />
     <ClInclude Include="ChatLogicServer\MessageHandle\MessageHandleSubClass.h" />
+    <ClInclude Include="Util\CommonDef.h" />
     <ClInclude Include="Util\OutOfOrderTool.h" />
     <ClInclude Include="Protocol\ProtoDest\CSProtoPkgBodyDef.pb.h" />
     <ClInclude Include="Protocol\ProtoDest\CSProtoPkgDef.pb.h" />

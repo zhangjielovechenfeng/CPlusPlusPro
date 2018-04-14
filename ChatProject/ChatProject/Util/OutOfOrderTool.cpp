@@ -4,15 +4,15 @@
 
 int OutOfOrderTool::m_key[] = { 0xae, 0xbf, 0x56, 0x78, 0xab, 0xcd, 0xef, 0xf1 };
 
-char * OutOfOrderTool::PositiveOrder(char * data)
+char * OutOfOrderTool::NegativeOrder(char * data, int len)
 {
-	int convertData[strlen(data)];
-	memset(convertData, 0, strlen(data) * sizeof(int));
-	for (int i = 0; i < strlen(data); ++i)
+	int convertData[len];
+	memset(convertData, 0, len * sizeof(int));
+	for (int i = 0; i < len; ++i)
 	{
 		convertData[i] = data[i];
 	}
-	for (int i = 0; i < strlen(data); ++i)
+	for (int i = 0; i < len; ++i)
 	{
 		if (i > 0)
 		{
@@ -25,26 +25,26 @@ char * OutOfOrderTool::PositiveOrder(char * data)
 			convertData[0] = convertData[0] ^ m_key[0];
 		}
 	}
-	for (int i = 0; i < strlen(data); ++i)
+	for (int i = 0; i < len; ++i)
 	{
 		data[i] = convertData[i];
 	}
 	return data;
 }
 
-char * OutOfOrderTool::NegativeOrder(char * data)
+char * OutOfOrderTool::PositiveOrder(char * data, int len)
 {
-	int convertData[strlen(data)];
-	int tmpData[strlen(data)];
-	memset(convertData, 0, strlen(data) * sizeof(int));
-	memset(tmpData, 0, strlen(data) * sizeof(int));
+	int convertData[len];
+	int tmpData[len];
+	memset(convertData, 0, len * sizeof(int));
+	memset(tmpData, 0, len * sizeof(int));
 
-	for (int i = 0; i < strlen(data); ++i)
+	for (int i = 0; i < len; ++i)
 	{
 		convertData[i] = data[i];
 		tmpData[i] = data[i];
 	}
-	for (int i = 0; i < strlen(data); ++i)
+	for (int i = 0; i < len; ++i)
 	{
 		if (i > 0)
 		{
@@ -57,7 +57,7 @@ char * OutOfOrderTool::NegativeOrder(char * data)
 			convertData[0] = convertData[0] ^ m_key[0];
 		}
 	}
-	for (int i = 0; i < strlen(data); ++i)
+	for (int i = 0; i < len; ++i)
 	{
 		data[i] = convertData[i];
 	}
