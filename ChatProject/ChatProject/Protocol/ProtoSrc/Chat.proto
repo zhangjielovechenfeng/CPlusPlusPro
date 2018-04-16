@@ -1,0 +1,41 @@
+syntax = "proto3";
+enum Message_ID
+{
+    ERROR_NUM                  = 0;
+    CSID_HEART_BEAT_REQ        = 10001;//心跳包请求
+    SCID_HEART_BEAT_RSP        = 10002;//心跳包返回
+    CSID_LOGIN_REQ             = 10003;//登录请求
+    SCID_LOGIN_RSP             = 10004;//登录返回
+    CSID_REGISTER_REQ          = 10005;//注册请求
+    SCID_REGISTER_RSP          = 10006;//注册返回
+}
+
+message CS_HEART_BEAT_REQ
+{
+    
+}
+
+message SC_HEART_BEAT_RSP
+{
+
+}
+
+message CS_LOGIN_REQ
+{
+
+}
+
+message SC_LOGIN_RSP
+{
+
+}
+
+message CS_REGISTER_REQ
+{
+
+}
+
+message SC_REGISTER_RSP
+{
+
+}

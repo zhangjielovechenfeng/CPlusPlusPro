@@ -76,10 +76,12 @@
     <ClCompile Include="ChatLogicServer\Message.cpp" />
     <ClCompile Include="ChatLogicServer\MyEpoll.cpp" />
     <ClCompile Include="ChatLogicServer\CSMsgBuff.cpp" />
+    <ClCompile Include="Protocol\CSMsgPkgDef.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ChatLogicServer\MessageHandle\MessageHandle.cpp" />
     <ClCompile Include="ChatLogicServer\MessageHandle\MessageHandleManager.cpp" />
     <ClCompile Include="ChatLogicServer\MessageHandle\MessageHandleSubClass.cpp" />
+    <ClCompile Include="Protocol\ProtoDest\Chat.pb.cc" />
     <ClCompile Include="Util\OutOfOrderTool.cpp" />
     <ClCompile Include="Protocol\ProtoDest\CSProtoPkgBodyDef.pb.cc" />
     <ClCompile Include="Protocol\ProtoDest\CSProtoPkgDef.pb.cc" />
@@ -104,6 +106,8 @@
     <ClInclude Include="ChatLogicServer\MessageHandle\MessageHandle.h" />
     <ClInclude Include="ChatLogicServer\MessageHandle\MessageHandleManager.h" />
     <ClInclude Include="ChatLogicServer\MessageHandle\MessageHandleSubClass.h" />
+    <ClInclude Include="Protocol\CSMsgPkgDef.h" />
+    <ClInclude Include="Protocol\ProtoDest\Chat.pb.h" />
     <ClInclude Include="Util\CommonDef.h" />
     <ClInclude Include="Util\OutOfOrderTool.h" />
     <ClInclude Include="Protocol\ProtoDest\CSProtoPkgBodyDef.pb.h" />
@@ -124,6 +128,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Protocol\ProtocolConverter.sh" />
+    <None Include="Protocol\ProtoSrc\Chat.proto" />
     <None Include="Protocol\ProtoSrc\CSProtoPkgBodyDef.proto" />
     <None Include="Protocol\ProtoSrc\CSProtoPkgDef.proto" />
     <None Include="readme\readme.html" />
