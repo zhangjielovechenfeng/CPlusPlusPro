@@ -54,7 +54,7 @@ bool CSMsgBuff::IsNeedParseBuff()
 	// 提出包体长度
 	memcpy(&pkgbodylen, tmpData + CS_MSG_PKG_CONSTANT_HEAD_SIZE / 2, CS_MSG_PKG_CONSTANT_HEAD_SIZE / 2);
 
-	if (m_currBuffLen < pkgbodylen + CS_MSG_PKG_CONSTANT_HEAD_SIZE)
+	if (m_currBuffLen < (uint32_t)(pkgbodylen + CS_MSG_PKG_CONSTANT_HEAD_SIZE))
 	{
 		return false;
 	}

@@ -76,14 +76,14 @@
     <ClCompile Include="ChatLogicServer\Message.cpp" />
     <ClCompile Include="ChatLogicServer\MyEpoll.cpp" />
     <ClCompile Include="ChatLogicServer\CSMsgBuff.cpp" />
+    <ClCompile Include="Protocol\CSMsgPkg\CSMsgPkgDef.cpp" />
+    <ClCompile Include="Protocol\CSMsgPkg\CSMsgPkgBodyFactory.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ChatLogicServer\MessageHandle\MessageHandle.cpp" />
     <ClCompile Include="ChatLogicServer\MessageHandle\MessageHandleManager.cpp" />
     <ClCompile Include="ChatLogicServer\MessageHandle\MessageHandleSubClass.cpp" />
     <ClCompile Include="Protocol\ProtoDest\Chat.pb.cc" />
     <ClCompile Include="Util\OutOfOrderTool.cpp" />
-    <ClCompile Include="Protocol\ProtoDest\CSProtoPkgBodyDef.pb.cc" />
-    <ClCompile Include="Protocol\ProtoDest\CSProtoPkgDef.pb.cc" />
     <ClCompile Include="Util\Time\TimeWheelBucket.cpp" />
     <ClCompile Include="Util\Time\TimeWheel.cpp" />
     <ClCompile Include="Util\Time\TimeWheelManager.cpp" />
@@ -105,12 +105,11 @@
     <ClInclude Include="ChatLogicServer\MessageHandle\MessageHandle.h" />
     <ClInclude Include="ChatLogicServer\MessageHandle\MessageHandleManager.h" />
     <ClInclude Include="ChatLogicServer\MessageHandle\MessageHandleSubClass.h" />
-    <ClInclude Include="Protocol\CSMsgPkgDef.h" />
+    <ClInclude Include="Protocol\CSMsgPkg\CSMsgPkgBodyFactory.h" />
+    <ClInclude Include="Protocol\CSMsgPkg\CSMsgPkgDef.h" />
     <ClInclude Include="Protocol\ProtoDest\Chat.pb.h" />
     <ClInclude Include="Util\CommonDef.h" />
     <ClInclude Include="Util\OutOfOrderTool.h" />
-    <ClInclude Include="Protocol\ProtoDest\CSProtoPkgBodyDef.pb.h" />
-    <ClInclude Include="Protocol\ProtoDest\CSProtoPkgDef.pb.h" />
     <ClInclude Include="Util\Time\TimeWheelBucket.h" />
     <ClInclude Include="Util\Time\TimeWheel.h" />
     <ClInclude Include="Util\Time\TimeWheelManager.h" />
@@ -128,8 +127,6 @@
   <ItemGroup>
     <None Include="Protocol\ProtocolConverter.sh" />
     <None Include="Protocol\ProtoSrc\Chat.proto" />
-    <None Include="Protocol\ProtoSrc\CSProtoPkgBodyDef.proto" />
-    <None Include="Protocol\ProtoSrc\CSProtoPkgDef.proto" />
     <None Include="readme\readme.html" />
     <None Include="readme\stylesheet.css" />
   </ItemGroup>

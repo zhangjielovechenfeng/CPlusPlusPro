@@ -12,12 +12,12 @@ public:
 	virtual ~MessageHandle();
 
 public:
-	bool InitMessgeHandle(Message* msg);
+	bool InitMessgeHandle(MessageBase* msg);
 
 public:
 	virtual bool Handle() = 0;
 
 protected:
-	Message*	m_msg;
+	MessageBase *	m_msg;
 };
 

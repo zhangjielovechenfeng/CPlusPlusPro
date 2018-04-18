@@ -2,17 +2,15 @@
 
 #include "../../Util/Singleton.h"
 #include "MessageHandleSubClass.h"
-#include "../../Util/Util.h"
 #include "../../Util/CommonFactory.h"
-#include "../../Protocol/ProtoDest/CSProtoPkgBodyDef.pb.h"
+#include "../../Protocol/ProtoDest/Chat.pb.h"
 
 class MessageHandleManager : public Singleton<MessageHandleManager>, public CommonFactory<uint32_t, MessageHandle, MessageHandleManager>
 {
 public:
 	MessageHandleManager()
 	{
-		REGISTER_PRODUCT(CSMsg_None, MessageHandleNone, MessageHandleManager);
-		REGISTER_PRODUCT(CSMsg_HeartBeatReq, MessageHandleHeartBeatReq, MessageHandleManager);
+		REGISTER_PRODUCT(CSID_HEART_BEAT_REQ, MessageHandleHeartBeatReq, MessageHandleManager)
 	}
 	virtual ~MessageHandleManager() {}
 
@@ -21,7 +19,6 @@ public:
 	void ReleaseMessageHandle();
 
 private:
-	INSTANCE_PRODUCT(MessageHandleNone, MessageHandle)
 	INSTANCE_PRODUCT(MessageHandleHeartBeatReq, MessageHandle)
 };
 

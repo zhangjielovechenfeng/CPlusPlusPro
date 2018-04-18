@@ -12,7 +12,7 @@ MessageHandle::~MessageHandle()
 {
 }
 
-bool MessageHandle::InitMessgeHandle(Message * msg)
+bool MessageHandle::InitMessgeHandle(MessageBase * msg)
 {
 	m_msg = msg;
 	return false;

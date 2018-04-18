@@ -1,24 +1,22 @@
 #pragma once
 
-#include "../Protocol/ProtoDest/CSProtoPkgDef.pb.h"
+#include "../Protocol/CSMsgPkg/CSMsgPkgDef.h"
 #include <string>
 
 using namespace std;
-
-using namespace CSProtocol;
 
 #define MAX_ONE_PKG_SIZE 1024 // 一个包最大大小
 /*
 	Message : 聊天消息类 
 */
-class Message
+class MessageBase
 {
 public:
-	Message();
-	virtual ~Message();
+	MessageBase();
+	virtual ~MessageBase();
 
 public:
-	CSMsgPkg& GetMsgPkg();
+	CSMsgPkg & GetMsgPkg();
 
 	int GetSessionID();
 
@@ -34,13 +32,11 @@ protected:
 /*
 	C->S过程中S收到的消息
 */
-class CSMessage : public Message
+class CSMessage : public MessageBase
 {
 public:
 	CSMessage(int session);
 	virtual ~CSMessage();
-public:
-	CSMsgPkg& GetMsgPkg();
 
 public:
 	// 通知消息处理handle
@@ -59,7 +55,7 @@ private:
 /*
 S->C过程中S发送的消息
 */
-class SCMessage : public Message
+class SCMessage : public MessageBase
 {
 public:
 	SCMessage(int sessionID);

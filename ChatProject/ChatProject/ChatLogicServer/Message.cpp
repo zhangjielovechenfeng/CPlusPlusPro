@@ -5,23 +5,22 @@
 #include "../Util/OutOfOrderTool.h"
 #include "../Util/CommonDef.h"
 
-Message::Message()
+MessageBase::MessageBase()
 {
-	m_csMsgPkg.Clear();
 	m_sessionID = 0;
 }
 
 
-Message::~Message()
+MessageBase::~MessageBase()
 {
 }
 
-CSMsgPkg & Message::GetMsgPkg()
+CSMsgPkg & MessageBase::GetMsgPkg()
 {
 	return m_csMsgPkg;
 }
 
-int Message::GetSessionID()
+int MessageBase::GetSessionID()
 {
 	return m_sessionID;
 }
@@ -36,29 +35,24 @@ CSMessage::~CSMessage()
 {
 }
 
-CSMsgPkg & CSMessage::GetMsgPkg()
-{
-	return m_csMsgPkg;
-}
-
 bool CSMessage::HandleMsg()
 {
-	MessageHandle* msgHandle = MessageHandleManager::Instance().CreateProduct(m_csMsgPkg.msgid());
+	MessageHandle* msgHandle = MessageHandleManager::Instance().CreateProduct(m_csMsgPkg.GetMsgID());
 	if (NULL == msgHandle)
 	{
-		LOG_ERR("MessageHandle[MsgID: %u] Create Failes!!!", m_csMsgPkg.msgid());
+		LOG_ERR("MessageHandle[MsgID: %u] Create Failes!!!", m_csMsgPkg.GetMsgID());
 		return false;
 	}
 
 	if (!msgHandle->InitMessgeHandle(this))
 	{
-		LOG_ERR("MessageHandle[MsgID: %u] Init Failes!!!", m_csMsgPkg.msgid());
+		LOG_ERR("MessageHandle[MsgID: %u] Init Failes!!!", m_csMsgPkg.GetMsgID());
 		return false;
 	}
 
 	if (!msgHandle->Handle())
 	{
-		LOG_ERR("Message[MsgID: %u] Handle Failed!!!", m_csMsgPkg.msgid());
+		LOG_ERR("Message[MsgID: %u] Handle Failed!!!", m_csMsgPkg.GetMsgID());
 		return false;
 	}
 	return true;
@@ -66,10 +60,8 @@ bool CSMessage::HandleMsg()
 
 void CSMessage::HandleMsgData()
 {
-	m_csMsgPkg.Clear();
-
-	uint msgID = 0;
-	uint pkgBodyLen = 0;
+	uint32_t msgID = 0;
+	uint32_t pkgBodyLen = 0;
 	char* tmpData = NULL;
 
 	// 正序所有数据（前方已经判断此数据是否是一个包）
@@ -80,12 +72,11 @@ void CSMessage::HandleMsgData()
 	memcpy(&pkgBodyLen, tmpData + CS_MSG_PKG_CONSTANT_HEAD_SIZE / 2, CS_MSG_PKG_CONSTANT_HEAD_SIZE / 2); 
 
 	// 设置消息ID和包体长度
-	m_csMsgPkg.set_msgid(msgID);
-	m_csMsgPkg.set_pkgbodylen(pkgBodyLen);
+	m_csMsgPkg.SetMsgID(msgID);
+	m_csMsgPkg.SetMsgPkgLen(pkgBodyLen);
 
 	// 反序列化出包体
-	CSMsgPkgBody* csMsgPkgBody = const_cast<CSMsgPkgBody*>(&m_csMsgPkg.csmsgpkgbody());
-	csMsgPkgBody->ParseFromString(tmpData + CS_MSG_PKG_CONSTANT_HEAD_SIZE);
+	m_csMsgPkg.GetMsgPkgBody()->ParseFromString(tmpData + CS_MSG_PKG_CONSTANT_HEAD_SIZE);
 
 	HandleMsg();
 }
@@ -109,17 +100,17 @@ void SCMessage::HandleMsgData()
 {
 	// 序列化数据包包体
 	string serializeBodyData = "";
-	if (m_csMsgPkg.csmsgpkgbody().SerializeToString(&serializeBodyData))
+	if (m_csMsgPkg.GetMsgPkgBody()->SerializeToString(&serializeBodyData))
 	{
 		LOG_ERR("Serialize Msg Data Failed!!!");
 		return;
 	}
 	char tmpData[CS_MSG_PKG_CONSTANT_HEAD_SIZE] = { 0 };
-	uint msgID = m_csMsgPkg.msgid();
-	uint pkgBodyLen = serializeBodyData.size();
+	uint32_t msgID = m_csMsgPkg.GetMsgID();
+	uint32_t pkgBodyLen = serializeBodyData.size();
 
 	// 填充包体长度
-	m_csMsgPkg.set_pkgbodylen(serializeBodyData.size());
+	m_csMsgPkg.SetMsgPkgLen(serializeBodyData.size());
 
 	// 包头转化成字节序
 	memcpy(tmpData, &msgID, CS_MSG_PKG_CONSTANT_HEAD_SIZE / 2);
