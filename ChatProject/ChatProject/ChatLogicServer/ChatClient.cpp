@@ -79,5 +79,7 @@ bool ChatClient::SaveMsgData(char * data, uint32_t dataLen)
 	{
 		CSMessage csMsg(m_sessionID);
 		csMsg.SetMsgData(data);
+		return true;
 	}
+	return false;
 }

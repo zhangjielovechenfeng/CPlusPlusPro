@@ -112,20 +112,11 @@ int ChatServer::RunChatServer()
 		{
 			if (m_epoll->GetRecvEvents()[i].data.fd == m_socketFd) // 检测到有client连接
 			{
-				int sessionID = _SocketAccept();
-				if (sessionID < 0)
+				int ret = _SocketAccept();
+				if (ret != ERROR_CODE_NONE)
 				{
-					return ERROR_CODE_SOCKET_ACCEPT_FAILED;
-				}
-
-				if (!_SetNonBlock(sessionID))
-				{
-					return ERROR_CODE_SET_NONBLOCK_FAILED;
-				}
-
-				if (!m_epoll->EpollAdd(sessionID))
-				{
-					return ERROR_CODE_EPOLL_ADD_FAILED;
+					LOG_ERR("Socket Accpet Error!!!, errno : %d", ret);
+					continue;
 				}
 			}
 			else if (m_epoll->CanReadData(i)) // 用户已连接进行读取
@@ -192,24 +183,41 @@ int ChatServer::_SocketAccept()
 {
 	SockAddr_In clientAddr;
 	socklen_t clientAddSize = sizeof(SockAddr_In);
-	int sessionID = accept(m_socketFd, (SockAddr*)&clientAddr, &clientAddSize);
-	if (sessionID < 0)
+	int sessionID = 0;
+	while ((sessionID = accept(m_socketFd, (SockAddr*)&clientAddr, &clientAddSize)) > 0)
 	{
-		LOG_ERR("Socket Accept Client Failed!!!,error:[%s]", strerror(errno));
-		return ERROR_CODE_SOCKET_ACCEPT_FAILED;
-	}
-	// 相当于顶号
-	ChatClient* chatClient = ChatClientManager::Instance().GetChatClient(sessionID);
-	if (chatClient != NULL)
-	{
-		ChatClientManager::Instance().DelChatClient(sessionID);
-	}
+		// 相当于顶号
+		ChatClient* chatClient = ChatClientManager::Instance().GetChatClient(sessionID);
+		if (chatClient != NULL)
+		{
+			ChatClientManager::Instance().DelChatClient(sessionID);
+		}
 
-	if (!ChatClientManager::Instance().AddChatClient(sessionID, clientAddr))
-	{
-		return ERROR_CODE_INSERT_ONLINE_FAILED;
+		if (!ChatClientManager::Instance().AddChatClient(sessionID, clientAddr))
+		{
+			return ERROR_CODE_INSERT_ONLINE_FAILED;
+		}
+
+		if (!_SetNonBlock(sessionID))
+		{
+			return ERROR_CODE_SET_NONBLOCK_FAILED;
+		}
+
+		if (!m_epoll->EpollAdd(sessionID))
+		{
+			return ERROR_CODE_EPOLL_ADD_FAILED;
+		}
 	}
-	return sessionID;
+	if (sessionID == -1)
+	{
+		if (EAGAIN != errno && ECONNABORTED != errno && EPROTO != errno && EINTR != errno)
+		{
+			LOG_ERR("Socket Accept Client Failed!!!,error:[%s]", strerror(errno));
+			return ERROR_CODE_SOCKET_ACCEPT_FAILED;
+		}
+	}
+	
+	return ERROR_CODE_NONE;
 }
 
 void ChatServer::Stop()
@@ -224,14 +232,14 @@ bool ChatServer::_SetNonBlock(int fd)
 	int opt = fcntl(fd, F_GETFL);
 	if (opt < 0)
 	{
-		LOG_ERR("fcntl(%d, F_GETFL) failed! error:%s", m_socketFd, strerror(errno));
+		LOG_ERR("fcntl(%d, F_GETFL) failed! error:%s", fd, strerror(errno));
 		return false;
 	}
 
 	opt = opt | O_NONBLOCK | O_NDELAY;
 	if (fcntl(fd, F_SETFL, opt) < 0)
 	{
-		LOG_ERR("fcntl(%d, F_GETFL, %d) failed! error:%s", m_socketFd, opt, strerror(errno));
+		LOG_ERR("fcntl(%d, F_GETFL, %d) failed! error:%s", fd, opt, strerror(errno));
 		return false;
 	}
 	return true;
