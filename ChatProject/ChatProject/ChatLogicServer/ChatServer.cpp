@@ -288,7 +288,6 @@ int ChatServer::_RecvMsg(int sessionID)
 		}
 		memset(recvMsgBuff, 0, DATA_BUFF_SIZE);
 	}
-	
 
 	if (!chatClient->IsBuildLongConn())
 	{
@@ -308,21 +307,19 @@ bool ChatServer::_WebSocketShakeHandsHandle(ChatClient* chatClient)
 	// 还没有建立长连接，处理握手包
 	WebSocketHandle webSocketHandle;
 	CSMsgBuff& csMsgBuff = chatClient->GetCSMsgBuff();
-	webSocketHandle.SetClientShakeHandsMsg(csMsgBuff.GetRecvBuff(), csMsgBuff.GetCurrBuffLen());
-	if (!webSocketHandle.IsWebSocketConn())
+	if (!webSocketHandle.IsWebSocketConn(csMsgBuff.GetRecvBuff()))
 	{
 		// 普通socket连接，本身就是长链接
 		chatClient->SetIsBuildLongConn(true);
 	}
 	else
 	{
-		// websocket连接，处理握手包
-		if (!webSocketHandle.Handle())
+		string msg = webSocketHandle.GenerateServerShakeHandsMsg(csMsgBuff.GetRecvBuff(), csMsgBuff.GetCurrBuffLen());
+		if (msg.empty())
 		{
-			LOG_ERR("Server Shake Hands Msg Generate Failed!!!");
-			return ERROR_CODE_GENERATE_SHAKE_HANDS_MSG_FAILED;
+			LOG_ERR("Generate Server ShakeHands Msg Is Empty!!!");
+			return false;
 		}
-		string& msg = webSocketHandle.GetServerShakeHandsMsg();
 		if (!SendMessage(chatClient->GetSessionID(), msg)) // 发送握手包信息， 直接send
 		{
 			LOG_ERR("Send Shake Hands Msg Failed");
@@ -330,6 +327,7 @@ bool ChatServer::_WebSocketShakeHandsHandle(ChatClient* chatClient)
 		}
 		LOG_RUN("The Handshake With Websocket[ip: %s, port: %d] Has Been Established!!!\n", chatClient->GetIP().c_str(), chatClient->GetPort());
 		printf("The Handshake With Websocket[ip: %s, port: %d] Has Been Established!!!\n", chatClient->GetIP().c_str(), chatClient->GetPort());
+
 		chatClient->SetIsBuildLongConn(true);
 		// 回包发送后，清理buff
 		csMsgBuff.ClearBuff(csMsgBuff.GetCurrBuffLen());

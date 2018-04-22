@@ -36,15 +36,17 @@ bool CSMsgBuff::InsertDataToBuff(char * data, uint32_t dataLen)
 	m_currBuffLen += dataLen;
 	m_recvBuff[m_currBuffLen] = 0;
 
+	printf("%s", m_recvBuff);
+
 	return true;
 }
 
 bool CSMsgBuff::IsNeedParseBuff()
 {
-	if (m_currBuffLen < CS_MSG_PKG_CONSTANT_HEAD_SIZE)
+	/*if (m_currBuffLen < CS_MSG_PKG_CONSTANT_HEAD_SIZE)
 	{
 		return false;
-	}
+	}*/
 	char* tmpData = NULL;
 	int pkgbodylen = 0;
 	int id = 0;
