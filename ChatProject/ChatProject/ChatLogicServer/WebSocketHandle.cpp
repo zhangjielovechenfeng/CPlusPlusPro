@@ -97,7 +97,7 @@ string WebSocketHandle::PackServerData(string & serverData)
 bool WebSocketHandle::IsDisconnect(char * clientData, int dataLen)
 {
 	ASSERT_RETURN(clientData != NULL, false);
-	if (clientData[0] & 0xF == 0x8)
+	if ((clientData[0] & 0xF0) >> 4 == 0x8)
 	{
 		return true;
 	}

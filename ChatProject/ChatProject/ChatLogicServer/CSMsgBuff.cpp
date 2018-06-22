@@ -36,8 +36,6 @@ bool CSMsgBuff::InsertDataToBuff(char * data, uint32_t dataLen)
 	m_currBuffLen += dataLen;
 	m_recvBuff[m_currBuffLen] = 0;
 
-	printf("%s", m_recvBuff);
-
 	return true;
 }
 

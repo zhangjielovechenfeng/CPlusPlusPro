@@ -63,7 +63,7 @@ private:
 	// socket监听
 	bool _SocketListen();
 
-	// 等待client练剑请求
+	// 等待client连接请求
 	int _SocketAccept();
 
 	// 设置非阻塞模式
@@ -71,9 +71,6 @@ private:
 
 	// 接收消息
 	int _RecvMsg(int sessionID);
-
-	// websocket握手处理
-	bool _WebSocketShakeHandsHandle(ChatClient* chatClient);
 
 private:
 	MyEpoll*		m_epoll;

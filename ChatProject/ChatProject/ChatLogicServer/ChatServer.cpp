@@ -8,7 +8,6 @@
 #include "../Util/LogPrint.h"
 #include "../Util/ErrDefine.h"
 #include "../Util/Util.h"
-#include "WebSocketHandle.h"
 #include "../Util/Time/TimeWheelManager.h"
 
 ChatServer::ChatServer()
@@ -287,52 +286,23 @@ int ChatServer::_RecvMsg(int sessionID)
 			return ERROR_CODE_INSERT_MSG_TO_BUFF_FAILED;
 		}
 		memset(recvMsgBuff, 0, DATA_BUFF_SIZE);
+
+		if (!chatClient->HandleMsg())
+		{
+			LOG_ERR("Handle Msg Fail!!!");
+			return ERROR_CODE_MSG_HANDLE_FAIL;
+		}
 	}
 
-	if (!chatClient->IsBuildLongConn())
+	// 判断是否断开连接
+	CSMsgBuff& csMsgBuff = chatClient->GetCSMsgBuff();
+	if (chatClient->IsDisconnect(csMsgBuff.GetRecvBuff(), csMsgBuff.GetCurrBuffLen()))
 	{
-		if (!_WebSocketShakeHandsHandle(chatClient))
-		{
-			LOG_ERR("Server Shake Hands Msg Generate Failed!!!");
-			return ERROR_CODE_WEBSOCKET_SHAKE_HANDS_FAILED;
-		}
+		// 通知聊天管理器断开连接
+		ChatClientManager::Instance().DelChatClient(sessionID);
 	}
 
 	return ERROR_CODE_NONE;
-}
-
-bool ChatServer::_WebSocketShakeHandsHandle(ChatClient* chatClient)
-{
-	ASSERT_RETURN(chatClient != NULL, false);
-	// 还没有建立长连接，处理握手包
-	WebSocketHandle webSocketHandle;
-	CSMsgBuff& csMsgBuff = chatClient->GetCSMsgBuff();
-	if (!webSocketHandle.IsWebSocketConn(csMsgBuff.GetRecvBuff()))
-	{
-		// 普通socket连接，本身就是长链接
-		chatClient->SetIsBuildLongConn(true);
-	}
-	else
-	{
-		string msg = webSocketHandle.GenerateServerShakeHandsMsg(csMsgBuff.GetRecvBuff(), csMsgBuff.GetCurrBuffLen());
-		if (msg.empty())
-		{
-			LOG_ERR("Generate Server ShakeHands Msg Is Empty!!!");
-			return false;
-		}
-		if (!SendMessage(chatClient->GetSessionID(), msg)) // 发送握手包信息， 直接send
-		{
-			LOG_ERR("Send Shake Hands Msg Failed");
-			return ERROR_CODE_SEND_SHAKE_HANDS_MSG_FAILED;
-		}
-		LOG_RUN("The Handshake With Websocket[ip: %s, port: %d] Has Been Established!!!\n", chatClient->GetIP().c_str(), chatClient->GetPort());
-		printf("The Handshake With Websocket[ip: %s, port: %d] Has Been Established!!!\n", chatClient->GetIP().c_str(), chatClient->GetPort());
-
-		chatClient->SetIsBuildLongConn(true);
-		// 回包发送后，清理buff
-		csMsgBuff.ClearBuff(csMsgBuff.GetCurrBuffLen());
-	}
-	return true;
 }
 
 bool ChatServer::RunTimeWheelThread()
