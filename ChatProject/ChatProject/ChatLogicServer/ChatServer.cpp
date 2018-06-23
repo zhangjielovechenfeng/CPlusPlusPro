@@ -123,6 +123,8 @@ int ChatServer::RunChatServer()
 				int sessionID = m_epoll->GetRecvEvents()[i].data.fd;
 				if (sessionID < 0)
 				{
+					LOG_ERR("Socket Session[%d] Error!!!", sessionID);
+					close(sessionID);
 					continue;
 				}
 
@@ -130,7 +132,6 @@ int ChatServer::RunChatServer()
 				if (ret != ERROR_CODE_NONE)
 				{
 					m_epoll->EpollDel(sessionID);
-					close(sessionID);
 					ChatClientManager::Instance().DelChatClient(sessionID);
 					continue;
 				}
@@ -246,9 +247,6 @@ bool ChatServer::_SetNonBlock(int fd)
 
 int ChatServer::_RecvMsg(int sessionID)
 {
- 	ChatClient* chatClient = ChatClientManager::Instance().GetChatClient(sessionID);
-	ASSERT_RETURN(chatClient != NULL, ERROR_CODE_CLIENT_NOT_EXIST);
-
 	char recvMsgBuff[DATA_BUFF_SIZE];
 	memset(recvMsgBuff, 0, DATA_BUFF_SIZE);
 
@@ -273,11 +271,13 @@ int ChatServer::_RecvMsg(int sessionID)
 			}
 			else if(EWOULDBLOCK == errno || EAGAIN == errno)
 			{
-				return ERROR_CODE_NONE;
+				continue;
 			}
 			LOG_ERR("Recv Data Error!!!error: %s", strerror(errno));
 			return ERROR_CODE_RECV_MSG_ERROR;
 		}
+		ChatClient* chatClient = ChatClientManager::Instance().GetChatClient(sessionID);
+		ASSERT_RETURN(chatClient != NULL, ERROR_CODE_CLIENT_NOT_EXIST);
 
 		// 存储接收的消息
 		if (!chatClient->SaveMsgData(recvMsgBuff, (uint32_t)recvSize))
@@ -287,21 +287,21 @@ int ChatServer::_RecvMsg(int sessionID)
 		}
 		memset(recvMsgBuff, 0, DATA_BUFF_SIZE);
 
+		// 判断是否断开连接
+		CSMsgBuff& csMsgBuff = chatClient->GetCSMsgBuff();
+		if (chatClient->IsDisconnect(csMsgBuff.GetRecvBuff(), csMsgBuff.GetCurrBuffLen()))
+		{
+			// 通知聊天管理器断开连接
+			ChatClientManager::Instance().DelChatClient(sessionID);
+		}
+
+		// 消息处理
 		if (!chatClient->HandleMsg())
 		{
 			LOG_ERR("Handle Msg Fail!!!");
 			return ERROR_CODE_MSG_HANDLE_FAIL;
 		}
 	}
-
-	// 判断是否断开连接
-	CSMsgBuff& csMsgBuff = chatClient->GetCSMsgBuff();
-	if (chatClient->IsDisconnect(csMsgBuff.GetRecvBuff(), csMsgBuff.GetCurrBuffLen()))
-	{
-		// 通知聊天管理器断开连接
-		ChatClientManager::Instance().DelChatClient(sessionID);
-	}
-
 	return ERROR_CODE_NONE;
 }
 

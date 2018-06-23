@@ -80,6 +80,7 @@ bool ChatClient::IsDisconnect(char * clientData, int dataLen)
 
 bool ChatClient::HandleMsg()
 {
+	// 判断是否已经和服务器建立了websoket连接
 	if (!m_isBuildLongConn)
 	{
 		if (!_WebSocketShakeHandsHandle())

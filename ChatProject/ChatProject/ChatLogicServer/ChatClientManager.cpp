@@ -49,14 +49,18 @@ bool ChatClientManager::DelChatClient(int sessionID)
 	ChatClientMap::iterator it = m_chatClientMap.find(sessionID);
 	if (it == m_chatClientMap.end())
 	{
+		close(sessionID);
 		LOG_ERR("This Client Non-existent!!!"); // 不存在这个client对删除操作无影响
 		return true;
 	}
 
 	LOG_RUN("The Client[ip: %s][port: %d] Disconnect!!!", it->second->GetIP().c_str(), it->second->GetPort());
 	cout << "The Client[ip: " << it->second->GetIP().c_str() << "] Disconnect!!!" << endl;
-	SAFE_DELETE(it->second);
+	ChatClient* chatClient = it->second;
+	ASSERT_RETURN(chatClient != NULL, false);
+	SAFE_DELETE(chatClient);
 	m_chatClientMap.erase(sessionID);
+	close(sessionID);
 	return true;
 }
 
@@ -102,7 +106,6 @@ void ChatClientManager::CheckClientTick()
 		else if(tmpMtime > MAX_INTERVAL_TIME * ONE_SECOND_TO_MSECOND)
 		{
 			// 关闭连接，删除client
-			close(it->first);
 			DelChatClient(it->first);
 		}
 	}
