@@ -45,7 +45,7 @@ public:
 	// ½âÎö
 	virtual void HandleMsgData();
 
-	void SetMsgData(char* data);
+	void SetMsgData(string& data);
 private:
 	string				m_data;
 

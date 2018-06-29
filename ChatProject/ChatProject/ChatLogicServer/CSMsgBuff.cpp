@@ -39,30 +39,6 @@ bool CSMsgBuff::InsertDataToBuff(char * data, uint32_t dataLen)
 	return true;
 }
 
-bool CSMsgBuff::IsNeedParseBuff()
-{
-	/*if (m_currBuffLen < CS_MSG_PKG_CONSTANT_HEAD_SIZE)
-	{
-		return false;
-	}*/
-	char* tmpData = NULL;
-	int pkgbodylen = 0;
-	int id = 0;
-
-	// 正序数据
-	//tmpData = OutOfOrderTool::PositiveOrder(m_recvBuff, CS_MSG_PKG_CONSTANT_HEAD_SIZE);
-
-	// 提出包体长度
-	memcpy(&pkgbodylen, m_recvBuff + CS_MSG_PKG_CONSTANT_HEAD_SIZE / 2, CS_MSG_PKG_CONSTANT_HEAD_SIZE / 2);
-	memcpy(&id, m_recvBuff, CS_MSG_PKG_CONSTANT_HEAD_SIZE / 2);
-
-	if (m_currBuffLen < (uint32_t)(pkgbodylen + CS_MSG_PKG_CONSTANT_HEAD_SIZE))
-	{
-		return false;
-	}
-	return true;
-}
-
 void CSMsgBuff::ClearBuff(uint32_t len)
 {
 	memset(m_recvBuff, 0, len);

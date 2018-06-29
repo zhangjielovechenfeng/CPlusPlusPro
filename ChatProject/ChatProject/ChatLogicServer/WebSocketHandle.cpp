@@ -41,7 +41,7 @@ string WebSocketHandle::ParseClientData(char * clientData, int dataLen)
 	{
 		strncpy(masks, clientData + 4, 4);
 		payloadLen = (uint16_t)(clientData[2] << 8 | clientData[3]);
-		payloadData.copy(clientData + 8, payloadLen);
+		payloadData.assign(clientData + 8, payloadLen);
 	}
 	else if (payloadLen == 127)
 	{
@@ -53,12 +53,12 @@ string WebSocketHandle::ParseClientData(char * clientData, int dataLen)
 		}
 		uint64_t len = *((uint64_t*)payloadFactLen);
 
-		payloadData.copy(clientData + 14, len);
+		payloadData.assign(clientData + 14, len);
 	}
 	else
 	{
 		strncpy(masks, clientData + 2, 4);
-		payloadData.copy(clientData + 6, payloadLen);
+		payloadData.assign(clientData + 6, payloadLen);
 	}
 
 	for (int i = 0; i < payloadLen; ++i)
@@ -97,7 +97,7 @@ string WebSocketHandle::PackServerData(string & serverData)
 bool WebSocketHandle::IsDisconnect(char * clientData, int dataLen)
 {
 	ASSERT_RETURN(clientData != NULL, false);
-	if ((clientData[0] & 0xF0) >> 4 == 0x8)
+	if (clientData[0] & 0xF == 0x8)
 	{
 		return true;
 	}

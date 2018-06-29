@@ -46,7 +46,7 @@ public:
 	void Stop();
 
 	// ÅÉ·¢ÏûÏ¢
-	bool SendMessage(Message* message);
+	bool SendMessage(MessageBase* message);
 
 	bool SendMessage(int sessionID, string& message);
 

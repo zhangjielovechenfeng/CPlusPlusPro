@@ -38,9 +38,11 @@ string Time::GetCurrDate()
 	}
 	
 	struct tm* tm = localtime(&tv.tv_sec);
-	ASSERT_RETURN(tm != NULL, NULL)
+	ASSERT_RETURN(tm != NULL, NULL);
 
-	return asctime(tm);
+	string time = asctime(tm);
+	time = time.substr(0, time.length() - 1);
+	return time;
 }
 
 void Time::MSleep(time_t msecond)

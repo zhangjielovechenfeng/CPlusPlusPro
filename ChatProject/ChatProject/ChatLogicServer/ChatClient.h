@@ -33,13 +33,15 @@ public:
 	bool SaveMsgData(char* data, uint32_t dataLen);
 
 	// 客服端是否断开连接
-	bool IsDisconnect(char* clientData, int dataLen);
+	bool IsDisconnect(char * data, int dataLen);
 
 	// 消息处理
 	bool HandleMsg();
 private:
 	// websocket握手处理
 	bool _WebSocketShakeHandsHandle();
+
+	bool _IsNeedParseData(string& data);
 private:
 	int				m_sessionID;
 	int				m_port;
@@ -47,6 +49,5 @@ private:
 	CSMsgBuff		m_recvMsgData;
 	bool			m_isBuildLongConn;	// 是否建立了长连接
 	time_t			m_recvTickTime;		// 接收到心跳的时间 
-	WebSocketHandle m_webSocketHandle;  // Websocket处理器
 };
 

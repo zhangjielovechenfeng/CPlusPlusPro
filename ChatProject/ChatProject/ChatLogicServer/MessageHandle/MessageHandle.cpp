@@ -15,5 +15,5 @@ MessageHandle::~MessageHandle()
 bool MessageHandle::InitMessgeHandle(MessageBase * msg)
 {
 	m_msg = msg;
-	return false;
+	return true;
 }

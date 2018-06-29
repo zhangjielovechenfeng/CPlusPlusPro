@@ -17,9 +17,6 @@ public:
 	// 保存数据到自定义缓存区
 	bool InsertDataToBuff(char* data, uint32_t dataLen);
 
-	// 是否需要解析buff
-	bool IsNeedParseBuff();
-
 	void ClearBuff(uint32_t len);
 
 private:

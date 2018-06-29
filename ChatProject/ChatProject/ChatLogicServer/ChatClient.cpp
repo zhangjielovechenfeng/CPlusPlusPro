@@ -3,6 +3,8 @@
 #include "../Util/LogPrint.h"
 #include "WebSocketHandle.h"
 #include "ChatClientManager.h"
+#include "../Util/CommonDef.h"
+#include "../Util/OutOfOrderTool.h"
 
 ChatClient::ChatClient(int sessionID)
 {
@@ -73,9 +75,9 @@ bool ChatClient::SaveMsgData(char * data, uint32_t dataLen)
 	return true;
 }
 
-bool ChatClient::IsDisconnect(char * clientData, int dataLen)
+bool ChatClient::IsDisconnect(char * data, int dataLen)
 {
-	return m_webSocketHandle.IsDisconnect(clientData, dataLen);
+	return WebSocketHandle::Instance().IsDisconnect(data, dataLen);
 }
 
 bool ChatClient::HandleMsg()
@@ -88,13 +90,23 @@ bool ChatClient::HandleMsg()
 			LOG_ERR("Server Shake Hands Msg Generate Failed!!!");
 			return false;
 		}
+		return true;
+	}
+	// 服务器和client交互数据，提取真实数据内容
+	string factData = WebSocketHandle::Instance().ParseClientData(m_recvMsgData.GetRecvBuff(), m_recvMsgData.GetCurrBuffLen());
+	if (factData.empty())
+	{
+		LOG_ERR("Parse Client Data Failed!!!");
+		return false;
 	}
 
-	// 是否需要处理buff
-	if (m_recvMsgData.IsNeedParseBuff())
+	// 是否需要解析
+	if (_IsNeedParseData(factData))
 	{
 		CSMessage csMsg(m_sessionID);
-		csMsg.SetMsgData(m_recvMsgData.GetRecvBuff());
+		csMsg.SetMsgData(factData);
+		// 重置buff
+		m_recvMsgData.ClearBuff(m_recvMsgData.GetCurrBuffLen());
 		// 处理消息
 		csMsg.HandleMsgData();
 	}
@@ -104,14 +116,14 @@ bool ChatClient::HandleMsg()
 bool ChatClient::_WebSocketShakeHandsHandle()
 {
 	// 还没有建立长连接，处理握手包
-	if (!m_webSocketHandle.IsWebSocketConn(m_recvMsgData.GetRecvBuff()))
+	if (!WebSocketHandle::Instance().IsWebSocketConn(m_recvMsgData.GetRecvBuff()))
 	{
 		// 不接受普通socket连接
 		SetIsBuildLongConn(false);
 	}
 	else
 	{
-		string msg = m_webSocketHandle.GenerateServerShakeHandsMsg(m_recvMsgData.GetRecvBuff(), m_recvMsgData.GetCurrBuffLen());
+		string msg = WebSocketHandle::Instance().GenerateServerShakeHandsMsg(m_recvMsgData.GetRecvBuff(), m_recvMsgData.GetCurrBuffLen());
 		if (msg.empty())
 		{
 			LOG_ERR("Generate Server ShakeHands Msg Is Empty!!!");
@@ -122,13 +134,30 @@ bool ChatClient::_WebSocketShakeHandsHandle()
 			LOG_ERR("Send Shake Hands Msg Failed");
 			return false;
 		}
-		LOG_RUN("The Handshake With Websocket[ip: %s, port: %d] Has Been Established!!!\n", GetIP().c_str(), GetPort());
-		printf("The Handshake With Websocket[ip: %s, port: %d] Has Been Established!!!\n", GetIP().c_str(), GetPort());
+		LOG_RUN("The Handshake With Websocket[ip: %s, port: %d, session: %d] Has Been Established!!!\n", GetIP().c_str(), GetPort(), GetSessionID());
+		printf("The Handshake With Websocket[ip: %s, port: %d, session: %d] Has Been Established!!!\n", GetIP().c_str(), GetPort(), GetSessionID());
 
 		// 回包发送后，清理buff
 		m_recvMsgData.ClearBuff(m_recvMsgData.GetCurrBuffLen());
 
 		SetIsBuildLongConn(true);
+	}
+	return true;
+}
+
+bool ChatClient::_IsNeedParseData(string& data)
+{
+	int pkgbodylen = 0;
+
+	// 正序所有数据
+	//OutOfOrderTool::PositiveOrder(const_cast<char*>(data.c_str()), data.size());
+	 
+	// 提出包体长度
+	memcpy(&pkgbodylen, data.c_str(), CS_MSG_PKG_CONSTANT_HEAD_SIZE / 2);
+
+ 	if (data.size() < (uint32_t)(pkgbodylen + CS_MSG_PKG_CONSTANT_HEAD_SIZE))
+	{
+		return false;
 	}
 	return true;
 }

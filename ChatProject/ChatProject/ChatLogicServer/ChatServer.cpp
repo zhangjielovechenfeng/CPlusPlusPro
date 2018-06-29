@@ -279,6 +279,13 @@ int ChatServer::_RecvMsg(int sessionID)
 		ChatClient* chatClient = ChatClientManager::Instance().GetChatClient(sessionID);
 		ASSERT_RETURN(chatClient != NULL, ERROR_CODE_CLIENT_NOT_EXIST);
 
+		// 判断是否断开连接
+		if (chatClient->IsDisconnect(recvMsgBuff, recvSize))
+		{
+			// 外层会进行断开连接返回false
+			return false;
+		}
+
 		// 存储接收的消息
 		if (!chatClient->SaveMsgData(recvMsgBuff, (uint32_t)recvSize))
 		{
@@ -286,14 +293,6 @@ int ChatServer::_RecvMsg(int sessionID)
 			return ERROR_CODE_INSERT_MSG_TO_BUFF_FAILED;
 		}
 		memset(recvMsgBuff, 0, DATA_BUFF_SIZE);
-
-		// 判断是否断开连接
-		CSMsgBuff& csMsgBuff = chatClient->GetCSMsgBuff();
-		if (chatClient->IsDisconnect(csMsgBuff.GetRecvBuff(), csMsgBuff.GetCurrBuffLen()))
-		{
-			// 通知聊天管理器断开连接
-			ChatClientManager::Instance().DelChatClient(sessionID);
-		}
 
 		// 消息处理
 		if (!chatClient->HandleMsg())
@@ -312,9 +311,11 @@ bool ChatServer::RunTimeWheelThread()
 	return true;
 }
 
-bool ChatServer::SendMessage(Message * message)
+bool ChatServer::SendMessage(MessageBase * message)
 {
 	ASSERT_RETURN(message != NULL, false);
+	message->HandleMsgData();// 消息处理
+
 	SCMessage* scMsg = dynamic_cast<SCMessage*>(message);
 	if (NULL == scMsg)
 	{
@@ -322,7 +323,7 @@ bool ChatServer::SendMessage(Message * message)
 		return false;
 	}
 	string& data = scMsg->GetSerializeData();
-
+	
 	if (!SendMessage(scMsg->GetSessionID(), data))
 	{
 		return false;
@@ -332,13 +333,21 @@ bool ChatServer::SendMessage(Message * message)
 
 bool ChatServer::SendMessage(int sessionID, string & message)
 {
-	size_t msgSize = message.size();
+	// websocket协议打包
+	string factData = WebSocketHandle::Instance().PackServerData(message);
+	if (factData.empty())
+	{
+		LOG_ERR("Pack Server Data Failed!!!");
+		return false;
+	}
+
+	size_t msgSize = factData.size();
 	ssize_t factSendSize = 0;
 
 	// 发送数据， ET模式下，当数据没有发完时，不会继续触发EPOLLOUT事件，因此需要循环检查发送数据
 	while (msgSize > 0)
 	{
-		factSendSize = send(sessionID, message.c_str() + message.size() - msgSize, msgSize, 0);
+		factSendSize = send(sessionID, factData.c_str() + factData.size() - msgSize, msgSize, 0);
 		if (factSendSize < 0 && errno != EAGAIN)
 		{
 			LOG_ERR("Send Data Error!!!, error: %s", strerror(errno));
